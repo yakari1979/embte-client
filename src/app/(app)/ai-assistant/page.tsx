@@ -4,23 +4,27 @@
 // import Cookies from 'js-cookie';
 // import axios from 'axios';
 // import { Bot, Loader2, Send, FileUp, XCircle } from 'lucide-react';
-// import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation'; // Déjà présent, c'est parfait
 
 // const AiAssistantPage = () => {
 //     const [command, setCommand] = useState('');
-//     const [file, setFile] = useState<File | null>(null); // État pour le fichier
+//     const [file, setFile] = useState<File | null>(null);
 //     const [isLoading, setIsLoading] = useState(false);
 //     const [response, setResponse] = useState<{ message: string; error?: boolean } | null>(null);
     
-//     const exampleCommand = `Crée une classe nommée "Première L1". ...`; // Inchangé
+//     // --- AJOUT : Initialiser le router de Next.js ---
+//     const router = useRouter(); 
+    
+//     const exampleCommand = `Crée une classe nommée "Première L1". ...`;
 
 //     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 //         if (e.target.files && e.target.files[0]) {
 //             setFile(e.target.files[0]);
-//             setCommand(''); // On vide le texte si un fichier est choisi
+//             setCommand('');
 //         }
 //     };
 
+//     // --- MODIFICATION : La logique de soumission est mise à jour ---
 //     const handleSubmit = async (e: React.FormEvent) => {
 //         e.preventDefault();
 //         const token = Cookies.get('token');
@@ -32,9 +36,8 @@
 //         try {
 //             let apiResponse;
 //             if (file) {
-//                 // --- Logique d'upload de fichier ---
 //                 const formData = new FormData();
-//                 formData.append('document', file); // 'document' doit correspondre au backend
+//                 formData.append('document', file);
 
 //                 apiResponse = await axios.post(
 //                     'http://localhost:3001/api/ai/execute-from-file',
@@ -46,14 +49,31 @@
 //                 );
 
 //             } else {
-//                 // --- Logique de commande textuelle (existante) ---
 //                 apiResponse = await axios.post(
 //                     'http://localhost:3001/api/ai/execute-command',
 //                     { command },
 //                     { headers: { Authorization: `Bearer ${token}` } }
 //                 );
 //             }
-//             setResponse({ message: apiResponse.data.message });
+            
+//             // On récupère toutes les données de la réponse
+//             const result = apiResponse.data;
+
+//             // On vérifie si la réponse contient une liste non vide d'utilisateurs créés
+//             if (result.createdUsers && Array.isArray(result.createdUsers) && result.createdUsers.length > 0) {
+//                 // 1. On transforme le tableau d'utilisateurs en une chaîne de caractères JSON
+//                 const dataString = JSON.stringify(result.createdUsers);
+//                 // 2. On encode cette chaîne pour qu'elle soit valide dans une URL
+//                 const encodedData = encodeURIComponent(dataString);
+//                 // 3. On redirige vers la page de résumé avec les données
+//                 router.push(`/users/bulk-creation-summary?data=${encodedData}`);
+//                 // Pas besoin de setIsLoading(false) car la page va changer
+//             } else {
+//                 // S'il n'y a pas de nouveaux utilisateurs, on affiche simplement le message de succès sur la page actuelle
+//                 setResponse({ message: result.message });
+//                 setIsLoading(false);
+//                 setFile(null); // On réinitialise le fichier après envoi
+//             }
 
 //         } catch (err) {
 //             if (axios.isAxiosError(err) && err.response) {
@@ -61,10 +81,11 @@
 //             } else {
 //                 setResponse({ message: "Une erreur réseau est survenue.", error: true });
 //             }
-//         } finally {
+//             // On s'assure de stopper le chargement en cas d'erreur
 //             setIsLoading(false);
-//             setFile(null); // On réinitialise le fichier après envoi
+//             setFile(null);
 //         }
+//         // J'ai enlevé le bloc `finally` pour mieux contrôler l'état de chargement
 //     };
 
 //     return (
@@ -80,7 +101,7 @@
 //             <div className="bg-surface p-8 rounded-lg shadow-md">
 //                 <form onSubmit={handleSubmit}>
                     
-//                     {/* --- NOUVELLE SECTION D'UPLOAD --- */}
+//                     {/* --- Section d'Upload --- */}
 //                     <div className="mb-4">
 //                         <label htmlFor="file-upload" className="w-full flex items-center justify-center px-4 py-6 bg-background border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
 //                             <div className="text-center">
@@ -120,7 +141,7 @@
 //                             onChange={(e) => { setCommand(e.target.value); setFile(null); }}
 //                             placeholder="Décrivez ce que vous voulez faire..."
 //                             className="input-field w-full"
-//                             disabled={!!file} // Désactivé si un fichier est sélectionné
+//                             disabled={!!file}
 //                         />
 //                     </div>
 
@@ -135,6 +156,7 @@
 //                     </div>
 //                 </form>
 
+//                 {/* Ce bloc de réponse ne s'affichera que si l'opération réussit SANS créer de nouveaux utilisateurs */}
 //                 {response && (
 //                     <div className={`mt-6 p-4 rounded-md ${response.error ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
 //                         <p className="font-semibold">{response.error ? "Erreur" : "Résultat"}</p>
@@ -154,9 +176,16 @@
 
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import apiClient from '@/services/api'; // Assurez-vous que ce chemin est correct !
+// L'import de "axios" n'est plus nécessaire ici si on utilise apiClient partout,
+// mais on le garde car la gestion d'erreur l'utilise (axios.isAxiosError).
+import axios from 'axios'; 
 import { Bot, Loader2, Send, FileUp, XCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation'; // Déjà présent, c'est parfait
+import { useRouter } from 'next/navigation';
+
+// =======================================================
+//   CHANGEMENT 1 : Importer votre apiClient centralisé
+// =======================================================
 
 const AiAssistantPage = () => {
     const [command, setCommand] = useState('');
@@ -164,7 +193,6 @@ const AiAssistantPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [response, setResponse] = useState<{ message: string; error?: boolean } | null>(null);
     
-    // --- AJOUT : Initialiser le router de Next.js ---
     const router = useRouter(); 
     
     const exampleCommand = `Crée une classe nommée "Première L1". ...`;
@@ -176,7 +204,6 @@ const AiAssistantPage = () => {
         }
     };
 
-    // --- MODIFICATION : La logique de soumission est mise à jour ---
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const token = Cookies.get('token');
@@ -191,18 +218,24 @@ const AiAssistantPage = () => {
                 const formData = new FormData();
                 formData.append('document', file);
 
-                apiResponse = await axios.post(
-                    'http://localhost:3001/api/ai/execute-from-file',
+                // =======================================================
+                //   CHANGEMENT 2 : Utiliser apiClient au lieu de axios
+                // =======================================================
+                apiResponse = await apiClient.post(
+                    '/ai/execute-from-file', // L'URL est maintenant relative
                     formData,
                     { headers: { 
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
+                        // 'Content-Type' est géré automatiquement par apiClient pour les FormData
                     }}
                 );
 
             } else {
-                apiResponse = await axios.post(
-                    'http://localhost:3001/api/ai/execute-command',
+                // =======================================================
+                //   CHANGEMENT 3 : Utiliser apiClient au lieu de axios
+                // =======================================================
+                apiResponse = await apiClient.post(
+                    '/ai/execute-command', // L'URL est maintenant relative
                     { command },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -237,7 +270,6 @@ const AiAssistantPage = () => {
             setIsLoading(false);
             setFile(null);
         }
-        // J'ai enlevé le bloc `finally` pour mieux contrôler l'état de chargement
     };
 
     return (
@@ -321,3 +353,4 @@ const AiAssistantPage = () => {
 };
 
 export default AiAssistantPage;
+

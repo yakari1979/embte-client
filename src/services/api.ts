@@ -822,3 +822,5 @@ export const deleteEstablishment = (establishmentId: string, token: string) => {
       headers: { Authorization: `Bearer ${token}` }
   });
 };
+
+export default apiClient;
