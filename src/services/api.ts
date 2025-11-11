@@ -3,17 +3,14 @@ import {
   RegisterData, 
   LoginCredentials, 
   NewUserData, 
-  CourseSessionData,
-  ResourceData
-} from '../types/api-types';
-
-// const apiClient = axios.create({
-//   baseURL: 'http://localhost:3001/api',
-// });
+  CourseSessionData} from '../types/api-types';
 
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+// Crée le client Axios avec l'URL dynamique
 const apiClient = axios.create({
-  baseURL: 'https://peni-backend-node.onrender.com',
+  baseURL: baseURL,
 });
 
 // =======================================================
@@ -657,17 +654,7 @@ export const getBlogPostsForAdmin = (token: string) => {
   });
 };
 
-// export const createBlogPost = (postData: NewPostData, token: string) => {
-//   return apiClient.post<Post>('/blog/posts', postData, {
-//       headers: { Authorization: `Bearer ${token}` }
-//   });
-// };
 
-// export const updateBlogPost = (postId: string, postData: NewPostData, token: string) => {
-//   return apiClient.put<Post>(`/blog/posts/${postId}`, postData, {
-//       headers: { Authorization: `Bearer ${token}` }
-//   });
-// };
 
 export const deleteBlogPost = (postId: string, token: string) => {
   return apiClient.delete(`/blog/posts/${postId}`, {
