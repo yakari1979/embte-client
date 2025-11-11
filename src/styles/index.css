@@ -1,0 +1,98 @@
+/* Directives de base de Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- DÉFINITION DES VARIABLES DE COULEURS --- */
+@layer base {
+  /* Mode Clair (par défaut) */
+  :root {
+    --background: 210 20% 98%;
+    --surface: 0 0% 100%;
+    --text-primary: 195 43% 16%;
+    --text-secondary: 198 12% 43%;
+    --text-subtle: 200 8% 56%;
+    --brand-light: 157 81% 92%;
+  }
+
+  /* Mode Sombre */
+  .dark {
+    --background: 200 15% 12%;
+    --surface: 200 14% 17%;
+    --text-primary: 210 20% 98%;
+    --text-secondary: 200 8% 56%;
+    --text-subtle: 198 12% 43%;
+    --brand-light: 158 95% 15%;
+  }
+}
+
+
+/* --- NOUVELLES CLASSES UTILITAIRES GLOBALES --- */
+@layer utilities {
+  /* Bouton principal (bleu) */
+  .btn-primary {
+      @apply w-full flex items-center justify-center gap-2 bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors;
+  }
+  /* Bouton "En Direct" (vert avec animation) */
+  .btn-live {
+      @apply w-full flex items-center justify-center gap-2 bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 transition-colors animate-pulse;
+  }
+  /* Bouton secondaire (avec bordure) */
+  .btn-secondary {
+      @apply w-full flex items-center justify-center gap-2 bg-transparent border border-gray-500 text-gray-600 dark:border-gray-400 dark:text-gray-300 font-semibold px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors;
+  }
+
+  /* Tag pour les cours "En Direct" */
+  .tag-live {
+      @apply text-xs font-semibold text-green-700 bg-green-100 dark:text-green-200 dark:bg-green-900 px-2 py-1 rounded-full;
+  }
+  /* Tag pour les cours "Bientôt" */
+  .tag-soon {
+      @apply text-xs font-semibold text-blue-700 bg-blue-100 dark:text-blue-200 dark:bg-blue-900 px-2 py-1 rounded-full;
+  }
+
+  /* Style pour les onglets de la barre latérale */
+  .tab-button {
+    @apply flex-1 p-3 font-semibold text-text-secondary flex items-center justify-center gap-2 border-b-2 border-transparent transition-colors duration-200;
+}
+.tab-button:hover {
+    @apply bg-gray-100 dark:bg-gray-800;
+}
+.tab-button.active {
+    @apply text-blue-600 dark:text-blue-400 border-b-blue-600 dark:border-b-blue-400;
+}
+
+/* Style pour les champs de formulaire */
+.input-field {
+    @apply w-full px-4 py-2 bg-background border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors;
+}
+}
+
+
+
+@layer components {
+    /* Style pour les liens de navigation */
+    .nav-link {
+      @apply text-text-secondary hover:text-text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors;
+    }
+  
+    /* Style pour le lien actif */
+    .nav-link.active {
+      @apply text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40;
+    }
+    
+    /* Style pour le badge de rôle */
+    .user-role-badge {
+      @apply text-text-secondary text-xs font-semibold bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700;
+    }
+  
+    /* Style pour le bouton de déconnexion */
+    .logout-button {
+      @apply p-2 rounded-md text-text-secondary hover:text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors;
+    }
+  
+    /* Pour le menu mobile, les liens sont des blocs */
+    .md\:hidden .nav-link {
+      @apply block;
+    }
+  }

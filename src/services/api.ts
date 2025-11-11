@@ -1,0 +1,837 @@
+import axios from 'axios';
+import { 
+  RegisterData, 
+  LoginCredentials, 
+  NewUserData, 
+  CourseSessionData,
+  ResourceData
+} from '../types/api-types';
+
+// const apiClient = axios.create({
+//   baseURL: 'http://localhost:3001/api',
+// });
+
+
+const apiClient = axios.create({
+  baseURL: 'https://peni-backend-node.onrender.com',
+});
+
+// =======================================================
+//   SERVICE D'AUTHENTIFICATION
+// =======================================================
+
+export const register = (data: RegisterData) => {
+  return apiClient.post('/register', data);
+};
+
+export const login = (credentials: LoginCredentials) => {
+  return apiClient.post('/login', credentials);
+};
+
+
+// =======================================================
+//   SERVICE UTILISATEUR (Routes préfixées par /users)
+// =======================================================
+
+export const getMyProfile = (token: string) => {
+  return apiClient.get('/users/me', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const getMyStudentSchedule = (token: string) => {
+  return apiClient.get('/users/my-schedule', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const getMyTeacherSchedule = (token: string) => {
+  return apiClient.get('/users/my-teaching-schedule', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const getMyClasses = (token: string) => {
+  return apiClient.get('/users/my-classes', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const getMyClassDetails = (classId: string, token: string) => {
+  return apiClient.get(`/users/my-classes/${classId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// =======================================================
+//   SERVICE D'ADMINISTRATION (Routes préfixées par /establishment)
+// =======================================================
+
+export const createUser = (userData: NewUserData, token: string) => {
+  return apiClient.post('/establishment/users', userData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const listUsers = (token: string) => {
+  return apiClient.get('/establishment/users', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const createClass = (className: string, token: string) => {
+  return apiClient.post('/establishment/classes', { name: className }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const listClasses = (token: string) => {
+  return apiClient.get('/establishment/classes', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const assignStudentToClass = (classId: string, studentId: string, token: string) => {
+  return apiClient.post(`/establishment/classes/${classId}/assign-student`, { studentId }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const assignTeacherToClass = (classId: string, teacherId: string, token: string) => {
+  return apiClient.post(`/establishment/classes/${classId}/assign-teacher`, { teacherId }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const addCourseSession = (classId: string, sessionData: CourseSessionData, token: string) => {
+  return apiClient.post(`/establishment/classes/${classId}/schedule-sessions`, sessionData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// =======================================================
+//   SERVICE DE COURS (Routes préfixées par /courses)
+// =======================================================
+
+export const getSessionSummary = (sessionId: string, token: string) => {
+  return apiClient.get(`/courses/sessions/${sessionId}/summary`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const getSessionResources = (sessionId: string, token: string) => {
+  return apiClient.get(`/courses/sessions/${sessionId}/resources`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+interface NewResourceData {
+  name: string;
+  file: File; // On attend un objet File, pas une URL
+}
+
+// Fonction MODIFIÉE
+export const addSessionResource = (sessionId: string, data: NewResourceData, token: string) => {
+  // 1. On crée un objet FormData
+  const formData = new FormData();
+  
+  // 2. On y ajoute les données
+  formData.append('name', data.name);
+  formData.append('file', data.file); // Le nom 'file' doit correspondre à celui dans `upload.single('file')`
+
+  // 3. On envoie la requête. Axios s'occupera de mettre le bon Content-Type.
+  return apiClient.post(`/courses/sessions/${sessionId}/resources`, formData, {
+    headers: { 
+      Authorization: `Bearer ${token}`,
+      // PAS besoin de 'Content-Type': 'multipart/form-data', Axios le fait pour nous
+    }
+  });
+};
+
+export const getSessionStatus = (sessionId: string, token: string) => {
+  return apiClient.get(`/courses/sessions/${sessionId}/details`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const toggleLiveStatus = (sessionId: string, token: string) => {
+  return apiClient.post(`/courses/sessions/${sessionId}/toggle-live`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const toggleChatStatus = (sessionId: string, token: string) => {
+  return apiClient.post(`/courses/sessions/${sessionId}/toggle-chat`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const getSessionMessages = (sessionId: string, token: string) => {
+  return apiClient.get(`/courses/sessions/${sessionId}/messages`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// =======================================================
+//   SERVICE DE NOTATION (Routes préfixées par /grades)
+// =======================================================
+
+// Les types pour nos nouvelles données
+export type Appreciation = "EXCELLENT" | "TRES_BIEN" | "BIEN" | "PASSABLE" | "INSUFFISANT" | "ACQUERIR" | "NON_NOTE";
+
+
+export interface TeacherInfo {
+  firstName: string;
+  lastName: string;
+}
+
+
+export interface Evaluation {
+  id: string;
+  title: string;
+  type: string;
+  subject: string;
+  teacher: TeacherInfo; // <-- Le prof est maintenant dans l'évaluation
+}
+
+export interface Student {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface Grade {
+  id: string;
+  score: number | null;
+  appreciation: Appreciation;
+  studentId: string;
+  evaluationId: string;
+}
+
+export interface GradingData {
+  students: Student[];
+  evaluations: Evaluation[];
+  grades: Grade[];
+  teacherSubjects: string[]; // <-- On ajoute la liste des matières
+}
+
+// Type de réponse pour la page de l'élève
+export interface GradeWithEvaluation extends Grade {
+  evaluation: Evaluation;
+}
+
+
+interface NewEvaluationData {
+  title: string;
+  type: 'TD' | 'DEVOIR';
+  subject: string;
+  classId: string;
+}
+
+interface UpsertGradeData {
+  studentId: string;
+  evaluationId: string;
+  score: number | null;
+  appreciation: Appreciation;
+}
+
+
+
+
+// Récupère toutes les données (élèves, évals, notes) pour une classe
+export const getGradingDataForClass = (classId: string, token: string) => {
+  return apiClient.get<GradingData>(`/grades/class/${classId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// Pour la page de l'élève : Récupère toutes les notes de l'étudiant connecté
+export const getMyGrades = (token: string) => {
+  return apiClient.get<GradeWithEvaluation[]>('/grades/my-grades', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// Crée une nouvelle évaluation (ex: un nouveau TD)
+export const createEvaluation = (data: NewEvaluationData, token: string) => {
+  return apiClient.post('/grades/evaluations', data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// Supprime une évaluation
+export const deleteEvaluation = (evaluationId: string, token: string) => {
+  return apiClient.delete(`/grades/evaluations/${evaluationId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// Crée ou met à jour une note
+export const upsertGrade = (data: UpsertGradeData, token: string) => {
+  return apiClient.post('/grades', data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// --- NOUVEAUX TYPES ET FONCTIONS POUR LES NOTIFICATIONS ---
+export interface Notification {
+  id: string;
+  message: string;
+  link: string | null;
+  createdAt: string;
+}
+
+export const getMyNotifications = (token: string) => {
+    return apiClient.get<Notification[]>('/notifications/my-notifications', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+// --- NOUVELLE FONCTION ---
+export const markNotificationAsRead = (notificationId: string, token: string) => {
+  return apiClient.post(`/notifications/${notificationId}/mark-as-read`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+
+
+// ... (vos autres fonctions)
+
+// --- NOUVEAUX TYPES POUR LA PAGE "MES COURS" ---
+export interface Classmate {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+export interface Teacher extends Classmate {}
+export interface Resource {
+  id: string;
+  name: string;
+  url: string;
+}
+export interface SessionWithResources {
+  id: string;
+  subject: string;
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  teacher: Teacher;
+  resources: Resource[];
+}
+export interface MyCourseDetailsResponse {
+  id: string;
+  name: string;
+  classmates: Classmate[];
+  teachers: Teacher[];
+  schedule: {
+    sessions: SessionWithResources[];
+  } | null;
+}
+
+// --- NOUVELLE FONCTION API ---
+export const getMyCourseDetails = (token: string) => {
+    return apiClient.get<MyCourseDetailsResponse>('/users/my-course-details', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const resetUserPassword = (identifiant: string, token: string) => {
+  return apiClient.post('/establishment/users/reset-password', { identifiant }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+
+
+// ... (vos autres fonctions)
+
+// --- NOUVEAUX TYPES ET FONCTION POUR LE DASHBOARD ADMIN ---
+export interface AdminStats {
+  studentCount: number;
+  teacherCount: number;
+  classCount: number;
+}
+export interface RecentUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  role: 'STUDENT' | 'TEACHER';
+}
+export interface AdminDashboardData {
+  stats: AdminStats;
+  recentUsers: RecentUser[];
+}
+
+export const getAdminDashboardSummary = (token: string) => {
+    return apiClient.get<AdminDashboardData>('/establishment/dashboard-summary', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
+// --- NOUVELLES FONCTIONS ---
+export const searchUsers = (query: string, token: string) => {
+  return apiClient.get(`/establishment/users/search?q=${query}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const getUserDetails = (userId: string, token: string) => {
+  return apiClient.get(`/establishment/users/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// --- NOUVELLE FONCTION ---
+// Récupère les détails d'une classe pour l'admin (élèves, profs)
+export const getAdminClassDetails = (classId: string, token: string) => {
+  return apiClient.get(`/establishment/classes/${classId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- NOUVELLE FONCTION ---
+// Récupère les statistiques calculées pour le tableau de bord d'une classe
+export const getAdminClassDashboardStats = (classId: string, token: string) => {
+    return apiClient.get(`/establishment/classes/${classId}/dashboard-stats`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
+
+// --- NOUVELLE FONCTION ---
+export const updateCourseSession = (sessionId: string, sessionData: CourseSessionData, token: string) => {
+  return apiClient.put(`/establishment/sessions/${sessionId}`, sessionData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- NOUVELLE FONCTION ---
+export const deleteCourseSession = (sessionId: string, token: string) => {
+  return apiClient.delete(`/establishment/sessions/${sessionId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// =======================================================
+//   SERVICE DE SIMULATION QUANTIQUE
+// =======================================================
+
+// --- MODIFICATION ICI ---
+export const getQuantumSimulationImage = (
+  simulationType: 'superposition-bloch' | 'entanglement-histogram' | 'measurement', 
+  token: string
+) => {
+return apiClient.get(`/quantum-sim/${simulationType}`, {
+  headers: { Authorization: `Bearer ${token}` }
+});
+}
+
+
+// --- NOUVELLE FONCTION ---
+export const getPhysicsSimulationImage = (params: { velocity: number; angle: number }, token: string) => {
+  return apiClient.post(`/physics-sim/projectile`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getRLCSimulationImage = (params: { R: number; L: number; C: number }, token: string) => {
+  return apiClient.post(`/physics-sim/rlc-resonance`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getLensSimulationImage = (params: { focalLength: number; objectDistance: number; }, token: string) => {
+  return apiClient.post(`/physics-sim/lens`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// --- NOUVELLE FONCTION ---
+export const getDecaySimulationImage = (params: { initialNuclei: number; halfLife: number; }, token: string) => {
+  return apiClient.post(`/physics-sim/decay`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getTitrationSimulationImage = (params: { Ca: number; Va: number; Cb: number }, token: string) => {
+  return apiClient.post(`/physics-sim/titration`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getLeChatelierSimulationImage = (params: { perturbation: 'add_N2' | 'add_NH3' }, token: string) => {
+  return apiClient.post(`/physics-sim/le-chatelier`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// --- NOUVELLE FONCTION ---
+export const getDaniellCellSimulationImages = (token: string) => {
+  return apiClient.get(`/physics-sim/daniell-cell`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getKineticsSimulationImage = (params: { initialConcentration: number; temperature: number; }, token: string) => {
+  return apiClient.post(`/physics-sim/kinetics`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getTimeDilationSimulation = (params: { properTime: number; percentageOfC: number; }, token: string) => {
+  return apiClient.post(`/physics-sim/time-dilation`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- NOUVELLE FONCTION ---
+export const getGeneticsSimulation = (params: { parent1: string; parent2: string; offspringCount: number }, token: string) => {
+  return apiClient.post(`/physics-sim/genetics`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getEcologySimulation = (params: { initialPrey: number; initialPredators: number; }, token: string) => {
+  return apiClient.post(`/physics-sim/predator-prey`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getTranscriptionSimulation = (token: string) => {
+  return apiClient.get(`/physics-sim/transcription`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getContinentalDriftData = (token: string) => {
+  return apiClient.get(`/physics-sim/continental-drift`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- NOUVELLE FONCTION ---
+export const getEnzymeKineticsSimulation = (token: string) => {
+  // Pas de paramètres à envoyer pour cette simulation
+  return apiClient.post(`/physics-sim/enzyme-kinetics`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+export const getAgePyramidSimulation = (params: { country: string; birthModifier: number; lifeModifier: number }, token: string) => {
+  return apiClient.post(`/history-sim/age-pyramid`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+
+// --- NOUVELLE FONCTION ---
+export const getHistorySimulationData = (token: string) => {
+  return apiClient.get(`/history-sim/west-african-empires`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// --- NOUVELLE FONCTION ---
+export const getFaradaySimulationImage = (params: { magnetPosition: number; magnetVelocity: number; }, token: string) => {
+  return apiClient.post(`/physics-sim/faraday`, params, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLE FONCTION ---
+export const getWordCloudImage = (text: string, token: string) => {
+  return apiClient.post(`/history-sim/word-cloud`, { text }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// =======================================================
+//   SERVICE DU BLOG (Routes préfixées par /blog)
+// =======================================================
+
+export interface Post {
+  id: string;
+  title: string;
+  content: string;
+  published: boolean;
+  createdAt: string;
+  coverImageUrl: string | null; // <-- Ajouter ce champ
+  author: {
+      firstName: string;
+      lastName: string;
+  };
+}
+
+export interface NewPostData {
+  title: string;
+  content: string;
+  coverImage?: File | null; 
+  published?: boolean;
+}
+
+
+
+const createOrUpdateBlogPost = (postId: string | null, postData: NewPostData, token: string) => {
+  const formData = new FormData();
+  formData.append('title', postData.title);
+  formData.append('content', postData.content);
+  formData.append('published', String(postData.published || false));
+  if (postData.coverImage) {
+      formData.append('coverImage', postData.coverImage); // Le nom 'coverImage' doit correspondre au middleware
+  }
+
+  const config = { headers: { Authorization: `Bearer ${token}` }};
+
+  if (postId) { // Mise à jour
+      return apiClient.put<Post>(`/blog/posts/${postId}`, formData, config);
+  } else { // Création
+      return apiClient.post<Post>('/blog/posts', formData, config);
+  }
+};
+
+
+export const createBlogPost = (postData: NewPostData, token: string) => {
+  return createOrUpdateBlogPost(null, postData, token);
+};
+
+export const updateBlogPost = (postId: string, postData: NewPostData, token: string) => {
+  return createOrUpdateBlogPost(postId, postData, token);
+};
+
+
+// CORRIGÉ : Appelle la route /all pour que l'admin voie les brouillons
+export const getBlogPostsForAdmin = (token: string) => {
+  return apiClient.get<Post[]>('/blog/all', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// export const createBlogPost = (postData: NewPostData, token: string) => {
+//   return apiClient.post<Post>('/blog/posts', postData, {
+//       headers: { Authorization: `Bearer ${token}` }
+//   });
+// };
+
+// export const updateBlogPost = (postId: string, postData: NewPostData, token: string) => {
+//   return apiClient.put<Post>(`/blog/posts/${postId}`, postData, {
+//       headers: { Authorization: `Bearer ${token}` }
+//   });
+// };
+
+export const deleteBlogPost = (postId: string, token: string) => {
+  return apiClient.delete(`/blog/posts/${postId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- FONCTIONS PUBLIQUES (POUR ÉLÈVES ET PROFS) ---
+
+// CORRIGÉ : Appelle la route /published
+export const getPublishedBlogPosts = (token: string) => {
+  return apiClient.get<Post[]>('/blog/published', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// CORRIGÉ : Prend un postId en argument et appelle la bonne route
+export const getBlogPostById = (postId: string, token: string) => {
+    return apiClient.get<Post>(`/blog/posts/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
+
+// ... (à la fin du fichier)
+
+// =======================================================
+//   SERVICE DE MODÉRATION (Routes préfixées par /moderator)
+// =======================================================
+
+export interface GlobalStats {
+  establishmentCount: number;
+  classCount: number;
+  adminCount: number;
+  teacherCount: number;
+  studentCount: number;
+}
+
+export const getGlobalStats = (token: string) => {
+  return apiClient.get<GlobalStats>('/moderator/global-stats', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// ... (après getGlobalStats)
+
+// --- NOUVEAUX TYPES ---
+export interface EstablishmentSummary {
+  id: string;
+  name: string;
+  isSuspended: boolean; // <-- AJOUTER
+  _count: {
+      users: number;
+  };
+}
+
+export interface EstablishmentDetails {
+  id: string;
+  name: string;
+  users: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      role: string;
+      identifiant: string;
+  }[];
+  classes: {
+      id: string;
+      name: string;
+      _count: {
+          students: number;
+      };
+  }[];
+}
+
+// --- NOUVELLES FONCTIONS ---
+
+export const listAllEstablishments = (token: string) => {
+  return apiClient.get<EstablishmentSummary[]>('/moderator/establishments', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const getEstablishmentDetails = (establishmentId: string, token: string) => {
+  return apiClient.get<EstablishmentDetails>(`/moderator/establishments/${establishmentId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+
+export interface SearchedUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  identifiant: string;
+  role: string;
+  establishment: { name: string } | null;
+}
+
+export interface Moderator {
+  id: string;
+  firstName: string;
+  lastName: string;
+  identifiant: string;
+}
+
+export interface NewModeratorData {
+  firstName: string;
+  lastName: string;
+  identifiant: string;
+}
+
+export const searchAllUsers = (query: string, token: string) => {
+  return apiClient.get<SearchedUser[]>(`/moderator/users/search?q=${query}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const listModerators = (token: string) => {
+  return apiClient.get<Moderator[]>('/moderator/management/list', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const createModerator = (data: NewModeratorData, token: string) => {
+  return apiClient.post('/moderator/management/create', data, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// ... (après les imports)
+
+export interface NewEstablishmentData {
+  establishmentName: string;
+  adminFirstName: string;
+  adminLastName: string;
+  adminEmail: string;
+}
+
+// ... (dans la section du service de modération)
+
+export const createEstablishmentWithAdmin = (data: NewEstablishmentData, token: string) => {
+  return apiClient.post('/moderator/establishments/create', data, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- NOUVELLES FONCTIONS D'ACTION ---
+
+export const toggleEstablishmentSuspension = (establishmentId: string, token: string) => {
+  return apiClient.put(`/moderator/establishments/${establishmentId}/toggle-suspension`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const deleteEstablishment = (establishmentId: string, token: string) => {
+  return apiClient.delete(`/moderator/establishments/${establishmentId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};

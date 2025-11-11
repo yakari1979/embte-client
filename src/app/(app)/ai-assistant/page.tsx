@@ -1,0 +1,323 @@
+// "use client";
+
+// import React, { useState } from 'react';
+// import Cookies from 'js-cookie';
+// import axios from 'axios';
+// import { Bot, Loader2, Send, FileUp, XCircle } from 'lucide-react';
+// import { useRouter } from 'next/navigation';
+
+// const AiAssistantPage = () => {
+//     const [command, setCommand] = useState('');
+//     const [file, setFile] = useState<File | null>(null); // État pour le fichier
+//     const [isLoading, setIsLoading] = useState(false);
+//     const [response, setResponse] = useState<{ message: string; error?: boolean } | null>(null);
+    
+//     const exampleCommand = `Crée une classe nommée "Première L1". ...`; // Inchangé
+
+//     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//         if (e.target.files && e.target.files[0]) {
+//             setFile(e.target.files[0]);
+//             setCommand(''); // On vide le texte si un fichier est choisi
+//         }
+//     };
+
+//     const handleSubmit = async (e: React.FormEvent) => {
+//         e.preventDefault();
+//         const token = Cookies.get('token');
+//         if (!token || (!command.trim() && !file)) return;
+
+//         setIsLoading(true);
+//         setResponse(null);
+
+//         try {
+//             let apiResponse;
+//             if (file) {
+//                 // --- Logique d'upload de fichier ---
+//                 const formData = new FormData();
+//                 formData.append('document', file); // 'document' doit correspondre au backend
+
+//                 apiResponse = await axios.post(
+//                     'http://localhost:3001/api/ai/execute-from-file',
+//                     formData,
+//                     { headers: { 
+//                         'Authorization': `Bearer ${token}`,
+//                         'Content-Type': 'multipart/form-data'
+//                     }}
+//                 );
+
+//             } else {
+//                 // --- Logique de commande textuelle (existante) ---
+//                 apiResponse = await axios.post(
+//                     'http://localhost:3001/api/ai/execute-command',
+//                     { command },
+//                     { headers: { Authorization: `Bearer ${token}` } }
+//                 );
+//             }
+//             setResponse({ message: apiResponse.data.message });
+
+//         } catch (err) {
+//             if (axios.isAxiosError(err) && err.response) {
+//                 setResponse({ message: err.response.data.message, error: true });
+//             } else {
+//                 setResponse({ message: "Une erreur réseau est survenue.", error: true });
+//             }
+//         } finally {
+//             setIsLoading(false);
+//             setFile(null); // On réinitialise le fichier après envoi
+//         }
+//     };
+
+//     return (
+//         <div className="max-w-4xl mx-auto">
+//             <div className="flex items-center gap-4 mb-6">
+//                 <Bot className="h-10 w-10 text-primary" />
+//                 <div>
+//                     <h1 className="text-3xl font-bold text-text-primary">Assistant d'Administration IA</h1>
+//                     <p className="text-text-secondary">Automatisez les tâches via du texte ou en uploadant un fichier.</p>
+//                 </div>
+//             </div>
+
+//             <div className="bg-surface p-8 rounded-lg shadow-md">
+//                 <form onSubmit={handleSubmit}>
+                    
+//                     {/* --- NOUVELLE SECTION D'UPLOAD --- */}
+//                     <div className="mb-4">
+//                         <label htmlFor="file-upload" className="w-full flex items-center justify-center px-4 py-6 bg-background border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+//                             <div className="text-center">
+//                                 <FileUp className="mx-auto h-12 w-12 text-gray-400" />
+//                                 <p className="mt-2 text-sm text-text-secondary">
+//                                     <span className="font-semibold text-primary">Uploadez un fichier</span> ou glissez-déposez
+//                                 </p>
+//                                 <p className="text-xs text-text-subtle">PDF, DOCX</p>
+//                             </div>
+//                             <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept=".pdf,.docx" disabled={!!command.trim()} />
+//                         </label>
+//                         {file && (
+//                             <div className="mt-2 flex items-center justify-between text-sm text-text-secondary bg-gray-100 dark:bg-gray-900 p-2 rounded">
+//                                 <span>Fichier sélectionné : <span className="font-medium">{file.name}</span></span>
+//                                 <button type="button" onClick={() => setFile(null)} className="text-red-500 hover:text-red-700">
+//                                     <XCircle size={16} />
+//                                 </button>
+//                             </div>
+//                         )}
+//                     </div>
+                    
+//                     <div className="relative my-6 flex items-center">
+//                         <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+//                         <span className="flex-shrink mx-4 text-sm text-text-subtle">OU</span>
+//                         <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+//                     </div>
+
+//                     {/* --- Section Texte --- */}
+//                     <div className="mb-4">
+//                         <label htmlFor="command" className="block text-sm font-medium text-text-secondary mb-2">
+//                             Entrez votre commande manuellement
+//                         </label>
+//                         <textarea
+//                             id="command"
+//                             rows={8}
+//                             value={command}
+//                             onChange={(e) => { setCommand(e.target.value); setFile(null); }}
+//                             placeholder="Décrivez ce que vous voulez faire..."
+//                             className="input-field w-full"
+//                             disabled={!!file} // Désactivé si un fichier est sélectionné
+//                         />
+//                     </div>
+
+//                     <div className="flex justify-between items-center">
+//                         <button type="button" onClick={() => { setCommand(exampleCommand); setFile(null); }} className="text-sm text-blue-500 hover:underline" disabled={!!file}>
+//                             Utiliser un exemple
+//                         </button>
+//                         <button type="submit" disabled={isLoading || (!command.trim() && !file)} className="btn-primary flex items-center gap-2">
+//                             {isLoading ? <Loader2 className="animate-spin" /> : <Send size={16} />}
+//                             {isLoading ? "Traitement en cours..." : "Exécuter"}
+//                         </button>
+//                     </div>
+//                 </form>
+
+//                 {response && (
+//                     <div className={`mt-6 p-4 rounded-md ${response.error ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+//                         <p className="font-semibold">{response.error ? "Erreur" : "Résultat"}</p>
+//                         <p>{response.message}</p>
+//                     </div>
+//                 )}
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default AiAssistantPage;
+
+
+
+"use client";
+
+import React, { useState } from 'react';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { Bot, Loader2, Send, FileUp, XCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation'; // Déjà présent, c'est parfait
+
+const AiAssistantPage = () => {
+    const [command, setCommand] = useState('');
+    const [file, setFile] = useState<File | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [response, setResponse] = useState<{ message: string; error?: boolean } | null>(null);
+    
+    // --- AJOUT : Initialiser le router de Next.js ---
+    const router = useRouter(); 
+    
+    const exampleCommand = `Crée une classe nommée "Première L1". ...`;
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
+            setCommand('');
+        }
+    };
+
+    // --- MODIFICATION : La logique de soumission est mise à jour ---
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const token = Cookies.get('token');
+        if (!token || (!command.trim() && !file)) return;
+
+        setIsLoading(true);
+        setResponse(null);
+
+        try {
+            let apiResponse;
+            if (file) {
+                const formData = new FormData();
+                formData.append('document', file);
+
+                apiResponse = await axios.post(
+                    'http://localhost:3001/api/ai/execute-from-file',
+                    formData,
+                    { headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }}
+                );
+
+            } else {
+                apiResponse = await axios.post(
+                    'http://localhost:3001/api/ai/execute-command',
+                    { command },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+            }
+            
+            // On récupère toutes les données de la réponse
+            const result = apiResponse.data;
+
+            // On vérifie si la réponse contient une liste non vide d'utilisateurs créés
+            if (result.createdUsers && Array.isArray(result.createdUsers) && result.createdUsers.length > 0) {
+                // 1. On transforme le tableau d'utilisateurs en une chaîne de caractères JSON
+                const dataString = JSON.stringify(result.createdUsers);
+                // 2. On encode cette chaîne pour qu'elle soit valide dans une URL
+                const encodedData = encodeURIComponent(dataString);
+                // 3. On redirige vers la page de résumé avec les données
+                router.push(`/users/bulk-creation-summary?data=${encodedData}`);
+                // Pas besoin de setIsLoading(false) car la page va changer
+            } else {
+                // S'il n'y a pas de nouveaux utilisateurs, on affiche simplement le message de succès sur la page actuelle
+                setResponse({ message: result.message });
+                setIsLoading(false);
+                setFile(null); // On réinitialise le fichier après envoi
+            }
+
+        } catch (err) {
+            if (axios.isAxiosError(err) && err.response) {
+                setResponse({ message: err.response.data.message, error: true });
+            } else {
+                setResponse({ message: "Une erreur réseau est survenue.", error: true });
+            }
+            // On s'assure de stopper le chargement en cas d'erreur
+            setIsLoading(false);
+            setFile(null);
+        }
+        // J'ai enlevé le bloc `finally` pour mieux contrôler l'état de chargement
+    };
+
+    return (
+        <div className="max-w-4xl mx-auto">
+            <div className="flex items-center gap-4 mb-6">
+                <Bot className="h-10 w-10 text-primary" />
+                <div>
+                    <h1 className="text-3xl font-bold text-text-primary">Assistant d'Administration IA</h1>
+                    <p className="text-text-secondary">Automatisez les tâches via du texte ou en uploadant un fichier.</p>
+                </div>
+            </div>
+
+            <div className="bg-surface p-8 rounded-lg shadow-md">
+                <form onSubmit={handleSubmit}>
+                    
+                    {/* --- Section d'Upload --- */}
+                    <div className="mb-4">
+                        <label htmlFor="file-upload" className="w-full flex items-center justify-center px-4 py-6 bg-background border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="text-center">
+                                <FileUp className="mx-auto h-12 w-12 text-gray-400" />
+                                <p className="mt-2 text-sm text-text-secondary">
+                                    <span className="font-semibold text-primary">Uploadez un fichier</span> ou glissez-déposez
+                                </p>
+                                <p className="text-xs text-text-subtle">PDF, DOCX</p>
+                            </div>
+                            <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept=".pdf,.docx" disabled={!!command.trim()} />
+                        </label>
+                        {file && (
+                            <div className="mt-2 flex items-center justify-between text-sm text-text-secondary bg-gray-100 dark:bg-gray-900 p-2 rounded">
+                                <span>Fichier sélectionné : <span className="font-medium">{file.name}</span></span>
+                                <button type="button" onClick={() => setFile(null)} className="text-red-500 hover:text-red-700">
+                                    <XCircle size={16} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="relative my-6 flex items-center">
+                        <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+                        <span className="flex-shrink mx-4 text-sm text-text-subtle">OU</span>
+                        <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+                    </div>
+
+                    {/* --- Section Texte --- */}
+                    <div className="mb-4">
+                        <label htmlFor="command" className="block text-sm font-medium text-text-secondary mb-2">
+                            Entrez votre commande manuellement
+                        </label>
+                        <textarea
+                            id="command"
+                            rows={8}
+                            value={command}
+                            onChange={(e) => { setCommand(e.target.value); setFile(null); }}
+                            placeholder="Décrivez ce que vous voulez faire..."
+                            className="input-field w-full"
+                            disabled={!!file}
+                        />
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <button type="button" onClick={() => { setCommand(exampleCommand); setFile(null); }} className="text-sm text-blue-500 hover:underline" disabled={!!file}>
+                            Utiliser un exemple
+                        </button>
+                        <button type="submit" disabled={isLoading || (!command.trim() && !file)} className="btn-primary flex items-center gap-2">
+                            {isLoading ? <Loader2 className="animate-spin" /> : <Send size={16} />}
+                            {isLoading ? "Traitement en cours..." : "Exécuter"}
+                        </button>
+                    </div>
+                </form>
+
+                {/* Ce bloc de réponse ne s'affichera que si l'opération réussit SANS créer de nouveaux utilisateurs */}
+                {response && (
+                    <div className={`mt-6 p-4 rounded-md ${response.error ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                        <p className="font-semibold">{response.error ? "Erreur" : "Résultat"}</p>
+                        <p>{response.message}</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default AiAssistantPage;
