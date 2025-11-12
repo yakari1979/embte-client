@@ -6,7 +6,7 @@ import apiClient from '@/services/api'; // Assurez-vous que ce chemin est correc
 // L'import de "axios" n'est plus nécessaire ici si on utilise apiClient partout,
 // mais on le garde car la gestion d'erreur l'utilise (axios.isAxiosError).
 import axios from 'axios'; 
-import { Bot, Loader2, Send, FileUp, XCircle } from 'lucide-react';
+import { Bot, Loader2, Send, FileUp, XCircle, AlertTriangle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // =======================================================
@@ -107,6 +107,25 @@ const AiAssistantPage = () => {
                     <p className="text-text-secondary">Automatisez les tâches via du texte ou en uploadant un fichier.</p>
                 </div>
             </div>
+
+            {/* ======================= SECTION À AJOUTER CI-DESSOUS ======================= */}
+
+    <div className="bg-green-50 border-l-4 border-green-400 text-green-800 p-4 rounded-md mb-8 dark:bg-green-900/20 dark:border-green-600 dark:text-green-300" role="alert">
+        <div className="flex">
+            <div className="py-1">
+                <AlertTriangle className="h-5 w-5 text-green-500 mr-3" />
+            </div>
+            <div>
+                <p className="font-bold">Attention : Ceci est un assistant</p>
+                <p className="text-sm">
+                    Cet outil est là pour vous aider, mais il peut commettre des erreurs ou mal interpréter une commande. Veuillez toujours vérifier attentivement les résultats générés avant de les valider définitivement.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {/* ======================= FIN DE LA SECTION À AJOUTER ======================= */}
+
 
             <div className="bg-surface p-8 rounded-lg shadow-md">
                 <form onSubmit={handleSubmit}>

@@ -435,9 +435,9 @@ export const deleteCourseSession = (sessionId: string, token: string) => {
 
 
 
-// =======================================================
-//   SERVICE DE SIMULATION QUANTIQUE
-// =======================================================
+// ======================================================================================
+//   SERVICE DE SIMULATION QUANTIQUE si on a une autre microservice on vas utiliser sa 
+// ======================================================================================
 
 
 
@@ -598,144 +598,128 @@ export const deleteCourseSession = (sessionId: string, token: string) => {
 
 
 
-// =======================================================
-//   SERVICE DE SIMULATION (SECTION MODIFIÉE)
-// =======================================================
+// ===========================================================================================================================
+//   SERVICE DE SIMULATION (SECTION CORRIGÉE) mais cette partis c'est par ce uqe on a fusionner les deux pas de microservice 
+// ==========================================================================================================================
 
-// Le préfixe commun pour toutes les simulations
-const SIM_PREFIX = '/api/simulations';
+// --- DÉBUT DE LA CORRECTION ---
+// Le préfixe commun pour toutes les simulations, SANS /api
+const SIM_PREFIX = '/simulations';
+// --- FIN DE LA CORRECTION ---
+
 
 export const getQuantumSimulationImage = (
   simulationType: 'superposition-bloch' | 'entanglement-histogram' | 'measurement', 
   token: string
 ) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.get(`${SIM_PREFIX}/quantum-sim/${simulationType}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 }
 
 export const getPhysicsSimulationImage = (params: { velocity: number; angle: number }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/projectile`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getRLCSimulationImage = (params: { R: number; L: number; C: number }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/rlc-resonance`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getLensSimulationImage = (params: { focalLength: number; objectDistance: number; }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/lens`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getDecaySimulationImage = (params: { initialNuclei: number; halfLife: number; }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/decay`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getTitrationSimulationImage = (params: { Ca: number; Va: number; Cb: number }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/titration`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getLeChatelierSimulationImage = (params: { perturbation: 'add_N2' | 'add_NH3' }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/le-chatelier`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getDaniellCellSimulationImages = (token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.get(`${SIM_PREFIX}/physics-sim/daniell-cell`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getKineticsSimulationImage = (params: { initialConcentration: number; temperature: number; }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/kinetics`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getTimeDilationSimulation = (params: { properTime: number; percentageOfC: number; }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/time-dilation`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getGeneticsSimulation = (params: { parent1: string; parent2: string; offspringCount: number }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/genetics`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getEcologySimulation = (params: { initialPrey: number; initialPredators: number; }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/predator-prey`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getTranscriptionSimulation = (token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.get(`${SIM_PREFIX}/physics-sim/transcription`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getContinentalDriftData = (token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.get(`${SIM_PREFIX}/physics-sim/continental-drift`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getEnzymeKineticsSimulation = (token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/enzyme-kinetics`, {}, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getAgePyramidSimulation = (params: { country: string; birthModifier: number; lifeModifier: number }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/history-sim/age-pyramid`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getHistorySimulationData = (token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.get(`${SIM_PREFIX}/history-sim/west-african-empires`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getFaradaySimulationImage = (params: { magnetPosition: number; magnetVelocity: number; }, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/physics-sim/faraday`, params, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
 
 export const getWordCloudImage = (text: string, token: string) => {
-  // MISE À JOUR : Ajout du préfixe
   return apiClient.post(`${SIM_PREFIX}/history-sim/word-cloud`, { text }, {
     headers: { Authorization: `Bearer ${token}` }
   });
