@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import { listUsers, assignStudentToClass, assignTeacherToClass } from '@/services/api'; // On importe nos fonctions API
+import { getAdminClassDetails,listUsers, assignStudentToClass, assignTeacherToClass } from '@/services/api'; // On importe nos fonctions API
 import { User, School, Calendar, Users, UserPlus } from 'lucide-react';
 import ScheduleManager from '@/components/ScheduleManager'; // <-- 1. IMPORTER LE NOUVEAU COMPOSANT
 
@@ -30,30 +30,60 @@ const ClassDetailPage = () => {
   const [error, setError] = useState<string | null>(null);
   
   // On utilise useCallback pour mémoriser la fonction et éviter les re-render inutiles
-  const fetchClassData = useCallback(async () => {
-    const token = Cookies.get('token');
-    if (!token || !classId) return;
+  // const fetchClassData = useCallback(async () => {
+  //   const token = Cookies.get('token');
+  //   if (!token || !classId) return;
 
-    setLoading(true);
-    try {
-      // On utilise une route API spécifique pour les détails de la classe (à créer)
-      // Pour l'instant, on simule en filtrant la liste complète
-      const classResponse = await fetch(`http://localhost:3001/api/establishment/classes/${classId}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if(!classResponse.ok) throw new Error("Classe non trouvée ou accès refusé.");
-      const classData = await classResponse.json();
+  //   setLoading(true);
+  //   try {
+  //     // On utilise une route API spécifique pour les détails de la classe (à créer)
+  //     // Pour l'instant, on simule en filtrant la liste complète
+  //     const classResponse = await fetch(`http://localhost:3001/api/establishment/classes/${classId}`, {
+  //         headers: { 'Authorization': `Bearer ${token}` }
+  //     });
+  //     if(!classResponse.ok) throw new Error("Classe non trouvée ou accès refusé.");
+  //     const classData = await classResponse.json();
       
-      const usersResponse = await listUsers(token);
+  //     const usersResponse = await listUsers(token);
 
-      setClassDetails(classData);
-      setAllUsers(usersResponse.data);
-    } catch (err) {
-      setError("Impossible de charger les détails de la classe.");
-    } finally {
-      setLoading(false);
-    }
-  }, [classId]);
+  //     setClassDetails(classData);
+  //     setAllUsers(usersResponse.data);
+  //   } catch (err) {
+  //     setError("Impossible de charger les détails de la classe.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [classId]);
+
+  // Dans le composant ClassDetailPage
+
+const fetchClassData = useCallback(async () => {
+  const token = Cookies.get('token');
+  if (!token || !classId) return;
+
+  setLoading(true);
+  try {
+    // --- DÉBUT DE LA CORRECTION ---
+    // 1. On appelle getAdminClassDetails qui fait tout le travail.
+    // Cette fonction utilise apiClient et donc la bonne URL !
+    const classResponse = await getAdminClassDetails(classId, token);
+    const classData = classResponse.data;
+
+    // 2. On appelle listUsers pour avoir la liste des utilisateurs non assignés.
+    const usersResponse = await listUsers(token);
+    const allUsersData = usersResponse.data;
+
+    setClassDetails(classData);
+    setAllUsers(allUsersData);
+    // --- FIN DE LA CORRECTION ---
+
+  } catch (err) {
+    console.error("Erreur de chargement des données de la classe :", err);
+    setError("Impossible de charger les détails de la classe.");
+  } finally {
+    setLoading(false);
+  }
+}, [classId]);
 
   useEffect(() => {
     fetchClassData();
