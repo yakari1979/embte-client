@@ -263,33 +263,102 @@ const ClassSessionPage = () => {
     }, [sessionId, router]);
 
     // --- EFFET 2 : Démarrage Média et PeerJS ---
+    // useEffect(() => {
+    //     if (!socket || !currentUser) return;
+        
+    //     let localStream: MediaStream; let localPeer: Peer;
+    //     const startMediaAndPeer = async () => {
+    //         try {
+    //             localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    //             const isTeacher = currentUser.role === 'TEACHER';
+    //             localStream.getVideoTracks().forEach(t => t.enabled = isTeacher);
+    //             localStream.getAudioTracks().forEach(t => t.enabled = isTeacher);
+    //             setIsVideoOff(!isTeacher); setIsMuted(!isTeacher);
+    //             setMyStream(localStream);
+
+    //             localPeer = new Peer(currentUser.id, { host: 'localhost', port: 3001, path: '/peerjs/myapp' });
+    //             setPeer(localPeer);
+
+    //             localPeer.on('open', () => socket.emit('join_class_video', { classId: sessionId, user: currentUser }));
+    //             localPeer.on('call', (call) => {
+    //                 call.answer(localStream);
+    //                 call.on('stream', (remoteStream) => setStreams(prev => ({ ...prev, [call.peer]: remoteStream })));
+    //                 callsRef.current[call.peer] = call;
+    //             });
+    //         } catch (err) { setError("Accès à la caméra/micro refusé ou impossible."); }
+    //     };
+    //     startMediaAndPeer();
+    //     return () => { localStream?.getTracks().forEach(track => track.stop()); localPeer?.destroy(); }
+    // }, [socket, currentUser, sessionId]);
+
+
+    // --- EFFET 2 : Démarrage Média et PeerJS (VERSION CORRIGÉE) ---
     useEffect(() => {
         if (!socket || !currentUser) return;
         
-        let localStream: MediaStream; let localPeer: Peer;
+        let localStream: MediaStream; 
+        let localPeer: Peer;
+
         const startMediaAndPeer = async () => {
             try {
                 localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 const isTeacher = currentUser.role === 'TEACHER';
                 localStream.getVideoTracks().forEach(t => t.enabled = isTeacher);
                 localStream.getAudioTracks().forEach(t => t.enabled = isTeacher);
-                setIsVideoOff(!isTeacher); setIsMuted(!isTeacher);
+                setIsVideoOff(!isTeacher); 
+                setIsMuted(!isTeacher);
                 setMyStream(localStream);
 
-                localPeer = new Peer(currentUser.id, { host: 'localhost', port: 3001, path: '/peerjs/myapp' });
+                // --- DÉBUT DE LA CORRECTION ---
+                // 1. On récupère l'URL de l'API et on la parse
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+                const url = new URL(apiUrl);
+
+                // 2. On prépare la configuration de PeerJS en fonction de l'environnement
+                let peerConfig;
+                if (url.protocol === 'https:') {
+                    // Configuration pour la PRODUCTION (Render)
+                    peerConfig = {
+                        host: url.hostname, // ex: 'peni-backend-node.onrender.com'
+                        port: 443,          // Port standard pour HTTPS/WSS
+                        path: '/peerjs/myapp',
+                        secure: true        // Très important pour WSS
+                    };
+                } else {
+                    // Configuration pour le DÉVELOPPEMENT (Local)
+                    peerConfig = {
+                        host: 'localhost',
+                        port: 3001,
+                        path: '/peerjs/myapp'
+                    };
+                }
+
+                // 3. On initialise PeerJS avec la configuration dynamique
+                localPeer = new Peer(currentUser.id, peerConfig);
+                // --- FIN DE LA CORRECTION ---
+
                 setPeer(localPeer);
 
                 localPeer.on('open', () => socket.emit('join_class_video', { classId: sessionId, user: currentUser }));
+                
                 localPeer.on('call', (call) => {
                     call.answer(localStream);
                     call.on('stream', (remoteStream) => setStreams(prev => ({ ...prev, [call.peer]: remoteStream })));
                     callsRef.current[call.peer] = call;
                 });
-            } catch (err) { setError("Accès à la caméra/micro refusé ou impossible."); }
+
+            } catch (err) { 
+                setError("Accès à la caméra/micro refusé ou impossible."); 
+            }
         };
+
         startMediaAndPeer();
-        return () => { localStream?.getTracks().forEach(track => track.stop()); localPeer?.destroy(); }
-    }, [socket, currentUser, sessionId]);
+        
+        return () => { 
+            localStream?.getTracks().forEach(track => track.stop()); 
+            localPeer?.destroy(); 
+        }
+    }, [socket, currentUser, sessionId]); // Les dépendances ne changent pas
 
     // --- EFFET 3 : Gestion des appels sortants ---
     useEffect(() => {
