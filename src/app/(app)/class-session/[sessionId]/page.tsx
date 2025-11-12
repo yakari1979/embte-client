@@ -159,243 +159,132 @@ const ClassSessionPage = () => {
 
 
 
-    // // --- EFFET 1 : Initialisation Générale et Socket.IO ---
-    // useEffect(() => {
-    //     let isMounted = true;
-    //     const token = Cookies.get('token');
-    //     if (!token) { router.push('/login'); return; }
-
-    //     const decoded = jwtDecode<UserPayload>(token);
-    //     decoded.id = decoded.userId;
-    //     setCurrentUser(decoded);
-
-    //     // --- DÉBUT DE LA CORRECTION ---
-    //     // 1. On récupère l'URL de base de l'API.
-    //     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
-
-    //     // 2. On crée l'URL pour le socket en retirant le chemin '/api'.
-    //     //    'new URL(apiUrl)' crée un objet URL.
-    //     //    '.origin' retourne la partie principale (ex: "https://peni-backend-node.onrender.com").
-    //     //    Le fallback est pour le cas où l'URL est malformée.
-    //     const socketUrl = new URL(apiUrl).origin || "http://localhost:3001";
-
-    //     // 3. On initialise le socket avec l'URL de base correcte.
-    //     const newSocket = io(socketUrl, {
-    //         transports: ['websocket', 'polling']
-    //     });
-    //     // --- FIN DE LA CORRECTION ---
-
-    //     setSocket(newSocket);
-        
-    //     const initializeSession = async () => {
-    //         try {
-    //             const [statusRes, messagesRes, resourcesRes] = await Promise.all([getSessionStatus(sessionId, token), getSessionMessages(sessionId, token), getSessionResources(sessionId, token)]);
-    //             if (isMounted) {
-    //                 setIsLive(statusRes.data.isLive);
-    //                 setIsChatEnabled(statusRes.data.isChatEnabled);
-    //                 setMessages(messagesRes.data);
-    //                 setResources(resourcesRes.data);
-    //                 newSocket.emit('join_class_chat', { classId: sessionId });
-    //             }
-    //         } catch (err) {
-    //             if (isMounted) setError("Impossible de charger les données de la session.");
-    //         } finally {
-    //             if (isMounted) setIsLoading(false);
-    //         }
-    //     };
-    //     initializeSession();
-
-    //     newSocket.on('session_status_updated', ({ type, status }) => { if (type === 'live') setIsLive(status); if (type === 'chat') setIsChatEnabled(status); });
-    //     newSocket.on('receive_message', (data: ChatMessage) => setMessages(prev => [...prev, data]));
-    //     newSocket.on('receive_new_resource', (newResource: Resource) => setResources(prev => [...prev, newResource]));
-    //     newSocket.on('room_state_update', (state: RoomState) => setRoomState(state));
-    //     newSocket.on('you_are_interrogated', () => setInterrogationRequest(true));
-
-    //     return () => {
-    //         isMounted = false; newSocket.disconnect(); Object.values(callsRef.current).forEach(call => call.close());
-    //         myStream?.getTracks().forEach(track => track.stop()); peer?.destroy();
-    //     };
-    // }, [sessionId, router]);
-
-    // // --- EFFET 2 : Démarrage Média et PeerJS (VERSION CORRIGÉE) ---
-    // useEffect(() => {
-    //     if (!socket || !currentUser) return;
-        
-    //     let localStream: MediaStream; 
-    //     let localPeer: Peer;
-
-    //     const startMediaAndPeer = async () => {
-    //         try {
-    //             localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    //             const isTeacher = currentUser.role === 'TEACHER';
-    //             localStream.getVideoTracks().forEach(t => t.enabled = isTeacher);
-    //             localStream.getAudioTracks().forEach(t => t.enabled = isTeacher);
-    //             setIsVideoOff(!isTeacher); 
-    //             setIsMuted(!isTeacher);
-    //             setMyStream(localStream);
-
-    //             // --- DÉBUT DE LA CORRECTION ---
-    //             // 1. On récupère l'URL de l'API et on la parse
-    //             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-    //             const url = new URL(apiUrl);
-
-    //             // 2. On prépare la configuration de PeerJS en fonction de l'environnement
-    //             let peerConfig;
-    //             if (url.protocol === 'https:') {
-    //                 // Configuration pour la PRODUCTION (Render)
-    //                 peerConfig = {
-    //                     host: url.hostname, // ex: 'peni-backend-node.onrender.com'
-    //                     port: 443,          // Port standard pour HTTPS/WSS
-    //                     path: '/peerjs/myapp',
-    //                     secure: true        // Très important pour WSS
-    //                 };
-    //             } else {
-    //                 // Configuration pour le DÉVELOPPEMENT (Local)
-    //                 peerConfig = {
-    //                     host: 'localhost',
-    //                     port: 3001,
-    //                     path: '/peerjs/myapp'
-    //                 };
-    //             }
-
-    //             // 3. On initialise PeerJS avec la configuration dynamique
-    //             localPeer = new Peer(currentUser.id, peerConfig);
-    //             // --- FIN DE LA CORRECTION ---
-
-    //             setPeer(localPeer);
-
-    //             localPeer.on('open', () => socket.emit('join_class_video', { classId: sessionId, user: currentUser }));
-                
-    //             localPeer.on('call', (call) => {
-    //                 call.answer(localStream);
-    //                 call.on('stream', (remoteStream) => setStreams(prev => ({ ...prev, [call.peer]: remoteStream })));
-    //                 callsRef.current[call.peer] = call;
-    //             });
-
-    //         } catch (err) { 
-    //             setError("Accès à la caméra/micro refusé ou impossible."); 
-    //         }
-    //     };
-
-    //     startMediaAndPeer();
-        
-    //     return () => { 
-    //         localStream?.getTracks().forEach(track => track.stop()); 
-    //         localPeer?.destroy(); 
-    //     }
-    // }, [socket, currentUser, sessionId]); // Les dépendances ne changent pas
-
-
-    // Dans ClassSessionPage.tsx
-
-    // Dans ClassSessionPage.tsx
-
+    // --- EFFET 1 : Initialisation Générale et Socket.IO ---
     useEffect(() => {
+        let isMounted = true;
         const token = Cookies.get('token');
-        if (!token) {
-            router.push('/login');
-            return;
-        }
+        if (!token) { router.push('/login'); return; }
 
         const decoded = jwtDecode<UserPayload>(token);
         decoded.id = decoded.userId;
         setCurrentUser(decoded);
 
-        let localSocket: Socket;
-        let localPeer: Peer;
-        let localStream: MediaStream;
+        // --- DÉBUT DE LA CORRECTION ---
+        // 1. On récupère l'URL de base de l'API.
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
-        const initialize = async () => {
+        // 2. On crée l'URL pour le socket en retirant le chemin '/api'.
+        //    'new URL(apiUrl)' crée un objet URL.
+        //    '.origin' retourne la partie principale (ex: "https://peni-backend-node.onrender.com").
+        //    Le fallback est pour le cas où l'URL est malformée.
+        const socketUrl = new URL(apiUrl).origin || "http://localhost:3001";
+
+        // 3. On initialise le socket avec l'URL de base correcte.
+        const newSocket = io(socketUrl, {
+            transports: ['websocket', 'polling']
+        });
+        // --- FIN DE LA CORRECTION ---
+
+        setSocket(newSocket);
+        
+        const initializeSession = async () => {
             try {
-                // Les étapes HTTP et Socket.IO sont correctes
-                const [statusRes, messagesRes, resourcesRes] = await Promise.all([
-                    getSessionStatus(sessionId, token), getSessionMessages(sessionId, token), getSessionResources(sessionId, token)
-                ]);
-                setIsLive(statusRes.data.isLive);
-                setIsChatEnabled(statusRes.data.isChatEnabled);
-                setMessages(messagesRes.data);
-                setResources(resourcesRes.data);
+                const [statusRes, messagesRes, resourcesRes] = await Promise.all([getSessionStatus(sessionId, token), getSessionMessages(sessionId, token), getSessionResources(sessionId, token)]);
+                if (isMounted) {
+                    setIsLive(statusRes.data.isLive);
+                    setIsChatEnabled(statusRes.data.isChatEnabled);
+                    setMessages(messagesRes.data);
+                    setResources(resourcesRes.data);
+                    newSocket.emit('join_class_chat', { classId: sessionId });
+                }
+            } catch (err) {
+                if (isMounted) setError("Impossible de charger les données de la session.");
+            } finally {
+                if (isMounted) setIsLoading(false);
+            }
+        };
+        initializeSession();
 
-                const socketUrl = new URL(process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api").origin;
-                localSocket = io(socketUrl, { transports: ['websocket', 'polling'] });
-                setSocket(localSocket);
+        newSocket.on('session_status_updated', ({ type, status }) => { if (type === 'live') setIsLive(status); if (type === 'chat') setIsChatEnabled(status); });
+        newSocket.on('receive_message', (data: ChatMessage) => setMessages(prev => [...prev, data]));
+        newSocket.on('receive_new_resource', (newResource: Resource) => setResources(prev => [...prev, newResource]));
+        newSocket.on('room_state_update', (state: RoomState) => setRoomState(state));
+        newSocket.on('you_are_interrogated', () => setInterrogationRequest(true));
 
-                // ... (vos listeners socket.on ne changent pas)
-                localSocket.on('session_status_updated', ({ type, status }) => { if (type === 'live') setIsLive(status); if (type === 'chat') setIsChatEnabled(status); });
-                localSocket.on('receive_message', (data: ChatMessage) => setMessages(prev => [...prev, data]));
-                localSocket.on('receive_new_resource', (newResource: Resource) => setResources(prev => [...prev, newResource]));
-                localSocket.on('room_state_update', (state: RoomState) => setRoomState(state));
-                localSocket.on('you_are_interrogated', () => setInterrogationRequest(true));
-                localSocket.emit('join_class_chat', { classId: sessionId });
+        return () => {
+            isMounted = false; newSocket.disconnect(); Object.values(callsRef.current).forEach(call => call.close());
+            myStream?.getTracks().forEach(track => track.stop()); peer?.destroy();
+        };
+    }, [sessionId, router]);
 
-                // L'obtention du stream média est correcte
+    // --- EFFET 2 : Démarrage Média et PeerJS (VERSION CORRIGÉE) ---
+    useEffect(() => {
+        if (!socket || !currentUser) return;
+        
+        let localStream: MediaStream; 
+        let localPeer: Peer;
+
+        const startMediaAndPeer = async () => {
+            try {
                 localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                const isTeacher = decoded.role === 'TEACHER';
+                const isTeacher = currentUser.role === 'TEACHER';
                 localStream.getVideoTracks().forEach(t => t.enabled = isTeacher);
                 localStream.getAudioTracks().forEach(t => t.enabled = isTeacher);
-                setIsVideoOff(!isTeacher);
+                setIsVideoOff(!isTeacher); 
                 setIsMuted(!isTeacher);
                 setMyStream(localStream);
 
-                // --- DÉBUT DE LA CORRECTION DÉFINITIVE POUR PEERJS ---
-                
-                // 1. On détermine le nom d'hôte de notre backend.
-                const backendHost = new URL(socketUrl).hostname; // ex: 'peni-backend-node.onrender.com' ou 'localhost'
+                // --- DÉBUT DE LA CORRECTION ---
+                // 1. On récupère l'URL de l'API et on la parse
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+                const url = new URL(apiUrl);
 
-                // 2. On crée l'objet de configuration PeerJS de manière dynamique.
-                const peerConfig = {
-                    path: '/peerjs/myapp',
-                    host: backendHost, // On lui donne l'adresse exacte.
-                    secure: backendHost !== 'localhost', // 'true' en production, 'false' en local.
-                    // On ne spécifie PAS le port en production, pour qu'il utilise le port par défaut 443 (HTTPS).
-                    // On le spécifie uniquement en local.
-                    ...(backendHost === 'localhost' && { port: 3001 }) 
-                };
-                
-                console.log("Configuration PeerJS utilisée :", peerConfig); // Log pour déboguer
+                // 2. On prépare la configuration de PeerJS en fonction de l'environnement
+                let peerConfig;
+                if (url.protocol === 'https:') {
+                    // Configuration pour la PRODUCTION (Render)
+                    peerConfig = {
+                        host: url.hostname, // ex: 'peni-backend-node.onrender.com'
+                        port: 443,          // Port standard pour HTTPS/WSS
+                        path: '/peerjs/myapp',
+                        secure: true        // Très important pour WSS
+                    };
+                } else {
+                    // Configuration pour le DÉVELOPPEMENT (Local)
+                    peerConfig = {
+                        host: 'localhost',
+                        port: 3001,
+                        path: '/peerjs/myapp'
+                    };
+                }
 
-                // 3. On initialise PeerJS avec cette configuration explicite.
-                localPeer = new Peer(decoded.id, peerConfig);
-                
-                // --- FIN DE LA CORRECTION DÉFINITIVE POUR PEERJS ---
-                
+                // 3. On initialise PeerJS avec la configuration dynamique
+                localPeer = new Peer(currentUser.id, peerConfig);
+                // --- FIN DE LA CORRECTION ---
+
                 setPeer(localPeer);
 
-                // Le reste du code ne change pas
-                localPeer.on('open', () => {
-                    console.log('PeerJS connection opened with ID:', decoded.id);
-                    localSocket.emit('join_class_video', { classId: sessionId, user: decoded });
-                });
+                localPeer.on('open', () => socket.emit('join_class_video', { classId: sessionId, user: currentUser }));
                 
-                localPeer.on('error', (err) => {
-                    console.error('PeerJS Error:', err);
-                });
-
                 localPeer.on('call', (call) => {
                     call.answer(localStream);
                     call.on('stream', (remoteStream) => setStreams(prev => ({ ...prev, [call.peer]: remoteStream })));
                     callsRef.current[call.peer] = call;
                 });
 
-            } catch (err) {
-                console.error("Erreur d'initialisation:", err);
-                setError("Impossible de démarrer la session. Vérifiez vos permissions de caméra/micro et rechargez la page.");
-            } finally {
-                setIsLoading(false);
+            } catch (err) { 
+                setError("Accès à la caméra/micro refusé ou impossible."); 
             }
         };
 
-        initialize();
+        startMediaAndPeer();
+        
+        return () => { 
+            localStream?.getTracks().forEach(track => track.stop()); 
+            localPeer?.destroy(); 
+        }
+    }, [socket, currentUser, sessionId]); // Les dépendances ne changent pas
 
-        // La fonction de nettoyage reste la même
-        return () => {
-            localSocket?.disconnect();
-            localPeer?.destroy();
-            localStream?.getTracks().forEach(track => track.stop());
-            Object.values(callsRef.current).forEach(call => call.close());
-        };
-    }, [sessionId, router]);
-    
     // --- EFFET 3 : Gestion des appels sortants ---
     useEffect(() => {
         if (!peer || !myStream || !roomState || !currentUser) return;
