@@ -28,31 +28,6 @@ const LoginPage: React.FC = () => {
   const [isInfoModalOpen, setInfoModalOpen] = useState(false);
   const router = useRouter();
 
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   setLoading(true);
-  //   setError(null);
-
-  //   try {
-  //     const credentials: LoginCredentials = { identifiant, password };
-  //     const response = await login(credentials);
-      
-  //     const token = response.data.token;
-  //     Cookies.set('token', token, { expires: 1, secure: true }); 
-  //     router.push('/dashboard');
-      
-  //   } catch (err) {
-  //     if (axios.isAxiosError(err) && err.response) {
-  //       setError(err.response.data.message || 'Identifiant ou mot de passe incorrect.');
-  //     } else {
-  //       setError('Une erreur réseau est survenue. Veuillez réessayer.');
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);

@@ -206,6 +206,182 @@ const PhysicsLabPage = () => {
     };
 
 
+    // const handleProjectileSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getPhysicsSimulationImage(projectileParams, token),
+    //         'projectile',
+    //         `Trajectoire pour v₀=${projectileParams.velocity}m/s et θ=${projectileParams.angle}°`,
+    //         (response) => {
+    //             setSimulationResult({ title: `Trajectoire pour v₀=${projectileParams.velocity}m/s et θ=${projectileParams.angle}°`, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+    // const startMeasurementExperiment = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     setMeasurementStep('initial');
+    //     runSimulation(
+    //         () => getQuantumSimulationImage('superposition-bloch', token),
+    //         'superposition-bloch',
+    //         'Étape 1 : Qubit en Superposition',
+    //         (response) => {
+    //             setSimulationResult({ title: 'Étape 1 : Qubit en Superposition', dataUrl: response.data.dataUrl });
+    //             setMeasurementStep('superposition_ready');
+    //         }
+    //     );
+    // };
+
+    // const performMeasurement = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getQuantumSimulationImage('measurement', token),
+    //         'measurement',
+    //         'Étape 2 : Résultat de la Mesure',
+    //         (response) => {
+    //             setSimulationResult({
+    //                 title: 'Étape 2 : Résultat de la Mesure',
+    //                 dataUrl: response.data.dataUrl,
+    //                 result: response.data.result
+    //             });
+    //             setMeasurementStep('measured');
+    //         }
+    //     );
+    // };
+    
+    // const handleEntanglementSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     setMeasurementStep('initial');
+    //     runSimulation(
+    //         () => getQuantumSimulationImage('entanglement-histogram', token),
+    //         'entanglement',
+    //         'Résultat de Mesure de Qubits Intriqués',
+    //         (response) => {
+    //              setSimulationResult({ title: 'Résultat de Mesure de Qubits Intriqués', dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+    // // --- NOUVELLE FONCTION ---
+    // const handleRLCSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getRLCSimulationImage(rlcParams, token),
+    //         'rlc',
+    //         'Courbe de Résonance RLC',
+    //         (response) => {
+    //             setSimulationResult({ title: `Courbe de Résonance RLC`, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+    // // --- NOUVELLE FONCTION ---
+    // const handleLensSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getLensSimulationImage(lensParams, token),
+    //         'lens',
+    //         'Lentille Convergente',
+    //         (response) => {
+    //             setSimulationResult({ title: `Lentille Convergente`, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+    // // --- NOUVELLE FONCTION ---
+    // const handleDecaySimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getDecaySimulationImage(decayParams, token),
+    //         'decay',
+    //         'Décroissance Radioactive',
+    //         (response) => {
+    //             setSimulationResult({ title: `Décroissance Radioactive`, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+    // // --- NOUVELLE FONCTION ---
+    // const handleTitrationSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getTitrationSimulationImage(titrationParams, token),
+    //         'titration',
+    //         'Dosage Acide-Base',
+    //         (response) => {
+    //             setSimulationResult({ title: `Dosage Acide-Base`, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+
+    // // --- NOUVELLE FONCTION ---
+    // const handleLeChatelierSimulation = (perturbation: 'add_N2' | 'add_NH3') => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     const simId = `le-chatelier-${perturbation}`;
+    //     runSimulation(
+    //         () => getLeChatelierSimulationImage({ perturbation }, token),
+    //         simId,
+    //         'add_N2',
+    //         (response) => {
+    //             const title = perturbation === 'add_N2' ? "Perturbation : Ajout d'un réactif (N₂)" : "Perturbation : Ajout d'un produit (NH₃)";
+    //             setSimulationResult({ title, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+
+    // // --- NOUVELLE FONCTION ---
+    // const handleDaniellCellSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     // Cette simulation renvoie deux images, donc nous la traitons un peu différemment
+    //     setActiveSimulation('daniell-cell');
+    //     setError(null);
+    //     setSimulationResult(null);
+    //     getDaniellCellSimulationImages(token)
+    //         .then(response => {
+    //             // On stocke les deux URLs dans un seul objet de résultat
+    //             setSimulationResult({
+    //                 title: 'Simulation de la Pile Daniell (Zn-Cu)',
+    //                 schemaUrl: response.data.schemaUrl, // URL de l'image 1
+    //                 graphUrl: response.data.graphUrl     // URL de l'image 2
+    //             });
+    //         })
+    //         .catch(err => {
+    //             setError("Le service de simulation a rencontré une erreur.");
+    //         })
+    //         .finally(() => {
+    //             setActiveSimulation(null);
+    //         });
+    // };
+
+
+    // // --- NOUVELLE FONCTION ---
+    // const handleKineticsSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getKineticsSimulationImage(kineticsParams, token),
+    //         'kinetics',
+    //         'Cinétique Chimique',
+    //         (response) => {
+    //             setSimulationResult({ title: `Cinétique Chimique`, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+
+
     const handleProjectileSimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
@@ -214,7 +390,11 @@ const PhysicsLabPage = () => {
             'projectile',
             `Trajectoire pour v₀=${projectileParams.velocity}m/s et θ=${projectileParams.angle}°`,
             (response) => {
-                setSimulationResult({ title: `Trajectoire pour v₀=${projectileParams.velocity}m/s et θ=${projectileParams.angle}°`, dataUrl: response.data.dataUrl });
+                // MISE À JOUR : On construit le dataUrl ici
+                setSimulationResult({ 
+                    title: `Trajectoire pour v₀=${projectileParams.velocity}m/s et θ=${projectileParams.angle}°`, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
             }
         );
     };
@@ -228,7 +408,11 @@ const PhysicsLabPage = () => {
             'superposition-bloch',
             'Étape 1 : Qubit en Superposition',
             (response) => {
-                setSimulationResult({ title: 'Étape 1 : Qubit en Superposition', dataUrl: response.data.dataUrl });
+                 // MISE À JOUR
+                setSimulationResult({ 
+                    title: 'Étape 1 : Qubit en Superposition', 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
                 setMeasurementStep('superposition_ready');
             }
         );
@@ -242,10 +426,11 @@ const PhysicsLabPage = () => {
             'measurement',
             'Étape 2 : Résultat de la Mesure',
             (response) => {
+                // MISE À JOUR
                 setSimulationResult({
                     title: 'Étape 2 : Résultat de la Mesure',
-                    dataUrl: response.data.dataUrl,
-                    result: response.data.result
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}`,
+                    result: response.data.classical_result // Cette clé vient directement de Python
                 });
                 setMeasurementStep('measured');
             }
@@ -261,100 +446,108 @@ const PhysicsLabPage = () => {
             'entanglement',
             'Résultat de Mesure de Qubits Intriqués',
             (response) => {
-                 setSimulationResult({ title: 'Résultat de Mesure de Qubits Intriqués', dataUrl: response.data.dataUrl });
+                 // MISE À JOUR
+                 setSimulationResult({ 
+                     title: 'Résultat de Mesure de Qubits Intriqués', 
+                     dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                 });
             }
         );
     };
 
-    // --- NOUVELLE FONCTION ---
     const handleRLCSimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
         runSimulation(
             () => getRLCSimulationImage(rlcParams, token),
-            'rlc',
-            'Courbe de Résonance RLC',
+            'rlc', 'Courbe de Résonance RLC',
             (response) => {
-                setSimulationResult({ title: `Courbe de Résonance RLC`, dataUrl: response.data.dataUrl });
+                // MISE À JOUR
+                setSimulationResult({ 
+                    title: `Courbe de Résonance RLC`, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
             }
         );
     };
 
-    // --- NOUVELLE FONCTION ---
     const handleLensSimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
         runSimulation(
             () => getLensSimulationImage(lensParams, token),
-            'lens',
-            'Lentille Convergente',
+            'lens', 'Lentille Convergente',
             (response) => {
-                setSimulationResult({ title: `Lentille Convergente`, dataUrl: response.data.dataUrl });
+                // MISE À JOUR
+                setSimulationResult({ 
+                    title: `Lentille Convergente`, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
             }
         );
     };
 
-    // --- NOUVELLE FONCTION ---
     const handleDecaySimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
         runSimulation(
             () => getDecaySimulationImage(decayParams, token),
-            'decay',
-            'Décroissance Radioactive',
+            'decay', 'Décroissance Radioactive',
             (response) => {
-                setSimulationResult({ title: `Décroissance Radioactive`, dataUrl: response.data.dataUrl });
+                // MISE À JOUR
+                setSimulationResult({ 
+                    title: `Décroissance Radioactive`, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
             }
         );
     };
-
-    // --- NOUVELLE FONCTION ---
+    
     const handleTitrationSimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
         runSimulation(
             () => getTitrationSimulationImage(titrationParams, token),
-            'titration',
-            'Dosage Acide-Base',
+            'titration', 'Dosage Acide-Base',
             (response) => {
-                setSimulationResult({ title: `Dosage Acide-Base`, dataUrl: response.data.dataUrl });
+                // MISE À JOUR
+                setSimulationResult({ 
+                    title: `Dosage Acide-Base`, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
             }
         );
     };
 
-
-    // --- NOUVELLE FONCTION ---
     const handleLeChatelierSimulation = (perturbation: 'add_N2' | 'add_NH3') => {
         const token = Cookies.get('token');
         if (!token) return;
-        const simId = `le-chatelier-${perturbation}`;
         runSimulation(
             () => getLeChatelierSimulationImage({ perturbation }, token),
-            simId,
-            'add_N2',
+            `le-chatelier-${perturbation}`, 'Principe de Le Chatelier',
             (response) => {
                 const title = perturbation === 'add_N2' ? "Perturbation : Ajout d'un réactif (N₂)" : "Perturbation : Ajout d'un produit (NH₃)";
-                setSimulationResult({ title, dataUrl: response.data.dataUrl });
+                // MISE À JOUR
+                setSimulationResult({ 
+                    title, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
             }
         );
     };
 
-
-    // --- NOUVELLE FONCTION ---
     const handleDaniellCellSimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
-        // Cette simulation renvoie deux images, donc nous la traitons un peu différemment
         setActiveSimulation('daniell-cell');
-        setError(null);
-        setSimulationResult(null);
+        // ... (le reste de cette fonction est correct, mais on met à jour le .then)
         getDaniellCellSimulationImages(token)
             .then(response => {
-                // On stocke les deux URLs dans un seul objet de résultat
+                // MISE À JOUR
                 setSimulationResult({
                     title: 'Simulation de la Pile Daniell (Zn-Cu)',
-                    schemaUrl: response.data.schemaUrl, // URL de l'image 1
-                    graphUrl: response.data.graphUrl     // URL de l'image 2
+                    schemaUrl: `data:image/png;base64,${response.data.schemaImageBase64}`,
+                    graphUrl: `data:image/png;base64,${response.data.graphImageBase64}`
                 });
             })
             .catch(err => {
@@ -365,17 +558,18 @@ const PhysicsLabPage = () => {
             });
     };
 
-
-    // --- NOUVELLE FONCTION ---
     const handleKineticsSimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
         runSimulation(
             () => getKineticsSimulationImage(kineticsParams, token),
-            'kinetics',
-            'Cinétique Chimique',
+            'kinetics', 'Cinétique Chimique',
             (response) => {
-                setSimulationResult({ title: `Cinétique Chimique`, dataUrl: response.data.dataUrl });
+                // MISE À JOUR
+                setSimulationResult({ 
+                    title: `Cinétique Chimique`, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
             }
         );
     };
@@ -397,34 +591,84 @@ const PhysicsLabPage = () => {
         );
     };
 
-    // --- NOUVELLE FONCTION ---
+    // // --- NOUVELLE FONCTION ---
+    // const handleGeneticsSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getGeneticsSimulation(geneticsParams, token),
+    //         'genetics',
+    //         'Résultats du Croisement',
+    //         (response) => {
+    //             setSimulationResult({
+    //                 title: `Résultats du Croisement`,
+    //                 punnettSquare: response.data.punnettSquare,
+    //                 resultsImageUrl: response.data.resultsImageUrl
+    //             });
+    //         }
+    //     );
+    // };
+
+    // // --- NOUVELLE FONCTION ---
+    // const handleEcologySimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getEcologySimulation(ecologyParams, token),
+    //         'ecology',
+    //         'Évolution Écosystème',
+    //         (response) => {
+    //             setSimulationResult({ title: `Évolution d'un Écosystème`, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
+
+
     const handleGeneticsSimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
         runSimulation(
             () => getGeneticsSimulation(geneticsParams, token),
-            'genetics',
-            'Résultats du Croisement',
+            'genetics', 'Résultats du Croisement',
             (response) => {
+                // MISE À JOUR
                 setSimulationResult({
                     title: `Résultats du Croisement`,
-                    punnettSquare: response.data.punnettSquare,
-                    resultsImageUrl: response.data.resultsImageUrl
+                    punnettSquare: response.data.punnett_square,
+                    resultsImageUrl: `data:image/png;base64,${response.data.results_image_base64}`
                 });
             }
         );
     };
 
-    // --- NOUVELLE FONCTION ---
     const handleEcologySimulation = () => {
         const token = Cookies.get('token');
         if (!token) return;
         runSimulation(
             () => getEcologySimulation(ecologyParams, token),
-            'ecology',
-            'Évolution Écosystème',
+            'ecology', 'Évolution Écosystème',
             (response) => {
-                setSimulationResult({ title: `Évolution d'un Écosystème`, dataUrl: response.data.dataUrl });
+                // MISE À JOUR
+                setSimulationResult({ 
+                    title: `Évolution d'un Écosystème`, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
+            }
+        );
+    };
+
+    const handleEnzymeSimulation = () => {
+        const token = Cookies.get('token');
+        if (!token) return;
+        runSimulation(
+            () => getEnzymeKineticsSimulation(token),
+            'enzyme', 'Cinétique Enzymatique',
+            (response) => {
+                // MISE À JOUR
+                setSimulationResult({ 
+                    title: `Cinétique Enzymatique`, 
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}` 
+                });
             }
         );
     };
@@ -463,31 +707,49 @@ const PhysicsLabPage = () => {
         );
     }; 
 
-    // --- NOUVELLE FONCTION ---
-    const handleEnzymeSimulation = () => {
-        const token = Cookies.get('token');
-        if (!token) return;
-        runSimulation(
-            () => getEnzymeKineticsSimulation(token),
-            'enzyme',
-            'Cinétique Enzymatique',
-            (response) => {
-                setSimulationResult({ title: `Cinétique Enzymatique`, dataUrl: response.data.dataUrl });
-            }
-        );
-    };
+    // // --- NOUVELLE FONCTION ---
+    // const handleEnzymeSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     runSimulation(
+    //         () => getEnzymeKineticsSimulation(token),
+    //         'enzyme',
+    //         'Cinétique Enzymatique',
+    //         (response) => {
+    //             setSimulationResult({ title: `Cinétique Enzymatique`, dataUrl: response.data.dataUrl });
+    //         }
+    //     );
+    // };
 
 
-    // --- NOUVELLE FONCTION ---
+    // // --- NOUVELLE FONCTION ---
+    // const handleFaradaySimulation = useCallback((params: { position: any; velocity: any; }) => {
+    //     const token = Cookies.get('token');
+    //     if (!token) return;
+    //     // Pas d'indicateur de chargement global pour ne pas figer l'UI
+    //     getFaradaySimulationImage({ magnetPosition: params.position, magnetVelocity: params.velocity }, token)
+    //         .then((response) => {
+    //             setSimulationResult({
+    //                 title: "Induction Électromagnétique",
+    //                 dataUrl: response.data.dataUrl
+    //             });
+    //         })
+    //         .catch(err => {
+    //             // On peut ignorer les petites erreurs réseau pour la fluidité
+    //             console.error(err);
+    //         });
+    // }, []);
+
+
     const handleFaradaySimulation = useCallback((params: { position: any; velocity: any; }) => {
         const token = Cookies.get('token');
         if (!token) return;
-        // Pas d'indicateur de chargement global pour ne pas figer l'UI
         getFaradaySimulationImage({ magnetPosition: params.position, magnetVelocity: params.velocity }, token)
             .then((response) => {
+                // MISE À JOUR
                 setSimulationResult({
                     title: "Induction Électromagnétique",
-                    dataUrl: response.data.dataUrl
+                    dataUrl: `data:image/png;base64,${response.data.imageBase64}`
                 });
             })
             .catch(err => {

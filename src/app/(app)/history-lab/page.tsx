@@ -72,6 +72,24 @@ const HGLabPage = () => {
     }, []);
 
     // Fonction pour lancer la simulation de la pyramide des âges
+    // const handlePyramidSimulation = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token) {
+    //         setPyramidError("Authentification requise.");
+    //         return;
+    //     }
+    //     setLoadingPyramid(true);
+    //     setPyramidError(null);
+    //     setPyramidImage(null); // On efface l'ancienne image
+    //     getAgePyramidSimulation(pyramidParams, token)
+    //         .then(response => {
+    //             setPyramidImage(response.data.dataUrl);
+    //         })
+    //         .catch(err => setPyramidError("Erreur lors de la simulation démographique."))
+    //         .finally(() => setLoadingPyramid(false));
+    // };
+
+
     const handlePyramidSimulation = () => {
         const token = Cookies.get('token');
         if (!token) {
@@ -83,13 +101,29 @@ const HGLabPage = () => {
         setPyramidImage(null); // On efface l'ancienne image
         getAgePyramidSimulation(pyramidParams, token)
             .then(response => {
-                setPyramidImage(response.data.dataUrl);
+                // MISE À JOUR : On construit le dataUrl ici
+                setPyramidImage(`data:image/png;base64,${response.data.imageBase64}`);
             })
             .catch(err => setPyramidError("Erreur lors de la simulation démographique."))
             .finally(() => setLoadingPyramid(false));
     };
 
     const activeEmpire = empires[activeIndex];
+
+    // const handleWordCloudAnalysis = () => {
+    //     const token = Cookies.get('token');
+    //     if (!token || !textToAnalyze.trim()) return;
+    //     setLoadingWordCloud(true);
+    //     setWordCloudError(null);
+    //     setWordCloudImage(null);
+    //     getWordCloudImage(textToAnalyze, token)
+    //         .then(response => {
+    //             setWordCloudImage(response.data.dataUrl);
+    //         })
+    //         .catch(err => setWordCloudError("Erreur lors de l'analyse du texte."))
+    //         .finally(() => setLoadingWordCloud(false));
+    // };
+
 
     const handleWordCloudAnalysis = () => {
         const token = Cookies.get('token');
@@ -99,7 +133,8 @@ const HGLabPage = () => {
         setWordCloudImage(null);
         getWordCloudImage(textToAnalyze, token)
             .then(response => {
-                setWordCloudImage(response.data.dataUrl);
+                // MISE À JOUR : On construit le dataUrl ici
+                setWordCloudImage(`data:image/png;base64,${response.data.imageBase64}`);
             })
             .catch(err => setWordCloudError("Erreur lors de l'analyse du texte."))
             .finally(() => setLoadingWordCloud(false));
