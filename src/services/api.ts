@@ -172,6 +172,17 @@ export const getSessionMessages = (sessionId: string, token: string) => {
   });
 };
 
+export const saveAttendance = (
+  sessionId: string, 
+  data: { attendances: { studentId: string; status: string }[], date: string },
+  token: string
+) => {
+  return apiClient.post(`/courses/sessions/${sessionId}/attendance`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
 
 // =======================================================
 //   SERVICE DE NOTATION (Routes préfixées par /grades)
@@ -276,7 +287,6 @@ export const upsertGrade = (data: UpsertGradeData, token: string) => {
     headers: { Authorization: `Bearer ${token}` }
   });
 };
-
 
 
 

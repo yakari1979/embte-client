@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
+import { saveAttendance } from '@/services/api'; // <-- 1. IMPORTER LA NOUVELLE FONCTION
 
 interface Session { id: string; subject: string; }
 interface Student { id: string; firstName: string; lastName: string; }
@@ -28,20 +29,48 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({ session, students, da
     setAttendance(prev => ({ ...prev, [studentId]: status }));
   };
 
+  // const handleSubmit = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   const token = Cookies.get('token');
+  //   const attendanceData = Object.entries(attendance).map(([studentId, status]) => ({ studentId, status }));
+
+  //   try {
+  //     const response = await fetch(`http://localhost:3001/api/courses/sessions/${session.id}/attendance`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+  //       body: JSON.stringify({ attendances: attendanceData, date: date }), // On envoie la date
+  //     });
+
+  //     if (!response.ok) throw new Error("La sauvegarde a échoué.");
+  //     alert('Présences enregistrées !');
+  //     onSuccess();
+  //     onClose();
+  //   } catch (err) {
+  //     setError('Erreur lors de l\'enregistrement. Veuillez réessayer.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+  // --- 2. METTRE À JOUR LA FONCTION handleSubmit ---
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
     const token = Cookies.get('token');
+    if (!token) {
+      setError("Erreur d'authentification. Veuillez vous reconnecter.");
+      setLoading(false);
+      return;
+    }
+
     const attendanceData = Object.entries(attendance).map(([studentId, status]) => ({ studentId, status }));
 
     try {
-      const response = await fetch(`http://localhost:3001/api/courses/sessions/${session.id}/attendance`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ attendances: attendanceData, date: date }), // On envoie la date
-      });
-
-      if (!response.ok) throw new Error("La sauvegarde a échoué.");
+      // On utilise maintenant notre fonction centralisée
+      await saveAttendance(session.id, { attendances: attendanceData, date: date }, token);
+      
       alert('Présences enregistrées !');
       onSuccess();
       onClose();
