@@ -307,13 +307,10 @@ const ClassSessionPage = () => {
 
         const initialize = async () => {
             try {
-                // --- Les étapes 1 à 4 restent identiques ---
+                // Les étapes HTTP et Socket.IO sont correctes
                 const [statusRes, messagesRes, resourcesRes] = await Promise.all([
-                    getSessionStatus(sessionId, token),
-                    getSessionMessages(sessionId, token),
-                    getSessionResources(sessionId, token)
+                    getSessionStatus(sessionId, token), getSessionMessages(sessionId, token), getSessionResources(sessionId, token)
                 ]);
-                
                 setIsLive(statusRes.data.isLive);
                 setIsChatEnabled(statusRes.data.isChatEnabled);
                 setMessages(messagesRes.data);
@@ -323,6 +320,7 @@ const ClassSessionPage = () => {
                 localSocket = io(socketUrl, { transports: ['websocket', 'polling'] });
                 setSocket(localSocket);
 
+                // ... (vos listeners socket.on ne changent pas)
                 localSocket.on('session_status_updated', ({ type, status }) => { if (type === 'live') setIsLive(status); if (type === 'chat') setIsChatEnabled(status); });
                 localSocket.on('receive_message', (data: ChatMessage) => setMessages(prev => [...prev, data]));
                 localSocket.on('receive_new_resource', (newResource: Resource) => setResources(prev => [...prev, newResource]));
@@ -330,7 +328,7 @@ const ClassSessionPage = () => {
                 localSocket.on('you_are_interrogated', () => setInterrogationRequest(true));
                 localSocket.emit('join_class_chat', { classId: sessionId });
 
-                // --- Étape 5 reste identique ---
+                // L'obtention du stream média est correcte
                 localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 const isTeacher = decoded.role === 'TEACHER';
                 localStream.getVideoTracks().forEach(t => t.enabled = isTeacher);
@@ -339,17 +337,31 @@ const ClassSessionPage = () => {
                 setIsMuted(!isTeacher);
                 setMyStream(localStream);
 
-                // --- DÉBUT DE LA CORRECTION MAJEURE (Étape 6) ---
-                // On ne spécifie plus host, port ou secure.
-                // On fournit simplement le chemin, et PeerJS déduira le reste de l'URL du socket.
-                localPeer = new Peer(decoded.id, {
-                    path: '/peerjs/myapp'
-                });
-                // --- FIN DE LA CORRECTION MAJEURE ---
+                // --- DÉBUT DE LA CORRECTION DÉFINITIVE POUR PEERJS ---
+                
+                // 1. On détermine le nom d'hôte de notre backend.
+                const backendHost = new URL(socketUrl).hostname; // ex: 'peni-backend-node.onrender.com' ou 'localhost'
+
+                // 2. On crée l'objet de configuration PeerJS de manière dynamique.
+                const peerConfig = {
+                    path: '/peerjs/myapp',
+                    host: backendHost, // On lui donne l'adresse exacte.
+                    secure: backendHost !== 'localhost', // 'true' en production, 'false' en local.
+                    // On ne spécifie PAS le port en production, pour qu'il utilise le port par défaut 443 (HTTPS).
+                    // On le spécifie uniquement en local.
+                    ...(backendHost === 'localhost' && { port: 3001 }) 
+                };
+                
+                console.log("Configuration PeerJS utilisée :", peerConfig); // Log pour déboguer
+
+                // 3. On initialise PeerJS avec cette configuration explicite.
+                localPeer = new Peer(decoded.id, peerConfig);
+                
+                // --- FIN DE LA CORRECTION DÉFINITIVE POUR PEERJS ---
                 
                 setPeer(localPeer);
 
-                // --- Les étapes 7 et la suite restent identiques ---
+                // Le reste du code ne change pas
                 localPeer.on('open', () => {
                     console.log('PeerJS connection opened with ID:', decoded.id);
                     localSocket.emit('join_class_video', { classId: sessionId, user: decoded });
@@ -377,13 +389,13 @@ const ClassSessionPage = () => {
 
         // La fonction de nettoyage reste la même
         return () => {
-            console.log("Cleanup function running: disconnecting socket and destroying peer.");
             localSocket?.disconnect();
             localPeer?.destroy();
             localStream?.getTracks().forEach(track => track.stop());
             Object.values(callsRef.current).forEach(call => call.close());
         };
-    }, [sessionId, router]); // IMPORTANT: Ce useEffect ne doit dépendre que de ce qui ne change pas
+    }, [sessionId, router]);
+    
     // --- EFFET 3 : Gestion des appels sortants ---
     useEffect(() => {
         if (!peer || !myStream || !roomState || !currentUser) return;
