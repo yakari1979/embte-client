@@ -314,16 +314,12 @@ const ClassSessionPage = () => {
         // });
 
         const newSocket = io(socketUrl, {
-            // La correction clé est ici :
-            // On spécifie explicitement les transports à essayer.
-            // 'polling' est plus résistant aux pare-feu et configurations réseau restrictives.
-            transports: ['websocket', 'polling'], 
+            // ON AJOUTE LA MÊME LIGNE ICI :
+            // Le client doit se connecter sur le même chemin que celui défini sur le serveur.
+            path: "/socket.io/",
         
-            // On peut aussi ajouter une option pour les versions plus anciennes si nécessaire,
-            // mais ce n'est généralement plus requis avec les versions 4+.
-            // allowEIO3: true, 
-        
-            // Forcer une nouvelle connexion et non réutiliser une ancienne en cache
+            // On garde les options précédentes
+            transports: ['websocket', 'polling'],
             forceNew: true 
         });
         // --- FIN DE LA CORRECTION ---
