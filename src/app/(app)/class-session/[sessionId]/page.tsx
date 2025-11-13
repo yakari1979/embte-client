@@ -308,21 +308,13 @@ const ClassSessionPage = () => {
         console.log("Connexion au serveur de socket sur l'URL :", socketUrl);
         console.log("Tentative de connexion au serveur de socket sur l'URL :", socketUrl);
 
-        // 3. On initialise le socket avec l'URL de base correcte et on spécifie les transports.
-        // const newSocket = io(socketUrl, {
-        //     transports: ['websocket', 'polling'] // Important pour la compatibilité sur Render
-        // });
-
         const newSocket = io(socketUrl, {
-            // ON AJOUTE LA MÊME LIGNE ICI :
-            // Le client doit se connecter sur le même chemin que celui défini sur le serveur.
+            // On garde uniquement les options essentielles qui correspondent au serveur
             path: "/socket.io/",
-        
-            // On garde les options précédentes
-            transports: ['websocket', 'polling'],
-            forceNew: true 
+            transports: ['websocket', 'polling'], // On autorise les deux pour la robustesse
+            forceNew: true,
         });
-        // --- FIN DE LA CORRECTION ---
+         
 
         setSocket(newSocket);
         
