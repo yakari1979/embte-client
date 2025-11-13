@@ -306,10 +306,25 @@ const ClassSessionPage = () => {
         const socketUrl = new URL(apiUrl).origin;
         
         console.log("Connexion au serveur de socket sur l'URL :", socketUrl);
+        console.log("Tentative de connexion au serveur de socket sur l'URL :", socketUrl);
 
         // 3. On initialise le socket avec l'URL de base correcte et on spécifie les transports.
+        // const newSocket = io(socketUrl, {
+        //     transports: ['websocket', 'polling'] // Important pour la compatibilité sur Render
+        // });
+
         const newSocket = io(socketUrl, {
-            transports: ['websocket', 'polling'] // Important pour la compatibilité sur Render
+            // La correction clé est ici :
+            // On spécifie explicitement les transports à essayer.
+            // 'polling' est plus résistant aux pare-feu et configurations réseau restrictives.
+            transports: ['websocket', 'polling'], 
+        
+            // On peut aussi ajouter une option pour les versions plus anciennes si nécessaire,
+            // mais ce n'est généralement plus requis avec les versions 4+.
+            // allowEIO3: true, 
+        
+            // Forcer une nouvelle connexion et non réutiliser une ancienne en cache
+            forceNew: true 
         });
         // --- FIN DE LA CORRECTION ---
 
