@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { getMyClassDetails, createWeeklyPlanItem, updateWeeklyPlanItem, deleteWeeklyPlanItem, WeeklyPlanItem, PlanItemType } from '@/services/api';
 import { Loader2, Book, Pencil, Repeat, Check, Plus, Trash2, CheckCircle, Circle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { jwtDecode } from 'jwt-decode';
 
 // Définir les types pour les données de la classe
 interface Session {
@@ -17,7 +18,9 @@ interface Session {
   dayOfWeek: string;
   startTime: string;
   endTime: string;
-  teacher: { firstName: string; lastName: string; };
+  teacher: {
+      id: string | null; firstName: string; lastName: string; 
+};
   weeklyPlanItems: WeeklyPlanItem[];
 }
 interface ClassDetails {
@@ -72,9 +75,14 @@ const AddPlanItemForm: React.FC<{ sessionId: string; onAddItem: (item: WeeklyPla
                     <option value="REVIEW">Révision</option>
                     <option value="OTHER">Autre</option>
                 </select>
-                <button type="submit" className="btn-primary-sm" disabled={isSubmitting}>
+                {/* <button type="submit" className="btn-primary-sm" disabled={isSubmitting}>
                     {isSubmitting ? <Loader2 className="animate-spin h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                </button> */}
+                {/* --- CORRECTION ICI --- */}
+                <button type="submit" className="btn-primary-sm flex items-center gap-1" disabled={isSubmitting}>
+                    {isSubmitting ? <Loader2 className="animate-spin h-4 w-4" /> : <> <Plus className="h-4 w-4" /> Ajouter </>}
                 </button>
+                {/* --- FIN DE LA CORRECTION --- */}
             </div>
         </form>
     );
@@ -150,6 +158,7 @@ const PlanItem: React.FC<{ item: WeeklyPlanItem; onUpdate: (id: string, data: Pa
 const ClassPlannerPage = () => {
     const [classDetails, setClassDetails] = useState<ClassDetails | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentUserId, setCurrentUserId] = useState<string | null>(null); // <-- AJOUTER CET ÉTAT
     const router = useRouter();
     const params = useParams();
     const classId = params.classId as string;
@@ -165,6 +174,12 @@ const ClassPlannerPage = () => {
             router.push('/login');
             return;
         }
+
+        // --- AJOUT : Décoder le token pour obtenir l'ID de l'utilisateur ---
+        const decoded: { userId: string } = jwtDecode(token);
+        setCurrentUserId(decoded.userId);
+        // --- FIN DE L'AJOUT ---
+
         getMyClassDetails(classId, token)
             .then(res => setClassDetails(res.data))
             .catch(err => toast.error("Impossible de charger les détails de la classe."))
@@ -197,7 +212,7 @@ const ClassPlannerPage = () => {
                     <div key={day} className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
                         <h2 className="font-bold text-center mb-4 text-gray-700 dark:text-gray-300">{dayTranslations[day]}</h2>
                         <div className="space-y-4">
-                            {classDetails.schedule?.sessions.filter(s => s.dayOfWeek === day).map(session => (
+                            {classDetails.schedule?.sessions.filter(s => s.dayOfWeek === day && s.teacher.id === currentUserId).map(session => (
                                 <div key={session.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
                                     <p className="font-bold text-sm">{session.subject}</p>
                                     <p className="text-xs text-gray-500">{session.startTime} - {session.endTime}</p>
@@ -218,7 +233,7 @@ const ClassPlannerPage = () => {
                                     />
                                 </div>
                             ))}
-                            {classDetails.schedule?.sessions.filter(s => s.dayOfWeek === day).length === 0 && (
+                            {classDetails.schedule?.sessions.filter(s => s.dayOfWeek === day && s.teacher.id === currentUserId).length === 0 && (
                                 <p className="text-center text-xs text-gray-400 italic py-8">Aucun cours ce jour.</p>
                             )}
                         </div>

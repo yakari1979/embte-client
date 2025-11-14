@@ -43,7 +43,7 @@ const PrivacyPolicyPage = () => {
                 <li>Permettre le bon déroulement des cours en ligne et la gestion des emplois du temps.</li>
                 <li>Permettre aux enseignants d'assurer le suivi pédagogique (notation, absences).</li>
                 <li>Mettre à disposition les enregistrements des cours à des fins de révision.</li>
-                <li>Générer des statistiques anonymisées pour le Ministère de l'Éducation Nationale afin de piloter les politiques éducatives.</li>
+                {/* <li>Générer des statistiques anonymisées pour le Ministère de l'Éducation Nationale afin de piloter les politiques éducatives.</li> */}
             </ul>
           </Article>
 

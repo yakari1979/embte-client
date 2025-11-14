@@ -907,7 +907,6 @@ export const getGlobalStats = (token: string) => {
 };
 
 
-
 export const listAllEstablishments = (token: string) => {
   return apiClient.get<EstablishmentSummary[]>('/moderator/establishments', {
       headers: { Authorization: `Bearer ${token}` }
@@ -919,8 +918,6 @@ export const getEstablishmentDetails = (establishmentId: string, token: string) 
       headers: { Authorization: `Bearer ${token}` }
   });
 };
-
-
 
 export const searchAllUsers = (query: string, token: string) => {
   return apiClient.get<SearchedUser[]>(`/moderator/users/search?q=${query}`, {
@@ -941,15 +938,11 @@ export const createModerator = (data: NewModeratorData, token: string) => {
 };
 
 
-
-
 export const createEstablishmentWithAdmin = (data: NewEstablishmentData, token: string) => {
   return apiClient.post('/moderator/establishments/create', data, {
       headers: { Authorization: `Bearer ${token}` }
   });
 };
-
-
 
 
 export const toggleEstablishmentSuspension = (establishmentId: string, token: string) => {
@@ -965,8 +958,6 @@ export const deleteEstablishment = (establishmentId: string, token: string) => {
 };
 
 
-
-// ... (au début, avec les autres types)
 
 export type PlanItemType = 'LESSON' | 'ASSIGNMENT' | 'REVIEW' | 'OTHER';
 
@@ -988,8 +979,6 @@ export interface UpdatePlanItemData {
   isCompleted?: boolean;
 }
 
-
-// ... (à la fin du fichier, avec les autres fonctions)
 export const createWeeklyPlanItem = (sessionId: string, data: NewPlanItemData, token: string) => {
     return apiClient.post(`/courses/sessions/${sessionId}/plan`, data, {
         headers: { Authorization: `Bearer ${token}` }
