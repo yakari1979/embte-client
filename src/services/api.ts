@@ -335,6 +335,7 @@ export interface SessionWithResources {
   endTime: string;
   teacher: Teacher;
   resources: Resource[];
+  weeklyPlanItems: WeeklyPlanItem[]; // <-- AJOUTER CETTE LIGNE
 }
 export interface MyCourseDetailsResponse {
   id: string;
@@ -961,6 +962,50 @@ export const deleteEstablishment = (establishmentId: string, token: string) => {
   return apiClient.delete(`/moderator/establishments/${establishmentId}`, {
       headers: { Authorization: `Bearer ${token}` }
   });
+};
+
+
+
+// ... (au début, avec les autres types)
+
+export type PlanItemType = 'LESSON' | 'ASSIGNMENT' | 'REVIEW' | 'OTHER';
+
+export interface WeeklyPlanItem {
+  id: string;
+  content: string;
+  type: PlanItemType;
+  isCompleted: boolean;
+  courseSessionId: string;
+}
+
+export interface NewPlanItemData {
+  content: string;
+  type: PlanItemType;
+}
+
+export interface UpdatePlanItemData {
+  content?: string;
+  isCompleted?: boolean;
+}
+
+
+// ... (à la fin du fichier, avec les autres fonctions)
+export const createWeeklyPlanItem = (sessionId: string, data: NewPlanItemData, token: string) => {
+    return apiClient.post(`/courses/sessions/${sessionId}/plan`, data, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+export const updateWeeklyPlanItem = (planItemId: string, data: UpdatePlanItemData, token: string) => {
+    return apiClient.put(`/courses/plan-items/${planItemId}`, data, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+export const deleteWeeklyPlanItem = (planItemId: string, token: string) => {
+    return apiClient.delete(`/courses/plan-items/${planItemId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
 };
 
 export default apiClient;
