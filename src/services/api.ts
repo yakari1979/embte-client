@@ -997,4 +997,45 @@ export const deleteWeeklyPlanItem = (planItemId: string, token: string) => {
     });
 };
 
+
+// --- NOUVEAUX TYPES ET FONCTIONS POUR LE PLAN DE RÉVISIONS ÉLÈVE ---
+
+export interface StudentPlanItem {
+  id: string;
+  goal: string;
+  isCompleted: boolean;
+  planDate: string; // Date en format ISO string
+  subject: string;
+}
+
+export interface NewStudentPlanData {
+  goal: string;
+  planDate: string;
+  subject: string;
+}
+
+export const getMyRevisionPlan = (token: string) => {
+  return apiClient.get<StudentPlanItem[]>('/users/my-revision-plan', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const createStudentPlanItem = (data: NewStudentPlanData, token: string) => {
+  return apiClient.post<StudentPlanItem>('/users/my-revision-plan', data, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const updateStudentPlanItem = (itemId: string, data: Partial<NewStudentPlanData & { isCompleted: boolean }>, token: string) => {
+  return apiClient.put(`/users/my-revision-plan/${itemId}`, data, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const deleteStudentPlanItem = (itemId: string, token: string) => {
+  return apiClient.delete(`/users/my-revision-plan/${itemId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
 export default apiClient;

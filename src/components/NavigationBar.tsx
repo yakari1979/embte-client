@@ -80,6 +80,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/my-grades" className={`nav-link ${pathname === '/my-grades' ? 'active' : ''}`}>Mes Notes</Link>
       {/* <Link href="/quantum-lab" className={`nav-link ${pathname === '/quantum-lab' ? 'active' : ''}`}>Laboratoire Quantique</Link>
       <Link href="/history-lab" className={`nav-link ${pathname === '/history-lab' ? 'active' : ''}`}>Laboratoire d'Histoire</Link> */}
+      <Link href="/dashboard/my-plan" className={`nav-link ${pathname === '/dashboard/my-plan' ? 'active' : ''}`}>Mon Plan de Réussite</Link>
       <Link href="/labs" className={`nav-link ${pathname === '/labs' ? 'active' : ''}`}>Laboratoire</Link>
       <Link href="/blog" className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}>Annonces</Link> {/* <-- AJOUTER */}
     </>
