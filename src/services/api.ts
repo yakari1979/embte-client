@@ -1038,4 +1038,25 @@ export const deleteStudentPlanItem = (itemId: string, token: string) => {
   });
 };
 
+export interface EstablishmentSummary {
+  id: string;
+  name: string;
+  isSuspended: boolean;
+  status: 'PENDING' | 'ACTIVE' | 'REJECTED' | 'SUSPENDED'; // Champ de statut
+  type: string; // Type d'établissement
+  createdAt: string; // Date de création
+  _count: {
+      users: number;
+  };
+}
+
+// ... (autres fonctions)
+
+// --- NOUVELLE FONCTION POUR GÉRER LES INSCRIPTIONS ---
+export const updateEstablishmentStatus = (establishmentId: string, status: 'ACTIVE' | 'REJECTED', token: string) => {
+  return apiClient.put(`/moderator/establishments/${establishmentId}/status`, { status }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
 export default apiClient;

@@ -43,6 +43,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/moderator/dashboard" className={`nav-link ${pathname.startsWith('/moderator/dashboard') ? 'active' : ''}`}>Vue d'Ensemble</Link>
       <Link href="/moderator/establishments" className={`nav-link ${pathname.startsWith('/moderator/establishments') ? 'active' : ''}`}>Établissements</Link>
       <Link href="/moderator/users" className={`nav-link ${pathname.startsWith('/moderator/users') ? 'active' : ''}`}>Utilisateurs</Link>
+      <Link href="/moderator/registrations" className={`nav-link ${pathname.startsWith('/moderator/registrations') ? 'active' : ''}`}>Registrations</Link>
       <Link href="/moderator/management" className={`nav-link ${pathname.startsWith('/moderator/management') ? 'active' : ''}`}>Gestion Modos</Link>
     </>
   );
