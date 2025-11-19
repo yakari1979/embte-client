@@ -840,14 +840,14 @@ export interface GlobalStats {
 
 
 
-export interface EstablishmentSummary {
-  id: string;
-  name: string;
-  isSuspended: boolean; 
-  _count: {
-      users: number;
-  };
-}
+// export interface EstablishmentSummary {
+//   id: string;
+//   name: string;
+//   isSuspended: boolean; 
+//   _count: {
+//       users: number;
+//   };
+// }
 
 export interface EstablishmentDetails {
   id: string;
