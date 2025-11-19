@@ -9,30 +9,76 @@ import {
     updateEstablishmentStatus,
     EstablishmentSummary 
 } from '@/services/api';
-import { Check, X, Clock, Building, Home, School } from 'lucide-react';
+import { Check, X, Clock, Building, Home, School, CheckCircle, Clipboard } from 'lucide-react';
+
 import Link from 'next/link';
 
 // Modal pour afficher les identifiants après approbation
+// const CredentialsModal: React.FC<{
+//     credentials: { identifiant: string; password: string };
+//     onClose: () => void;
+// }> = ({ credentials, onClose }) => (
+//     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+//         <div className="bg-surface rounded-lg shadow-xl w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
+//             <div className="p-6 border-b dark:border-gray-700">
+//                 <h2 className="text-xl font-bold text-text-primary">Approbation Réussie !</h2>
+//             </div>
+//             <div className="p-6">
+//                 <p className="text-sm mt-2 text-text-secondary">L'établissement est maintenant actif. Veuillez communiquer les identifiants temporaires suivants à son administrateur :</p>
+//                 <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg font-mono text-sm space-y-2">
+//                     <p><strong>Identifiant :</strong> <span className="text-blue-600 dark:text-blue-400">{credentials.identifiant}</span></p>
+//                     <p><strong>Mot de passe :</strong> <span className="text-blue-600 dark:text-blue-400">{credentials.password}</span></p>
+//                 </div>
+//                 <button onClick={onClose} className="btn-primary mt-6 w-full">Fermer</button>
+//             </div>
+//         </div>
+//     </div>
+// );
+
+
+// --- COMPOSANT MODAL MIS À JOUR AVEC UN BOUTON "COPIER" ---
 const CredentialsModal: React.FC<{
     credentials: { identifiant: string; password: string };
     onClose: () => void;
-}> = ({ credentials, onClose }) => (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
-        <div className="bg-surface rounded-lg shadow-xl w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
-            <div className="p-6 border-b dark:border-gray-700">
-                <h2 className="text-xl font-bold text-text-primary">Approbation Réussie !</h2>
-            </div>
-            <div className="p-6">
-                <p className="text-sm mt-2 text-text-secondary">L'établissement est maintenant actif. Veuillez communiquer les identifiants temporaires suivants à son administrateur :</p>
-                <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg font-mono text-sm space-y-2">
-                    <p><strong>Identifiant :</strong> <span className="text-blue-600 dark:text-blue-400">{credentials.identifiant}</span></p>
-                    <p><strong>Mot de passe :</strong> <span className="text-blue-600 dark:text-blue-400">{credentials.password}</span></p>
+}> = ({ credentials, onClose }) => {
+    const [copied, setCopied] = useState('');
+
+    const copyToClipboard = (text: string, field: 'id' | 'pw') => {
+        navigator.clipboard.writeText(text);
+        setCopied(field);
+        setTimeout(() => setCopied(''), 2000);
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+            <div className="bg-surface rounded-lg shadow-xl w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
+                <div className="p-6 border-b dark:border-gray-700">
+                    <h2 className="text-xl font-bold text-text-primary">Approbation Réussie !</h2>
                 </div>
-                <button onClick={onClose} className="btn-primary mt-6 w-full">Fermer</button>
+                <div className="p-6">
+                    <p className="text-sm mt-2 text-text-secondary">L'établissement est maintenant actif. Veuillez communiquer les identifiants suivants à son administrateur :</p>
+                    <div className="mt-4 space-y-3">
+                        {/* Identifiant */}
+                        <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
+                            <span className="font-mono text-sm text-text-secondary"><strong>Identifiant :</strong> <span className="text-blue-600 dark:text-blue-400">{credentials.identifiant}</span></span>
+                            <button onClick={() => copyToClipboard(credentials.identifiant, 'id')} title="Copier l'identifiant">
+                                {copied === 'id' ? <CheckCircle className="h-5 w-5 text-green-500" /> : <Clipboard className="h-5 w-5 text-gray-500" />}
+                            </button>
+                        </div>
+                        {/* Mot de passe */}
+                         <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
+                            <span className="font-mono text-sm text-text-secondary"><strong>Mot de passe :</strong> <span className="text-blue-600 dark:text-blue-400">{credentials.password}</span></span>
+                            <button onClick={() => copyToClipboard(credentials.password, 'pw')} title="Copier le mot de passe">
+                               {copied === 'pw' ? <CheckCircle className="h-5 w-5 text-green-500" /> : <Clipboard className="h-5 w-5 text-gray-500" />}
+                            </button>
+                        </div>
+                    </div>
+                    <button onClick={onClose} className="btn-primary mt-6 w-full">Fermer</button>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const RegistrationManagementPage = () => {
     const [establishments, setEstablishments] = useState<EstablishmentSummary[]>([]);
