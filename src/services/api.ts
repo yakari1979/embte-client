@@ -913,11 +913,11 @@ export const listAllEstablishments = (token: string) => {
   });
 };
 
-export const getEstablishmentDetails = (establishmentId: string, token: string) => {
-  return apiClient.get<EstablishmentDetails>(`/moderator/establishments/${establishmentId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-  });
-};
+// export const getEstablishmentDetails = (establishmentId: string, token: string) => {
+//   return apiClient.get<EstablishmentDetails>(`/moderator/establishments/${establishmentId}`, {
+//       headers: { Authorization: `Bearer ${token}` }
+//   });
+// };
 
 export const searchAllUsers = (query: string, token: string) => {
   return apiClient.get<SearchedUser[]>(`/moderator/users/search?q=${query}`, {
@@ -1058,5 +1058,45 @@ export const updateEstablishmentStatus = (establishmentId: string, status: 'ACTI
       headers: { Authorization: `Bearer ${token}` }
   });
 };
+
+
+export interface AdminInDetails {
+    id: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    identifiant: string;
+}
+
+export interface ClassInDetails {
+    id: string;
+    name: string;
+    _count: {
+        students: number;
+    };
+}
+
+// Le type principal pour la page de détails
+export interface EstablishmentDetails {
+  id: string;
+  name: string;
+  type: string;
+  address: string;
+  status: 'PENDING' | 'ACTIVE' | 'REJECTED' | 'SUSPENDED';
+  createdAt: string;
+  // On s'attend à recevoir un tableau d'utilisateurs
+  users: AdminInDetails[];
+  classes: ClassInDetails[];
+}
+
+
+// La fonction existante est déjà correcte
+export const getEstablishmentDetails = (establishmentId: string, token: string) => {
+  return apiClient.get<EstablishmentDetails>(`/moderator/establishments/${establishmentId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
 
 export default apiClient;
