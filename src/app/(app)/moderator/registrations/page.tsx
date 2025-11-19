@@ -118,7 +118,7 @@ const RegistrationManagementPage = () => {
                                                 <Building className="h-5 w-5 mr-3 text-text-secondary" />
                                                 <div >
                                                     <div className="font-medium text-text-primary">{est.name}</div>
-                                                    <Link href={`/moderator/establishments/${est.id}`} className="text-xs text-blue-600 hover:underline">
+                                                    <Link href={`/moderator/registrations/${est.id}`} className="text-xs text-blue-600 hover:underline">
                                                         Voir détails
                                                     </Link>
                                                 </div>
