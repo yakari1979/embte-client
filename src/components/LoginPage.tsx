@@ -15,7 +15,7 @@ import { jwtDecode } from 'jwt-decode'; // <-- Importer cette librairie
 
 // --- NOUVEAU TYPE ---
 interface DecodedToken {
-  role: 'ADMIN' | 'TEACHER' | 'STUDENT' | 'MODERATOR';
+  role: 'ADMIN' | 'TEACHER' | 'STUDENT' | 'MODERATOR'| 'PARENT';
   // ... autres champs du token
 }
 
@@ -45,6 +45,8 @@ const LoginPage: React.FC = () => {
       
       if (decodedToken.role === 'MODERATOR') {
         router.push('/moderator/dashboard'); // Redirection vers le tableau de bord modérateur
+      } else if (decodedToken.role === 'PARENT') { // <-- AJOUTER CETTE CONDITION
+        router.push('/parent/dashboard'); // Redirection vers le tableau de bord parent  
       } else {
         router.push('/dashboard'); // Redirection normale pour les autres
       }

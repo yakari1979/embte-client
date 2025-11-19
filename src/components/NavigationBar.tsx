@@ -87,6 +87,14 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
     </>
   );
 
+  // --- NOUVEAU : LIENS POUR LE PARENT ---
+  const parentLinks = (
+    <>
+      <Link href="/parent/dashboard" className={`nav-link ${pathname.startsWith('/parent') ? 'active' : ''}`}>Tableau de Bord</Link>
+      <Link href="/blog" className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}>Annonces</Link>
+    </>
+  );
+
   return (
     <>
       {/* --- MODIFIÉ : Le z-index de la barre de navigation est maintenant plus bas que celui du panneau --- */}
@@ -120,6 +128,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
               {user.role === 'ADMIN' && adminLinks}
               {user.role === 'TEACHER' && teacherLinks}
               {user.role === 'STUDENT' && studentLinks}
+              {user.role === 'PARENT' && parentLinks} {/* <-- AJOUTER LE RÔLE PARENT ICI */}
             </div>
 
             <div className="flex items-center gap-4">
@@ -159,6 +168,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
                 {user.role === 'ADMIN' && adminLinks}
                 {user.role === 'TEACHER' && teacherLinks}
                 {user.role === 'STUDENT' && studentLinks}
+                {user.role === 'PARENT' && parentLinks} {/* <-- AJOUTER LE RÔLE PARENT ICI */}
             </div>
             
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-4">

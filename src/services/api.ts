@@ -1099,4 +1099,114 @@ export const getEstablishmentDetails = (establishmentId: string, token: string) 
 
 
 
+
+// services/api.ts
+
+// ... (toutes vos fonctions et imports existants)
+
+// =======================================================
+//   NOUVELLE SECTION : GESTION DES PARENTS (POUR L'ADMIN)
+// =======================================================
+
+// Type pour la création d'un parent
+export interface NewParentData {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phone?: string;
+}
+
+// Fonction pour créer un compte parent
+export const createParent = (parentData: NewParentData, token: string) => {
+  return apiClient.post('/establishment/parents', parentData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// Fonction pour lier un élève à un parent
+export const assignStudentToParent = (parentId: string, studentId: string, token: string) => {
+  return apiClient.post(`/establishment/parents/${parentId}/assign-student`, { studentId }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// =======================================================
+//   NOUVELLE SECTION : ESPACE PARENT (POUR LE PARENT CONNECTÉ)
+// =======================================================
+
+// --- TYPES POUR LE DASHBOARD PARENT ---
+
+// Résumé d'un enfant pour le tableau de bord
+export interface ChildSummary {
+  id: string;
+  firstName: string;
+  lastName: string;
+  enrolledClass: { name: string } | null;
+}
+
+// Détails d'un professeur
+export interface TeacherDetails {
+    firstName: string;
+    lastName: string;
+}
+
+// Détails d'une note
+export interface ChildGrade {
+    evaluation: { title: string; subject: string; date: string; };
+    score: number | null;
+}
+
+// Détails d'une absence
+export interface ChildAttendance {
+    date: string;
+    session: { subject: string; };
+}
+
+// Emploi du temps complet
+export interface ChildSchedule {
+    sessions: {
+        id: string; // <-- LA CORRECTION EST ICI, AJOUTEZ CETTE LIGNE
+        dayOfWeek: string;
+        startTime: string;
+        endTime: string;
+        subject: string;
+        teacher: TeacherDetails;
+    }[];
+}
+
+// La réponse complète de l'API pour les détails d'un enfant
+export interface ChildDetailsResponse {
+    studentInfo: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        className: string | null;
+        teachers: TeacherDetails[];
+    };
+    grades: ChildGrade[];
+    attendance: ChildAttendance[];
+    schedule: ChildSchedule | null;
+}
+
+
+// --- FONCTIONS API POUR L'ESPACE PARENT ---
+
+// Récupère la liste des enfants du parent connecté
+export const getMyChildren = (token: string) => {
+    return apiClient.get<ChildSummary[]>('/users/my-children', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+// Récupère les détails complets d'un enfant spécifique
+export const getChildDetails = (studentId: string, token: string) => {
+    return apiClient.get<ChildDetailsResponse>(`/users/my-children/${studentId}/details`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+// ... (le reste de votre fichier api.ts)
+
+
 export default apiClient;
