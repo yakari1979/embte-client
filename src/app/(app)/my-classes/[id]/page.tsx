@@ -9,10 +9,10 @@
 // import AttendanceModal from '@/components/AttendanceModal';
 // import { jwtDecode } from 'jwt-decode';
 // import dayjs from 'dayjs';
-// import isBetween from 'dayjs/plugin/isBetween'; // <-- 1. IMPORTER LE PLUGIN
+// import isBetween from 'dayjs/plugin/isBetween';
 // import 'dayjs/locale/fr';
 
-// dayjs.extend(isBetween); // <-- 2. ACTIVER LE PLUGIN
+// dayjs.extend(isBetween);
 // dayjs.locale('fr');
 
 // // --- TYPES ---
@@ -31,46 +31,41 @@
 // interface ClassDetails { name: string; students: Student[]; schedule: { sessions: Session[] } | null; }
 // interface DecodedToken { userId: string; }
 
-// // --- COMPOSANT INTELLIGENT POUR UNE SESSION (CORRIGÉ) ---
+// // --- COMPOSANT INTELLIGENT POUR UNE SESSION (LOGIQUE FINALE CORRIGÉE) ---
 // const SessionItem: React.FC<{ session: Session; day: dayjs.Dayjs; currentUserId: string; onOpenModal: (session: Session, day: dayjs.Dayjs) => void; }> = ({ session, day, currentUserId, onOpenModal }) => {
-//   const router = useRouter();
 //   const now = dayjs();
   
-//   // On récupère l'heure de début ET de fin
 //   const startDateTime = day.hour(parseInt(session.startTime.split(':')[0])).minute(parseInt(session.startTime.split(':')[1]));
 //   const endDateTime = day.hour(parseInt(session.endTime.split(':')[0])).minute(parseInt(session.endTime.split(':')[1]));
   
-
-//   // --- LOGIQUE CORRIGÉE ICI ---
-//   const isPast = now.isAfter(endDateTime); // Le cours est passé s'il est après l'heure de FIN
-
-//   const isCurrent = now.isBetween(startDateTime, endDateTime); // Le cours est en cours s'il est ENTRE le début et la fin
-//   const isToday = day.isSame(now, 'day');
+//   const isPast = now.isAfter(endDateTime);
+//   const isCurrent = now.isBetween(startDateTime, endDateTime);
 //   const isMyCourse = session.teacher.id === currentUserId;
 
-
-//   const handleAction = () => {
-//     if (isPast) {
-//       router.push(`/session-summary/${session.id}`);
-//     } else {
-//       onOpenModal(session, day);
-//     }
-//   };
+//   const isHighlighted = isMyCourse && isCurrent;
 
 //   return (
-//     <div className={`flex justify-between items-center p-3 bg-background rounded-md mt-1 border ${isToday ? 'border-blue-500' : 'border-gray-200 dark:border-gray-700'}`}>
-//       <div>
+//     <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 bg-background rounded-md mt-1 border ${isHighlighted ? 'border-blue-500 ring-2 ring-blue-200 dark:ring-blue-800/50' : 'border-gray-200 dark:border-gray-700'}`}>
+//       <div className="mb-2 sm:mb-0">
 //         <p className="font-semibold">{session.subject}</p>
-//         <p className="text-sm text-text-secondary">{session.startTime}-{session.endTime} ({session.teacher.firstName.charAt(0)}. {session.teacher.lastName})</p>
+//         <p className="text-sm text-text-secondary">{session.startTime}-{session.endTime} (Prof: {session.teacher.firstName.charAt(0)}. {session.teacher.lastName})</p>
 //       </div>
       
-//       {/* --- CONDITION D'AFFICHAGE CORRIGÉE --- */}
-//       {isMyCourse && (isCurrent || isPast) ? (
-//         <button onClick={handleAction} className={isPast ? "btn-secondary" : "btn-primary"}>
-//           {isPast ? <ClipboardList className="h-4 w-4"/> : <CheckSquare className="h-4 w-4"/>}
-//           <span>{isPast ? "Bilan" : "Présences"}</span>
-//         </button>
-//       ) : null}
+//       {/* Affiche les boutons d'action uniquement pour mes cours passés ou présents */}
+//       {isMyCourse && (isCurrent || isPast) && (
+//         <div className="flex items-center space-x-2 self-end sm:self-center">
+//           <button onClick={() => onOpenModal(session, day)} className="btn-primary">
+//             <CheckSquare className="h-4 w-4"/>
+//             <span>Présences</span>
+//           </button>
+//           {isPast && (
+//              <Link href={`/session-summary/${session.id}`} className="btn-secondary">
+//                 <ClipboardList className="h-4 w-4"/>
+//                 <span>Bilan</span>
+//              </Link>
+//           )}
+//         </div>
+//       )}
 //     </div>
 //   );
 // };
@@ -243,6 +238,7 @@
 
 
 
+
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
@@ -260,7 +256,7 @@ import 'dayjs/locale/fr';
 dayjs.extend(isBetween);
 dayjs.locale('fr');
 
-// --- TYPES ---
+// --- TYPES MIS À JOUR ---
 interface Student { id: string; firstName: string; lastName: string; }
 interface Teacher { id: string; firstName: string; lastName: string; }
 interface AttendanceRecord { status: string; student: Student; date: string; }
@@ -271,12 +267,13 @@ interface Session {
   startTime: string; 
   endTime: string; 
   teacher: Teacher;
-  attendanceRecords: AttendanceRecord[];
+  // La clé peut ne pas exister si aucune présence n'a jamais été enregistrée
+  attendanceRecords?: AttendanceRecord[]; 
 }
 interface ClassDetails { name: string; students: Student[]; schedule: { sessions: Session[] } | null; }
 interface DecodedToken { userId: string; }
 
-// --- COMPOSANT INTELLIGENT POUR UNE SESSION (LOGIQUE FINALE CORRIGÉE) ---
+// --- COMPOSANT INTELLIGENT POUR UNE SESSION ---
 const SessionItem: React.FC<{ session: Session; day: dayjs.Dayjs; currentUserId: string; onOpenModal: (session: Session, day: dayjs.Dayjs) => void; }> = ({ session, day, currentUserId, onOpenModal }) => {
   const now = dayjs();
   
@@ -296,7 +293,6 @@ const SessionItem: React.FC<{ session: Session; day: dayjs.Dayjs; currentUserId:
         <p className="text-sm text-text-secondary">{session.startTime}-{session.endTime} (Prof: {session.teacher.firstName.charAt(0)}. {session.teacher.lastName})</p>
       </div>
       
-      {/* Affiche les boutons d'action uniquement pour mes cours passés ou présents */}
       {isMyCourse && (isCurrent || isPast) && (
         <div className="flex items-center space-x-2 self-end sm:self-center">
           <button onClick={() => onOpenModal(session, day)} className="btn-primary">
@@ -342,9 +338,10 @@ const ClassDetailPageForTeacher = () => {
     } catch (err: any) {
       setError(err.response?.data?.message || "Impossible de charger les détails.");
     } finally {
+      // On s'assure de ne mettre le loading à false qu'une seule fois
       if (loading) setLoading(false);
     }
-  }, [classId, loading]);
+  }, [classId, loading]); // `loading` est ajouté pour éviter un re-fetch inutile si loading est déjà false
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -359,14 +356,24 @@ const ClassDetailPageForTeacher = () => {
   
   const recentAbsences = useMemo(() => {
     if (!classDetails?.schedule?.sessions) return [];
+
     const allAbsences: { student: Student; session: Session; date: string }[] = [];
+    
     classDetails.schedule.sessions.forEach(session => {
-      session.attendanceRecords.forEach(record => {
-        if (record.status === 'ABSENT') {
-          allAbsences.push({ student: record.student, session, date: record.date });
-        }
-      });
+      // --- LA CORRECTION EST ICI ---
+      // On vérifie que `attendanceRecords` est bien un tableau avant de boucler dessus.
+      if (session.attendanceRecords && Array.isArray(session.attendanceRecords)) {
+        session.attendanceRecords.forEach(record => {
+          if (record.status === 'ABSENT') {
+            allAbsences.push({ student: record.student, session, date: record.date });
+          }
+        });
+      }
     });
+
+    // On trie par date la plus récente
+    allAbsences.sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
+
     return allAbsences.slice(0, 10);
   }, [classDetails]);
 
@@ -379,9 +386,9 @@ const ClassDetailPageForTeacher = () => {
   const endOfWeek = currentDate.endOf('week');
   const weekDays = Array.from({ length: 7 }, (_, i) => startOfWeek.add(i, 'day'));
 
-  if (loading) return <p className="text-center p-8">Chargement...</p>;
+  if (loading) return <p className="text-center p-8">Chargement des détails de la classe...</p>;
   if (error) return <p className="text-red-500 text-center p-4">{error}</p>;
-  if (!classDetails) return <p className="text-center p-8">Aucun détail trouvé.</p>;
+  if (!classDetails) return <p className="text-center p-8">Aucun détail trouvé pour cette classe.</p>;
 
   return (
     <div>
