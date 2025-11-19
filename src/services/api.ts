@@ -1206,7 +1206,36 @@ export const getChildDetails = (studentId: string, token: string) => {
     });
 };
 
-// ... (le reste de votre fichier api.ts)
 
+// --- NOUVEAU TYPE POUR LA RECHERCHE DE PARENTS ---
+export interface ParentSearchResult {
+  id: string;
+  firstName: string;
+  lastName: string;
+  identifiant: string;
+}
+
+// --- METTRE À JOUR LE TYPE UserDetails ---
+export interface UserDetails {
+  id: string;
+  firstName: string;
+  lastName: string;
+  identifiant: string;
+  email: string | null;
+  role: 'STUDENT' | 'TEACHER' | 'PARENT'; // Ajouter PARENT
+  enrolledClass: { name: string } | null;
+  parent: { // Ajouter le champ parent optionnel
+    id: string;
+    firstName: string;
+    lastName: string;
+  } | null;
+}
+
+// --- NOUVELLE FONCTION POUR RECHERCHER DES PARENTS ---
+export const searchParents = (query: string, token: string) => {
+  return apiClient.get<ParentSearchResult[]>(`/establishment/parents/search?q=${query}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
 
 export default apiClient;
