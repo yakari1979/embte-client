@@ -1238,4 +1238,47 @@ export const searchParents = (query: string, token: string) => {
   });
 };
 
+
+
+
+
+// pour le systeme de recommandation
+
+// --- NOUVEAUX TYPES POUR LE PROFIL D'APPRENTISSAGE ---
+export interface SubjectAverage {
+  subject: string;
+  average: number;
+}
+
+export interface LearningProfile {
+  summary: string;
+  strengths: SubjectAverage[];
+  weaknesses: SubjectAverage[];
+  fullProfile: SubjectAverage[];
+}
+
+// --- NOUVELLE FONCTION ---
+export const getMyLearningProfile = (token: string) => {
+    return apiClient.get<LearningProfile>('/users/my-learning-profile', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
+export interface RecommendedResource { id: string; title: string; type: 'VIDEO' | 'PDF'; url: string; source: string; }
+export interface RecommendationResponse { aiMessage: string; recommendedResources: RecommendedResource[]; }
+export const getMyRecommendations = (token: string) => {
+    return apiClient.post<RecommendationResponse>('/ai/recommendations/for-student', {}, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
+export const trackResourceClick = (resourceId: string, token: string) => {
+  return apiClient.post(`/library/resources/${resourceId}/track-click`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
 export default apiClient;

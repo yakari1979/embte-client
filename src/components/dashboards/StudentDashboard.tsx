@@ -1,205 +1,3 @@
-// "use client";
-
-// import React, { useState, useEffect } from 'react';
-// import { getMyStudentSchedule, getMyProfile } from '@/services/api';
-// import Cookies from 'js-cookie';
-// import { Clock, BookOpen, CalendarDays, Video, User, Building2 } from 'lucide-react';
-// import dayjs from 'dayjs';
-// import 'dayjs/locale/fr';
-// import Link from 'next/link';
-
-// dayjs.locale('fr');
-
-// // --- INTERFACES POUR NOS DONNÉES ---
-// interface CourseSession {
-//   id: string;
-//   subject: string;
-//   dayOfWeek: string;
-//   startTime: string;
-//   endTime: string;
-//   teacher: {
-//     firstName: string;
-//     lastName: string;
-//   };
-// }
-
-// interface ScheduleResponse {
-//     className: string;
-//     schedule?: { // On rend `schedule` optionnel pour mieux gérer les cas vides
-//         sessions: CourseSession[];
-//     }
-// }
-
-// interface UserProfile {
-//   firstName: string;
-//   lastName:string;
-//   establishment: {
-//     name: string;
-//   };
-// }
-
-// // --- LE COMPOSANT PRINCIPAL ---
-// const StudentDashboard = () => {
-//   const [scheduleData, setScheduleData] = useState<ScheduleResponse | null>(null);
-//   const [profile, setProfile] = useState<UserProfile | null>(null);
-//   const [todaysCourses, setTodaysCourses] = useState<CourseSession[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-
-//   const dayMap: { [key: string]: number } = {
-//     SUNDAY: 0, MONDAY: 1, TUESDAY: 2, WEDNESDAY: 3, THURSDAY: 4, FRIDAY: 5, SATURDAY: 6
-//   };
-//   const dayTranslations: Record<string, string> = {
-//       MONDAY: "Lundi", TUESDAY: "Mardi", WEDNESDAY: "Mercredi", THURSDAY: "Jeudi",
-//       FRIDAY: "Vendredi", SATURDAY: "Samedi", SUNDAY: "Dimanche"
-//   };
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const token = Cookies.get('token');
-//       if (!token) {
-//         setError("Authentification requise.");
-//         setLoading(false);
-//         return;
-//       }
-
-//       try {
-//         const [profileRes, scheduleRes] = await Promise.all([
-//           getMyProfile(token),
-//           getMyStudentSchedule(token)
-//         ]);
-
-//         const allSessions = scheduleRes.data.schedule?.sessions || [];
-
-//         setProfile(profileRes.data);
-//         setScheduleData(scheduleRes.data);
-
-//         const todayIndex = dayjs().day();
-//         const todaySessions = allSessions
-//           .filter((session: CourseSession) => dayMap[session.dayOfWeek.toUpperCase()] === todayIndex)
-//           .sort((a: CourseSession, b: CourseSession) => a.startTime.localeCompare(b.startTime));
-
-//         setTodaysCourses(todaySessions);
-
-//       } catch (err: any) {
-//         setError(err.response?.data?.message || "Impossible de charger vos informations.");
-//         console.error(err);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   if (loading) return <div className="text-center p-8"><p>Chargement de votre tableau de bord...</p></div>;
-//   if (error) return <div className="text-center p-4 bg-red-100 text-red-600 rounded-lg">{error}</div>;
-
-//   return (
-//     <div className="space-y-8">
-//       {/* --- SECTION 1 : EN-TÊTE DE BIENVENUE --- */}
-//       <div className="bg-surface p-6 rounded-lg shadow-md">
-//         {profile && (
-//             <>
-//                 <h1 className="text-3xl font-bold text-text-primary">
-//                     Bienvenue, {profile.firstName}
-//                 </h1>
-//                 <div className="mt-2 flex flex-col sm:flex-row sm:items-center text-text-secondary gap-x-6 gap-y-1">
-//                     {scheduleData?.className && (
-//                         <p className="text-md">Classe de <span className="font-semibold text-primary">{scheduleData.className}</span></p>
-//                     )}
-//                     <div className="flex items-center text-md">
-//                         <Building2 className="h-4 w-4 mr-2" />
-//                         <span>{profile.establishment.name}</span>
-//                     </div>
-//                 </div>
-//             </>
-//         )}
-//       </div>
-
-//       <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-//         {/* --- SECTION 2 : COURS DU JOUR --- */}
-//       <div className="lg:col-span-2 space-y-8"> 
-//         <h2 className="text-2xl font-bold text-text-primary mb-4">
-//             Cours d'aujourd'hui ({dayjs().format('dddd D MMMM')})
-//         </h2>
-//         {todaysCourses.length > 0 ? (
-//           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-//             {todaysCourses.map((session: CourseSession) => (
-//               <div key={session.id} className="bg-surface p-4 rounded-lg shadow-md border-l-4 border-blue-500">
-//                 <p className="text-xl font-bold text-primary">{session.subject}</p>
-//                 <p className="text-md text-text-secondary flex items-center mt-1">
-//                   <User className="h-4 w-4 mr-2" /> {`avec ${session.teacher.firstName} ${session.teacher.lastName}`}
-//                 </p>
-//                 <div className="flex items-center text-sm text-text-subtle mt-2">
-//                   <Clock className="h-4 w-4 mr-2" />
-//                   <span>{session.startTime} - {session.endTime}</span>
-//                 </div>
-//                 <Link href={`/class-session/${session.id}`} className="mt-4 inline-block w-full">
-//                   <button className="w-full flex items-center justify-center space-x-2 bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
-//                     <Video className="h-5 w-5" />
-//                     <span>Rejoindre le cours</span>
-//                   </button>
-//                 </Link>
-//               </div>
-//             ))}
-//           </div>
-//         ) : (
-//           <div className="text-center py-12 px-6 bg-surface rounded-lg">
-//             <CalendarDays className="mx-auto h-12 w-12 text-gray-400" />
-//             <p className="mt-4 text-text-secondary">Aucun cours n'est programmé pour aujourd'hui. Profitez de votre journée !</p>
-//           </div>
-//         )}
-//       </div>
-
-//       {/* --- SECTION 3 : EMPLOI DU TEMPS COMPLET --- */}
-//       <div className="lg:col-span-1 space-y-8">
-//         <h2 className="text-2xl font-bold text-text-primary mb-4">Emploi du Temps de la Semaine</h2>
-//         <div className="bg-surface p-6 rounded-lg shadow-md">
-//           {scheduleData?.schedule && scheduleData.schedule.sessions.length > 0 ? (
-//             <div className="space-y-4">
-//               {Object.entries(
-//                 scheduleData.schedule.sessions.reduce((acc: Record<string, CourseSession[]>, session: CourseSession) => {
-//                   (acc[session.dayOfWeek] = acc[session.dayOfWeek] || []).push(session);
-//                   return acc;
-//                 }, {})
-//               ).sort(([dayA], [dayB]) => dayOrder.indexOf(dayA) - dayOrder.indexOf(dayB))
-//               .map(([day, sessions]) => (
-//                 <div key={day}>
-//                     <h3 className="font-semibold text-text-secondary">{dayTranslations[day]}</h3>
-//                     <ul className="mt-2 space-y-2">
-//                         {sessions.sort((a,b) => a.startTime.localeCompare(b.startTime)).map((session) => (
-//                              <li key={session.id} className="p-3 bg-background rounded-md border text-sm">
-//                                 <p className="font-semibold flex items-center"><BookOpen className="h-4 w-4 mr-2" />{session.subject}</p>
-//                                 <p className="text-text-secondary flex items-center mt-1"><User className="h-4 w-4 mr-2" />{`${session.teacher.firstName} ${session.teacher.lastName}`}</p>
-//                                 <p className="text-text-subtle flex items-center mt-1"><Clock className="h-4 w-4 mr-2" />{`${session.startTime} - ${session.endTime}`}</p>
-//                              </li>
-//                         ))}
-//                     </ul>
-//                 </div>
-//               ))}
-//             </div>
-//           ) : (
-//             <p className="text-center text-text-subtle italic py-8">L'emploi du temps de votre classe n'a pas encore été défini.</p>
-//           )}
-//         </div>
-//       </div>
-//       </div>
-
-//     </div>
-//   );
-// };
-
-// export default StudentDashboard;
-
-// // Helper pour le tri
-// const dayOrder = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
-
-
-
-
-
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -211,6 +9,8 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/fr';
+import RecommendationWidget from '@/components/RecommendationWidget'; // Importez le nouveau
+import LearningProfileWidget from '@/components/LearningProfileWidget'; // Importez le composant
 
 // --- Configuration de Day.js ---
 dayjs.extend(isBetween);
@@ -386,6 +186,9 @@ const StudentDashboard = () => {
         )}
       </div>
 
+       {/* --- AJOUTEZ LE NOUVEAU WIDGET DE RECOMMANDATION ICI --- */}
+       <RecommendationWidget />
+
       {/* --- NOUVELLE SECTION : NOTIFICATIONS --- */}
      {/* --- SECTION NOTIFICATIONS (MAINTENANT AVEC BOUTON FERMER) --- */}
      {notifications.length > 0 && (
@@ -416,6 +219,9 @@ const StudentDashboard = () => {
             </div>
           </div>
       )}
+
+      {/* --- AJOUTEZ LE NOUVEAU WIDGET ICI --- */}
+      <LearningProfileWidget />
       
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
         {/* --- COURS DU JOUR (colonne principale) --- */}
