@@ -1281,4 +1281,32 @@ export const trackResourceClick = (resourceId: string, token: string) => {
 };
 
 
+
+
+// --- NOUVEAUX TYPES POUR L'ASSISTANT DU PROFESSEUR ---
+export interface DifficultSubject {
+  subject: string;
+  average: number;
+}
+
+export interface StrugglingStudent {
+  id: string;
+  name: string;
+  average: number;
+}
+
+export interface PedagogicalInsightsResponse {
+  aiSummary: string[];
+  difficultSubjects: DifficultSubject[];
+  strugglingStudents: StrugglingStudent[];
+}
+
+// --- NOUVELLE FONCTION ---
+export const getPedagogicalInsights = (classId: string, token: string) => {
+    return apiClient.get<PedagogicalInsightsResponse>(`/users/my-classes/${classId}/pedagogical-insights`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
 export default apiClient;
