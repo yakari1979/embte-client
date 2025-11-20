@@ -44,6 +44,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/moderator/establishments" className={`nav-link ${pathname.startsWith('/moderator/establishments') ? 'active' : ''}`}>Établissements</Link>
       <Link href="/moderator/users" className={`nav-link ${pathname.startsWith('/moderator/users') ? 'active' : ''}`}>Utilisateurs</Link>
       <Link href="/moderator/registrations" className={`nav-link ${pathname.startsWith('/moderator/registrations') ? 'active' : ''}`}>Registrations</Link>
+      <Link href="/moderator/resources" className={`nav-link ${pathname.startsWith('/moderator/resources') ? 'active' : ''}`}>Bibliothèque</Link>
       <Link href="/moderator/management" className={`nav-link ${pathname.startsWith('/moderator/management') ? 'active' : ''}`}>Gestion Modos</Link>
     </>
   );
@@ -68,7 +69,6 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       {/* <Link href="/quantum-lab" className={`nav-link ${pathname === '/quantum-lab' ? 'active' : ''}`}>Laboratoire Quantique</Link>
       <Link href="/history-lab" className={`nav-link ${pathname === '/history-lab' ? 'active' : ''}`}>Laboratoire d'Histoire</Link>
       <Link href="/philosophy-lab" className={`nav-link ${pathname === '/philosophy-lab' ? 'active' : ''}`}>Laboratoire de phylo</Link> */}
-      <Link href="/moderator/resources" className={`nav-link ${pathname.startsWith('/moderator/resources') ? 'active' : ''}`}>Bibliothèque</Link>
       <Link href="/dashboard/weekly-planner" className={`nav-link ${pathname === '/dashboard/weekly-planner' ? 'active' : ''}`}>Organiseur hebdo</Link>
       <Link href="/labs" className={`nav-link ${pathname === '/labs' ? 'active' : ''}`}>Laboratoire</Link>
       <Link href="/blog" className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}>Annonces</Link> {/* <-- AJOUTER */}
