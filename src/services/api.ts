@@ -1240,6 +1240,67 @@ export const searchParents = (query: string, token: string) => {
 
 
 
+// =======================================================
+//   NOUVELLE SECTION : GESTION DE LA BIBLIOTHÈQUE (MODÉRATEUR)
+// =======================================================
+
+export type ResourceType = 'VIDEO' | 'PDF' | 'LINK' | 'BOOK';
+
+export interface ExternalResource {
+  id: string;
+  title: string;
+  description?: string;
+  type: ResourceType;
+  url: string;
+  thumbnailUrl?: string;
+  source: string;
+  subject: string;
+  addedBy?: { // Optionnel car non présent sur la route publique
+      firstName: string;
+      lastName: string;
+  };
+  createdAt: string;
+}
+
+export interface NewExternalResourceData {
+  title: string;
+  description?: string;
+  type: ResourceType;
+  url: string;
+  thumbnailUrl?: string;
+  source: string;
+  subject: string;
+}
+
+// Lister toutes les ressources pour l'admin
+export const listAllAdminResources = (token: string) => {
+    return apiClient.get<ExternalResource[]>('/library/admin/resources', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+// Créer une nouvelle ressource
+export const createExternalResource = (data: NewExternalResourceData, token: string) => {
+    return apiClient.post<ExternalResource>('/library/admin/resources', data, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+// Mettre à jour une ressource
+export const updateExternalResource = (resourceId: string, data: NewExternalResourceData, token: string) => {
+    return apiClient.put<ExternalResource>(`/library/admin/resources/${resourceId}`, data, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+// Supprimer une ressource
+export const deleteExternalResource = (resourceId: string, token: string) => {
+    return apiClient.delete(`/library/admin/resources/${resourceId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
 
 
 // pour le systeme de recommandation
