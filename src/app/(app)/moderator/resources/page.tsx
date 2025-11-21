@@ -13,6 +13,20 @@ import { PlusCircle, Edit, Trash2, Video, FileText, Link as LinkIcon, Book, Load
 const MATIERES = ["Mathématiques", "Physique-Chimie", "SVT", "Français", "Histoire-Géographie", "Anglais", "Philosophie"];
 const SOURCES = ["École au Sénégal", "Prof Express", "Khan Academy", "Autre"];
 
+
+function isValidYoutubeUrl(url: string): boolean {
+    const youtubeRegex =
+        /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[A-Za-z0-9_-]{11}(\S*)?$/;
+    return youtubeRegex.test(url.trim());
+}
+
+function extractYoutubeId(url: string): string | null {
+    const regex = /(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+}
+
+
 // --- SOUS-COMPOSANT : MODAL DE CRÉATION/ÉDITION (MIS À JOUR) ---
 const ResourceModal: React.FC<{
     isOpen: boolean;
@@ -39,12 +53,53 @@ const ResourceModal: React.FC<{
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value as ResourceType }));
     };
 
+    // const handleSubmit = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     setLoading(true);
+    //     const token = Cookies.get('token');
+    //     if (!token) { alert("Session expirée"); setLoading(false); return; }
+        
+    //     try {
+    //         if (resource) {
+    //             await updateExternalResource(resource.id, formData, token);
+    //         } else {
+    //             await createExternalResource(formData, token);
+    //         }
+    //         onSave();
+    //         onClose();
+    //     } catch (error) {
+    //         alert("Erreur lors de la sauvegarde.");
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+    
+        // --- Validation YouTube uniquement si type = VIDEO ---
+        if (formData.type === "VIDEO") {
+    
+            if (!isValidYoutubeUrl(formData.url)) {
+                alert("L’URL fournie n’est pas un lien YouTube valide.");
+                setLoading(false);
+                return;
+            }
+    
+            // Génération automatique de la miniature si vide
+            if (!formData.thumbnailUrl) {
+                const id = extractYoutubeId(formData.url);
+                if (id) {
+                    formData.thumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+                }
+            }
+        }
+    
         const token = Cookies.get('token');
         if (!token) { alert("Session expirée"); setLoading(false); return; }
-        
+    
         try {
             if (resource) {
                 await updateExternalResource(resource.id, formData, token);
@@ -59,6 +114,7 @@ const ResourceModal: React.FC<{
             setLoading(false);
         }
     };
+    
 
     if (!isOpen) return null;
     return (

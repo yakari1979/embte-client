@@ -19,6 +19,13 @@ const typeConfig: Record<ResourceType, { icon: React.ReactNode, color: string }>
     BOOK: { icon: <Book />, color: "border-green-500" },
 };
 
+const placeholderByType: Record<ResourceType, string> = {
+    VIDEO: "/assets/placeholder-video.png",
+    PDF: "/assets/placeholder-pdf.png",
+    LINK: "/assets/placeholder-link.png",
+    BOOK: "/assets/placeholder-book.png",
+};
+
 // --- Sous-composant : Carte de Ressource ---
 const ResourceCard: React.FC<{ resource: ExternalResource }> = ({ resource }) => {
     const config = typeConfig[resource.type];
@@ -26,12 +33,19 @@ const ResourceCard: React.FC<{ resource: ExternalResource }> = ({ resource }) =>
         <Link href={`/library/${resource.id}`} className="block group">
             <div className={`bg-surface rounded-lg shadow-md hover:shadow-xl transition-shadow h-full border-l-4 ${config.color} flex flex-col`}>
                 <div className="relative h-40">
-                    <Image
-                        src={resource.thumbnailUrl || `/assets/video${resource.type.toLowerCase()}.webp`} // Ex: /assets/placeholder-video.png
+                    {/* <Image
+                        src={resource.thumbnailUrl || `/assets/video1${resource.type.toLowerCase()}.png`} // Ex: /assets/placeholder-video.png
                         alt={resource.title}
                         layout="fill"
                         objectFit="cover"
                         className="rounded-t-lg"
+                    /> */}
+
+                    <Image
+                        src={resource.thumbnailUrl || placeholderByType[resource.type]}
+                        alt={resource.title}
+                        fill
+                        className="object-cover rounded-t-lg"
                     />
                 </div>
                 <div className="p-4 flex flex-col flex-grow">
