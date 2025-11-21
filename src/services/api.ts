@@ -1223,7 +1223,7 @@ export interface UserDetails {
   identifiant: string;
   email: string | null;
   role: 'STUDENT' | 'TEACHER' | 'PARENT'; // Ajouter PARENT
-  enrolledClass: { name: string } | null;
+  enrolledClass: { name: string, id: string; } | null;
   parent: { // Ajouter le champ parent optionnel
     id: string;
     firstName: string;
@@ -1367,6 +1367,15 @@ export const getPedagogicalInsights = (classId: string, token: string) => {
     return apiClient.get<PedagogicalInsightsResponse>(`/users/my-classes/${classId}/pedagogical-insights`, {
         headers: { Authorization: `Bearer ${token}` }
     });
+};
+
+
+
+// --- NOUVELLE FONCTION POUR LES PROFESSEURS ---
+export const getStudentDetailsForTeacher = (studentId: string, token: string) => {
+  return apiClient.get<UserDetails>(`/users/my-students/${studentId}/details`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
 };
 
 
