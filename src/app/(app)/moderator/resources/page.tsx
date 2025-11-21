@@ -26,6 +26,11 @@ function extractYoutubeId(url: string): string | null {
     return match ? match[1] : null;
 }
 
+function cleanYoutubeUrl(url: string): string {
+    const id = extractYoutubeId(url);
+    return id ? `https://www.youtube.com/watch?v=${id}` : url;
+}
+
 
 // --- SOUS-COMPOSANT : MODAL DE CRÉATION/ÉDITION (MIS À JOUR) ---
 const ResourceModal: React.FC<{
@@ -80,22 +85,42 @@ const ResourceModal: React.FC<{
         setLoading(true);
     
         // --- Validation YouTube uniquement si type = VIDEO ---
-        if (formData.type === "VIDEO") {
+        // if (formData.type === "VIDEO") {
     
-            if (!isValidYoutubeUrl(formData.url)) {
+        //     if (!isValidYoutubeUrl(formData.url)) {
+        //         alert("L’URL fournie n’est pas un lien YouTube valide.");
+        //         setLoading(false);
+        //         return;
+        //     }
+    
+        //     // Génération automatique de la miniature si vide
+        //     if (!formData.thumbnailUrl) {
+        //         const id = extractYoutubeId(formData.url);
+        //         if (id) {
+        //             formData.thumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+        //         }
+        //     }
+        // }
+
+
+        if (formData.type === "VIDEO") {
+            const id = extractYoutubeId(formData.url);
+            if (!id) {
                 alert("L’URL fournie n’est pas un lien YouTube valide.");
                 setLoading(false);
                 return;
             }
-    
+        
+            // Nettoyer l'URL
+            formData.url = `https://www.youtube.com/watch?v=${id}`;
+        
             // Génération automatique de la miniature si vide
             if (!formData.thumbnailUrl) {
-                const id = extractYoutubeId(formData.url);
-                if (id) {
-                    formData.thumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-                }
+                formData.thumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
             }
         }
+        
+
     
         const token = Cookies.get('token');
         if (!token) { alert("Session expirée"); setLoading(false); return; }

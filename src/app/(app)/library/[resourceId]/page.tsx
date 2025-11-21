@@ -61,7 +61,7 @@ const ResourceDetailPage = () => {
                             style={{ position: 'absolute', top: 0, left: 0 }}
                             // Ajout pour une meilleure expérience sur certains navigateurs
                             playing={false}
-                            light={resource.thumbnailUrl || false}
+                            // light={resource.thumbnailUrl || false}
                         />
                     </div>
                 );
@@ -91,6 +91,9 @@ const ResourceDetailPage = () => {
 
     if (loading) return <div className="text-center py-20"><Loader2 className="animate-spin h-10 w-10 mx-auto text-blue-500"/></div>;
     if (!resource) return <div className="text-center py-20">Ressource non trouvée.</div>;
+
+    console.log('Resource URL:', resource.url);
+
     
     return (
         <div className="container mx-auto px-4 py-8">
