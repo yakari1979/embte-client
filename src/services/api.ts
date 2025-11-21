@@ -1379,4 +1379,22 @@ export const getStudentDetailsForTeacher = (studentId: string, token: string) =>
 };
 
 
+
+
+// --- NOUVELLE FONCTION POUR LA PAGE DE DÉTAILS ---
+export const getExternalResourceById = (resourceId: string, token: string) => {
+  return apiClient.get<ExternalResource>(`/library/resources/${resourceId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// La fonction listAllAdminResources est pour le modérateur,
+// nous avons besoin d'une fonction pour l'élève/prof
+export const listPublicResources = (token: string) => {
+  return apiClient.get<ExternalResource[]>('/library/resources', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
 export default apiClient;
