@@ -11,14 +11,18 @@ import { Loader2, ArrowLeft, ExternalLink } from 'lucide-react';
 import ReactPlayer from 'react-player';
 
 
-
-
-
 const ResourceDetailPage = () => {
     const pathname = usePathname();
     const resourceId = pathname.split('/').pop() || '';
     const [resource, setResource] = useState<ExternalResource | null>(null);
     const [loading, setLoading] = useState(true);
+    
+    // Cet état est une bonne pratique pour éviter les erreurs d'hydratation
+    const [hasMounted, setHasMounted] = useState(false);
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
+
 
     useEffect(() => {
         if (!resourceId) return;
@@ -29,7 +33,6 @@ const ResourceDetailPage = () => {
             try {
                 const response = await getExternalResourceById(resourceId, token);
                 setResource(response.data);
-                // On track le "clic" ici, car arriver sur la page est l'interaction principale
                 trackResourceClick(resourceId, token).catch(console.error);
             } catch (error) {
                 console.error(error);
@@ -41,20 +44,31 @@ const ResourceDetailPage = () => {
     }, [resourceId]);
 
     const renderContent = () => {
-        if (!resource) return null;
+        // On attend que le composant soit "monté" côté client avant d'afficher le lecteur
+        if (!resource || !hasMounted) {
+            return <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded-lg animate-pulse"></div>;
+        }
 
         switch (resource.type) {
             case 'VIDEO':
                 return (
-                    <div className="aspect-video bg-black rounded-lg overflow-hidden">
-                        <ReactPlayer url={resource.url} width="100%" height="100%" controls={true} />
+                    <div className="aspect-video bg-black rounded-lg overflow-hidden relative">
+                        <ReactPlayer 
+                            url={resource.url} 
+                            width="100%" 
+                            height="100%" 
+                            controls={true}
+                            style={{ position: 'absolute', top: 0, left: 0 }}
+                            // Ajout pour une meilleure expérience sur certains navigateurs
+                            playing={false}
+                            light={resource.thumbnailUrl || false}
+                        />
                     </div>
                 );
             case 'PDF':
                 return (
                     <div className="h-[80vh] border rounded-lg overflow-hidden">
                         <iframe src={resource.url} width="100%" height="100%" title={resource.title}>
-                            Votre navigateur ne supporte pas les iFrames.
                             <a href={resource.url} target="_blank" rel="noopener noreferrer">Voir le PDF</a>
                         </iframe>
                     </div>
@@ -62,7 +76,7 @@ const ResourceDetailPage = () => {
             case 'LINK':
             case 'BOOK':
                 return (
-                    <div className="bg-surface p-8 rounded-lg text-center">
+                     <div className="bg-surface p-8 rounded-lg text-center">
                         <h3 className="text-xl font-bold mb-4">Redirection vers une ressource externe</h3>
                         <p className="text-text-secondary mb-6">Vous allez être redirigé vers : <span className="font-semibold">{resource.source}</span></p>
                         <a href={resource.url} target="_blank" rel="noopener noreferrer" className="btn-primary inline-flex items-center gap-2">
