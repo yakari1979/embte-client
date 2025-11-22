@@ -33,14 +33,6 @@ const ResourceCard: React.FC<{ resource: ExternalResource }> = ({ resource }) =>
         <Link href={`/library/${resource.id}`} className="block group">
             <div className={`bg-surface rounded-lg shadow-md hover:shadow-xl transition-shadow h-full border-l-4 ${config.color} flex flex-col`}>
                 <div className="relative h-40">
-                    {/* <Image
-                        src={resource.thumbnailUrl || `/assets/video1${resource.type.toLowerCase()}.png`} // Ex: /assets/placeholder-video.png
-                        alt={resource.title}
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-t-lg"
-                    /> */}
-
                     <Image
                         src={resource.thumbnailUrl || placeholderByType[resource.type]}
                         alt={resource.title}

@@ -58,50 +58,10 @@ const ResourceModal: React.FC<{
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value as ResourceType }));
     };
 
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     setLoading(true);
-    //     const token = Cookies.get('token');
-    //     if (!token) { alert("Session expirée"); setLoading(false); return; }
-        
-    //     try {
-    //         if (resource) {
-    //             await updateExternalResource(resource.id, formData, token);
-    //         } else {
-    //             await createExternalResource(formData, token);
-    //         }
-    //         onSave();
-    //         onClose();
-    //     } catch (error) {
-    //         alert("Erreur lors de la sauvegarde.");
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-    
-        // --- Validation YouTube uniquement si type = VIDEO ---
-        // if (formData.type === "VIDEO") {
-    
-        //     if (!isValidYoutubeUrl(formData.url)) {
-        //         alert("L’URL fournie n’est pas un lien YouTube valide.");
-        //         setLoading(false);
-        //         return;
-        //     }
-    
-        //     // Génération automatique de la miniature si vide
-        //     if (!formData.thumbnailUrl) {
-        //         const id = extractYoutubeId(formData.url);
-        //         if (id) {
-        //             formData.thumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-        //         }
-        //     }
-        // }
-
 
         if (formData.type === "VIDEO") {
             const id = extractYoutubeId(formData.url);
