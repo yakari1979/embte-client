@@ -156,7 +156,7 @@ const LoginPage: React.FC = () => {
           <div className="hidden md:block w-1/2 relative">
             <Image 
               className="object-cover rounded-r-2xl"
-              src="/assets/login-image.webp"
+              src="/assets/log.png"
               alt="Illustration d'un environnement éducatif numérique au Sénégal"
               fill
               priority
