@@ -160,7 +160,7 @@ const typeConfig: Record<string, { label: string, icon: React.ReactNode, color: 
 };
 
 // Placeholder par défaut
-const placeholderImage = "/assets/placeholder-general.png"; 
+const placeholderImage = "/assets/placeholder-book.png"; 
 
 // --- SOUS-COMPOSANT : CARTE RESSOURCE ---
 const ResourceCard: React.FC<{ resource: ExternalResource }> = ({ resource }) => {
