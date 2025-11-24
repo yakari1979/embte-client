@@ -10,7 +10,7 @@ import ThemeSwitcher from './ThemeSwitcher';
 import axios from 'axios';
 import { LoginCredentials } from '../types/api-types';
 import { Info, User } from 'lucide-react';
-import InfoModal from '../components/InfoModal';
+import InfoModal from './InfoModal';
 import { jwtDecode } from 'jwt-decode'; // <-- Importer cette librairie
 
 // --- NOUVEAU TYPE ---
@@ -132,12 +132,12 @@ const LoginPage: React.FC = () => {
               </div>
             </form>
 
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
+            {/* <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
               Votre établissement n'est pas encore inscrit ?{' '}
               <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
                 Créer un compte
               </Link>
-            </p>
+            </p> */}
               
             <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg flex items-start space-x-3">
               <div className="flex-shrink-0">
