@@ -3,23 +3,29 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
-import { Send, Bot, X } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { Send, Bot, X, ExternalLink, PlayCircle, FileText } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation'; // Ajouter useRouter
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
+interface Resource {
+    id: string;
+    title: string;
+    type: string;
+}
+
 interface Message {
     sender: 'PENI' | 'YOU';
     text: string;
+    resources?: Resource[]; // Nouveau champ optionnel
 }
 
 const CoachingChat = () => {
-    // --- 1. DÉCLARATION DE TOUS LES HOOKS EN PREMIER (OBLIGATOIRE) ---
     const pathname = usePathname();
+    const router = useRouter(); // Pour la navigation
     const scrollRef = useRef<HTMLDivElement>(null);
     
-    // States
     const [isMounted, setIsMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [activeScenario, setActiveScenario] = useState(false);
@@ -29,12 +35,8 @@ const CoachingChat = () => {
     const [loading, setLoading] = useState(false);
     const [finished, setFinished] = useState(false);
 
-    // Effect pour l'hydratation
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
+    useEffect(() => { setIsMounted(true); }, []);
 
-    // Fonction de vérification (définie ici pour être utilisée dans le useEffect)
     const checkCoachingStatus = async () => {
         const token = Cookies.get('token');
         if (!token) return;
@@ -48,12 +50,19 @@ const CoachingChat = () => {
                 setActiveScenario(true);
                 setSessionId(res.data.sessionId);
                 setMessages(res.data.messages);
-                if (!finished) setIsOpen(true); 
+                
+                // Si la session est déjà finie (historique), on marque finished=true
+                if (res.data.finished) {
+                    setFinished(true);
+                } else {
+                    // Si c'est une NOUVELLE session active (pas finie), on ouvre la fenêtre
+                    setIsOpen(true);
+                }
             } else {
                 setActiveScenario(false);
                 setMessages([{
                     sender: 'PENI',
-                    text: "Salut ! Je n'ai détecté aucune note critique récemment. Continue tes efforts, je reste en veille ! 🚀"
+                    text: "Salut ! Je n'ai détecté aucune note critique récente. Continue tes efforts ! 🚀"
                 }]);
             }
         } catch (error) {
@@ -61,27 +70,20 @@ const CoachingChat = () => {
         }
     };
 
-    // Effect pour charger les données
-    // On ajoute une sécurité : ne pas charger si on est sur une page publique
     useEffect(() => {
         const publicPages = ['/', '/login', '/register', '/inscription', '/mot-de-passe-oublie'];
         const token = Cookies.get('token');
-        
         if (isMounted && token && !publicPages.includes(pathname)) {
             checkCoachingStatus();
         }
-    }, [isMounted, pathname]); // Se relance si on change de page
+    }, [isMounted, pathname]);
 
-    // Effect pour le scroll
     useEffect(() => {
-        if (isOpen) {
-            scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-        }
+        if (isOpen) scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, isOpen]);
 
     const handleSend = async () => {
-        if (!input.trim()) return;
-        if (!activeScenario) return;
+        if (!input.trim() || !activeScenario || finished) return;
 
         const userMsg = input;
         setInput('');
@@ -99,7 +101,14 @@ const CoachingChat = () => {
             });
 
             if (res.data.finished) {
-                setMessages(prev => [...prev, { sender: 'PENI', text: res.data.aiAdvice }]);
+                setMessages(prev => [
+                    ...prev, 
+                    { 
+                        sender: 'PENI', 
+                        text: res.data.aiAdvice,
+                        resources: res.data.resources // On reçoit les ressources
+                    }
+                ]);
                 setFinished(true);
             } else {
                 const refresh = await axios.get(`${API_URL}/coaching/current-session`, {
@@ -115,54 +124,61 @@ const CoachingChat = () => {
         }
     };
 
-    // --- 2. LOGIQUE D'AFFICHAGE CONDITIONNEL (À LA FIN SEULEMENT) ---
     const publicPages = ['/', '/login', '/register', '/inscription', '/mot-de-passe-oublie'];
-    
-    // Si pas monté, ou page publique, ou pas de token -> ON NE REND RIEN
-    if (!isMounted || publicPages.includes(pathname)) {
-        return null;
-    }
-    
-    // On vérifie le token ici aussi pour l'affichage (au cas où)
-    const token = Cookies.get('token');
-    if (!token) return null;
+    if (!isMounted || publicPages.includes(pathname)) return null;
+    if (!Cookies.get('token')) return null;
 
-    // --- 3. RENDU DU COMPOSANT ---
     return (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
             
             {isOpen && (
                 <div className="mb-4 w-80 sm:w-96 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 duration-300">
                     
-                    {/* Header */}
                     <div className="bg-blue-600 p-4 text-white flex justify-between items-center">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white/20 rounded-full">
-                                <Bot size={20} />
-                            </div>
+                            <div className="p-2 bg-white/20 rounded-full"><Bot size={20} /></div>
                             <div>
                                 <h3 className="font-bold text-md">Coach PENI</h3>
                                 <p className="text-xs text-blue-100">
-                                    {activeScenario ? "Analyse en cours..." : "En veille"}
+                                    {finished ? "Session terminée" : (activeScenario ? "Analyse en cours..." : "En veille")}
                                 </p>
                             </div>
                         </div>
-                        <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white">
-                            <X size={20} />
-                        </button>
+                        <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white"><X size={20} /></button>
                     </div>
 
-                    {/* Messages */}
-                    <div className="h-80 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900">
+                    <div className="h-96 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900">
                         {messages.map((msg, idx) => (
-                            <div key={idx} className={`flex ${msg.sender === 'YOU' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${
+                            <div key={idx} className={`flex flex-col ${msg.sender === 'YOU' ? 'items-end' : 'items-start'}`}>
+                                <div className={`max-w-[90%] p-3 rounded-2xl text-sm ${
                                     msg.sender === 'YOU' 
                                         ? 'bg-blue-600 text-white rounded-br-none' 
                                         : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none shadow-sm border border-gray-100 dark:border-gray-600'
                                 }`}>
-                                    {msg.text}
+                                    <p>{msg.text}</p>
                                 </div>
+
+                                {/* --- AFFICHAGE DES BOUTONS DE RESSOURCES --- */}
+                                {msg.resources && msg.resources.length > 0 && (
+                                    <div className="mt-2 space-y-2 w-[90%]">
+                                        <p className="text-xs text-gray-500 ml-1 font-medium">Ressources recommandées :</p>
+                                        {msg.resources.map(res => (
+                                            <button
+                                                key={res.id}
+                                                onClick={() => router.push(`/library/${res.id}`)} // Redirection
+                                                className="flex items-center gap-3 w-full p-2 bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-600 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors text-left group"
+                                            >
+                                                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-md group-hover:scale-110 transition-transform">
+                                                    {res.type === 'VIDEO' ? <PlayCircle size={16}/> : <FileText size={16}/>}
+                                                </div>
+                                                <span className="text-xs font-semibold text-gray-700 dark:text-gray-200 line-clamp-1 flex-1">
+                                                    {res.title}
+                                                </span>
+                                                <ExternalLink size={12} className="text-gray-400" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ))}
                         {loading && (
@@ -179,7 +195,6 @@ const CoachingChat = () => {
                         <div ref={scrollRef} />
                     </div>
 
-                    {/* Input */}
                     {activeScenario && !finished ? (
                         <div className="p-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex gap-2">
                             <input
@@ -199,8 +214,8 @@ const CoachingChat = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="p-3 bg-gray-50 dark:bg-gray-900/50 text-center text-gray-500 text-xs">
-                            {finished ? "Session terminée." : "Aucune action requise."}
+                        <div className="p-3 bg-gray-50 dark:bg-gray-900/50 text-center text-gray-500 text-xs border-t border-gray-100">
+                            {finished ? "Discussion archivée. Tu peux la relire à tout moment." : "Aucune action requise."}
                         </div>
                     )}
                 </div>
@@ -209,13 +224,13 @@ const CoachingChat = () => {
             <button 
                 onClick={() => setIsOpen(!isOpen)}
                 className={`p-4 rounded-full shadow-lg transition-all transform hover:scale-110 flex items-center justify-center ${
-                    activeScenario && !isOpen 
+                    activeScenario && !finished && !isOpen 
                         ? "bg-red-500 animate-pulse text-white" 
                         : "bg-blue-600 hover:bg-blue-700 text-white"
                 }`}
             >
                 {isOpen ? <X size={24} /> : <Bot size={28} />}
-                {activeScenario && !isOpen && (
+                {activeScenario && !finished && !isOpen && (
                     <span className="absolute top-0 right-0 h-3 w-3 bg-yellow-400 rounded-full border-2 border-white"></span>
                 )}
             </button>
