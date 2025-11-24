@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { Send, Bot, X, ExternalLink, PlayCircle, FileText } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation'; // Ajouter useRouter
+import { usePathname, useRouter } from 'next/navigation';
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -18,12 +18,28 @@ interface Resource {
 interface Message {
     sender: 'PENI' | 'YOU';
     text: string;
-    resources?: Resource[]; // Nouveau champ optionnel
+    resources?: Resource[];
 }
+
+// --- FONCTION UTILITAIRE POUR DÉCODER LE TOKEN (Sans installer de librairie) ---
+const getUserRoleFromToken = (token: string): string | null => {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        const payload = JSON.parse(jsonPayload);
+        return payload.role; // On récupère le rôle (STUDENT, TEACHER, etc.)
+    } catch (e) {
+        return null;
+    }
+};
 
 const CoachingChat = () => {
     const pathname = usePathname();
-    const router = useRouter(); // Pour la navigation
+    const router = useRouter();
     const scrollRef = useRef<HTMLDivElement>(null);
     
     const [isMounted, setIsMounted] = useState(false);
@@ -41,6 +57,10 @@ const CoachingChat = () => {
         const token = Cookies.get('token');
         if (!token) return;
 
+        // Vérification supplémentaire de sécurité
+        const role = getUserRoleFromToken(token);
+        if (role !== 'STUDENT') return; 
+
         try {
             const res = await axios.get(`${API_URL}/coaching/current-session`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -51,11 +71,9 @@ const CoachingChat = () => {
                 setSessionId(res.data.sessionId);
                 setMessages(res.data.messages);
                 
-                // Si la session est déjà finie (historique), on marque finished=true
                 if (res.data.finished) {
                     setFinished(true);
                 } else {
-                    // Si c'est une NOUVELLE session active (pas finie), on ouvre la fenêtre
                     setIsOpen(true);
                 }
             } else {
@@ -73,7 +91,11 @@ const CoachingChat = () => {
     useEffect(() => {
         const publicPages = ['/', '/login', '/register', '/inscription', '/mot-de-passe-oublie'];
         const token = Cookies.get('token');
-        if (isMounted && token && !publicPages.includes(pathname)) {
+        
+        // On vérifie le rôle AVANT de lancer la requête
+        const role = token ? getUserRoleFromToken(token) : null;
+
+        if (isMounted && token && role === 'STUDENT' && !publicPages.includes(pathname)) {
             checkCoachingStatus();
         }
     }, [isMounted, pathname]);
@@ -106,7 +128,7 @@ const CoachingChat = () => {
                     { 
                         sender: 'PENI', 
                         text: res.data.aiAdvice,
-                        resources: res.data.resources // On reçoit les ressources
+                        resources: res.data.resources 
                     }
                 ]);
                 setFinished(true);
@@ -124,9 +146,20 @@ const CoachingChat = () => {
         }
     };
 
+    // --- LOGIQUE D'AFFICHAGE ---
     const publicPages = ['/', '/login', '/register', '/inscription', '/mot-de-passe-oublie'];
+    
+    // 1. Vérifications de base (Montage + Page publique)
     if (!isMounted || publicPages.includes(pathname)) return null;
-    if (!Cookies.get('token')) return null;
+    
+    // 2. Vérification du Token
+    const token = Cookies.get('token');
+    if (!token) return null;
+
+    // 3. VÉRIFICATION DU RÔLE (La nouveauté)
+    // Si l'utilisateur n'est pas un étudiant, on cache le composant
+    const role = getUserRoleFromToken(token);
+    if (role !== 'STUDENT') return null;
 
     return (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
@@ -158,14 +191,13 @@ const CoachingChat = () => {
                                     <p>{msg.text}</p>
                                 </div>
 
-                                {/* --- AFFICHAGE DES BOUTONS DE RESSOURCES --- */}
                                 {msg.resources && msg.resources.length > 0 && (
                                     <div className="mt-2 space-y-2 w-[90%]">
                                         <p className="text-xs text-gray-500 ml-1 font-medium">Ressources recommandées :</p>
                                         {msg.resources.map(res => (
                                             <button
                                                 key={res.id}
-                                                onClick={() => router.push(`/library/${res.id}`)} // Redirection
+                                                onClick={() => router.push(`/library/${res.id}`)} 
                                                 className="flex items-center gap-3 w-full p-2 bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-600 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors text-left group"
                                             >
                                                 <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-md group-hover:scale-110 transition-transform">
