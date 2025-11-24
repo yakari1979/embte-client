@@ -37,7 +37,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
     router.push('/');
   };
 
-  // --- NOUVEAU MENU POUR LE MODÉRATEUR ---
+  // --- NOUVEAU MENU POUR LE MODÉRATEUR ---explorer
   const moderatorLinks = (
     <>
       <Link href="/moderator/dashboard" className={`nav-link ${pathname.startsWith('/moderator/dashboard') ? 'active' : ''}`}>Vue d'Ensemble</Link>
@@ -46,6 +46,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/moderator/registrations" className={`nav-link ${pathname.startsWith('/moderator/registrations') ? 'active' : ''}`}>Registrations</Link>
       <Link href="/moderator/resources" className={`nav-link ${pathname.startsWith('/moderator/resources') ? 'active' : ''}`}>Bibliothèque</Link>
       <Link href="/moderator/management" className={`nav-link ${pathname.startsWith('/moderator/management') ? 'active' : ''}`}>Gestion Modos</Link>
+      <Link href="/moderator/explorer" className={`nav-link ${pathname.startsWith('/moderator/explorer') ? 'active' : ''}`}>Explorer</Link>
     </>
   );
 
