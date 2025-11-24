@@ -1247,6 +1247,7 @@ export const searchParents = (query: string, token: string) => {
 export type ResourceType = 'VIDEO' | 'PDF' | 'LINK' | 'BOOK';
 
 export interface ExternalResource {
+  isPremium: any;
   id: string;
   title: string;
   description?: string;
