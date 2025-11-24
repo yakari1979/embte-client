@@ -52,6 +52,8 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      // --- AJOUTE CETTE LIGNE ---
+      { protocol: 'https', hostname: 'covers.openlibrary.org', pathname: '/**' },
     ],
   },
 };
