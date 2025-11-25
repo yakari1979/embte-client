@@ -160,7 +160,15 @@ const typeConfig: Record<string, { label: string, icon: React.ReactNode, color: 
 };
 
 // Placeholder par défaut
-const placeholderImage = "/assets/placeholder-book.png"; 
+// const placeholderImage = "/assets/placeholder-book.png"; 
+
+const placeholderByType: Record<ResourceType, string> = {
+    VIDEO: "/assets/placeholder-video.png",
+    PDF: "/assets/placeholder-pdf.png",
+    LINK: "/assets/placeholder-link.png",
+    BOOK: "/assets/placeholder-book.png",
+};
+
 
 // --- SOUS-COMPOSANT : CARTE RESSOURCE ---
 const ResourceCard: React.FC<{ resource: ExternalResource }> = ({ resource }) => {
@@ -170,7 +178,9 @@ const ResourceCard: React.FC<{ resource: ExternalResource }> = ({ resource }) =>
     const getImageSrc = () => {
         if (resource.thumbnailUrl) return resource.thumbnailUrl;
         // Fallback simple si pas d'image
-        return `https://ui-avatars.com/api/?name=${resource.type}&background=random&size=400`;
+        // return `https://ui-avatars.com/api/?name=${resource.type}&background=random&size=400`;
+        // Sinon → utiliser le placeholder pour le type
+        return placeholderByType[resource.type] || "/assets/placeholder-default.png";
     };
 
     return (

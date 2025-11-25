@@ -39,7 +39,8 @@ import { Providers } from "./providers";
 // --- IMPORT DU CHAT ---
 // Assure-toi que le chemin correspond bien à l'endroit où tu as créé le fichier
 // Si ton fichier est dans src/components/, c'est bien ça :
-import CoachingChat from "@/components/CoachingChat"; 
+import CoachingChat from "@/components/CoachingChat";
+import ParentAssistant from "@/components/ParentAssistant"; // <-- IMPORT 
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -62,6 +63,7 @@ export default function RootLayout({
           {/* --- LE CHATBOT FLOTTANT --- */}
           {/* Il se superpose à toutes les pages grâce à sa position "fixed" */}
           <CoachingChat />
+          <ParentAssistant />   {/* Pour les parents */}
           
         </Providers>
       </body>
