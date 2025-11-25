@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { getMyStudentSchedule, getMyProfile, getMyNotifications, Notification, markNotificationAsRead } from '@/services/api';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import { Clock, BookOpen, CalendarDays, Video, User, Building2, ClipboardList, Timer, Bell, X } from 'lucide-react';
+import { Clock, BookOpen, CalendarDays, Video, User, Building2, ClipboardList, Timer, Bell, X, Sparkles, ArrowRight } from 'lucide-react';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -36,6 +36,47 @@ interface UserProfile {
   establishment: { name: string; };
 }
 type SessionStatus = 'past' | 'current' | 'upcoming_soon' | 'upcoming_later';
+
+// Composant Bouton Intelligent
+// const SmartQuizButton = ({ notifications }: { notifications: Notification[] }) => {
+//   // On cherche la notification la plus récente qui contient un lien vers un quiz
+//   const pendingQuiz = notifications.find(n => n.link && n.link.includes('/student/quiz/'));
+
+//   // Si aucun quiz n'est trouvé, on n'affiche rien (le bouton se cache tout seul)
+//   if (!pendingQuiz) return null;
+
+  const SmartQuizButton = ({ notifications }: { notifications: Notification[] }) => {
+    // On filtre pour ne prendre que les notifs NON LUES (!n.isRead)
+    const pendingQuiz = notifications.find(n => 
+        !n.isRead && n.link && n.link.includes('/student/quiz/')
+    );
+  
+    if (!pendingQuiz) return null;
+
+  return (
+    <div className="mb-8 transform hover:scale-[1.01] transition-all duration-300">
+      <Link href={pendingQuiz.link!} className="block group relative overflow-hidden rounded-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 p-1 shadow-xl">
+        <span className="absolute inset-0 bg-white/10 group-hover:bg-white/20 transition-colors" />
+        <div className="relative flex items-center justify-between bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 text-white">
+          <div className="flex items-center gap-4">
+            <div className="bg-white/20 p-3 rounded-full animate-pulse">
+              <Sparkles className="w-6 h-6 text-yellow-300" />
+            </div>
+            <div>
+              <h3 className="font-bold text-xl">Nouveau Quiz Disponible !</h3>
+              <p className="text-purple-100 text-sm sm:text-base opacity-90">
+                Un devoir t'attend. Clique ici pour commencer.
+              </p>
+            </div>
+          </div>
+          <div className="bg-white text-purple-700 rounded-full p-2 group-hover:translate-x-1 transition-transform">
+            <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+};
 
 // =======================================================
 //   COMPOSANT DE CARTE DE COURS POUR ÉTUDIANT (ADAPTÉ)
@@ -186,6 +227,9 @@ const StudentDashboard = () => {
         )}
       </div>
 
+      {/* 🔥 INSERTION DU BOUTON INTELLIGENT ICI 🔥 */}
+      <SmartQuizButton notifications={notifications} />
+
        {/* --- AJOUTEZ LE NOUVEAU WIDGET DE RECOMMANDATION ICI --- */}
        <RecommendationWidget />
 
@@ -271,6 +315,8 @@ const StudentDashboard = () => {
     </div>
   );
 };
+
+
 
 export default StudentDashboard;
 

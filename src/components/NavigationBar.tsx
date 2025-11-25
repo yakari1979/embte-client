@@ -67,6 +67,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/dashboard" className={`nav-link ${pathname === '/dashboard' ? 'active' : ''}`}>Mon Emploi du Temps</Link>
       <Link href="/my-classes" className={`nav-link ${pathname.startsWith('/my-classes') ? 'active' : ''}`}>Mes Classes</Link>
       <Link href="/grades-management" className={`nav-link ${pathname === '/grades-management' ? 'active' : ''}`}>Suivi & Notes</Link>
+      <Link href="/teacher/quiz-generator" className={`nav-link ${pathname === '/teacher/quiz-generator' ? 'active' : ''}`}>Générateur de QCM</Link>
       {/* <Link href="/quantum-lab" className={`nav-link ${pathname === '/quantum-lab' ? 'active' : ''}`}>Laboratoire Quantique</Link>
       <Link href="/history-lab" className={`nav-link ${pathname === '/history-lab' ? 'active' : ''}`}>Laboratoire d'Histoire</Link>
       <Link href="/philosophy-lab" className={`nav-link ${pathname === '/philosophy-lab' ? 'active' : ''}`}>Laboratoire de phylo</Link> */}

@@ -291,6 +291,7 @@ export const upsertGrade = (data: UpsertGradeData, token: string) => {
 
 
 export interface Notification {
+  isRead: any;
   id: string;
   message: string;
   link: string | null;
@@ -1393,6 +1394,128 @@ export const getExternalResourceById = (resourceId: string, token: string) => {
 // nous avons besoin d'une fonction pour l'élève/prof
 export const listPublicResources = (token: string) => {
   return apiClient.get<ExternalResource[]>('/library/resources', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// ... (Tout ton code existant dans api.ts) ...
+
+// =======================================================
+//   NOUVELLE SECTION : GESTION DES QUIZ (QCM)
+// =======================================================
+
+export interface QuizQuestion {
+  id: string;
+  text: string;
+  options: string[];
+  correctAnswer?: string; // Optionnel car l'élève ne doit pas le voir avant la correction
+}
+
+export interface Quiz {
+  id: string;
+  title: string;
+  subject: string;
+  level: string;
+  _count?: { questions: number };
+  questions?: QuizQuestion[];
+}
+
+export interface QuizAssignment {
+  id: string;
+  quiz: Quiz;
+}
+
+export interface QuizSubmissionDetail {
+  question: string;
+  studentAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+}
+
+export interface QuizResult {
+  score: number;
+  total: number;
+  details: QuizSubmissionDetail[];
+}
+
+// --- PROFESSEUR ---
+
+// Récupérer les quiz du prof
+export const getTeacherQuizzes = (token: string) => {
+  return apiClient.get<Quiz[]>('/quizzes/teacher/my-quizzes', {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// Assigner un quiz à une classe
+export const assignQuizToClass = (quizId: string, classId: string, token: string) => {
+  return apiClient.post('/quizzes/teacher/assign', { quizId, classId }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- ÉLÈVE ---
+
+// Récupérer un quiz à faire (sans les réponses)
+export const getStudentQuiz = (assignmentId: string, token: string) => {
+  return apiClient.get<{ assignment: QuizAssignment, quiz: Quiz }>(`/quizzes/student/take/${assignmentId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// Envoyer les réponses
+export const submitStudentQuiz = (assignmentId: string, answers: Record<string, string>, token: string) => {
+  return apiClient.post<QuizResult>('/quizzes/student/submit', { assignmentId, answers }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// ... imports existants
+
+// Interface pour les résultats
+export interface QuizSubmissionResult {
+  id: string;
+  score: number;
+  submittedAt: string;
+  student: {
+      firstName: string;
+      lastName: string;
+  };
+  answers: any; // Le JSON des réponses
+}
+
+// Fonction pour récupérer les résultats
+export const getQuizAssignmentResults = (assignmentId: string, token: string) => {
+return apiClient.get<QuizSubmissionResult[]>(`/quizzes/teacher/results/${assignmentId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+});
+};
+
+
+
+// ... (autres interfaces)
+
+export interface QuizAssignmentSummary {
+  id: string;
+  createdAt: string;
+  quiz: {
+    title: string;
+    subject: string;
+    level: string;
+  };
+  class: {
+    name: string;
+  };
+  _count: {
+    submissions: number;
+  };
+}
+
+// Fonction pour récupérer l'historique des envois
+export const getTeacherAssignments = (token: string) => {
+  return apiClient.get<QuizAssignmentSummary[]>('/quizzes/teacher/assignments', {
       headers: { Authorization: `Bearer ${token}` }
   });
 };

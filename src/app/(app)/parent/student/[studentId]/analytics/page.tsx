@@ -124,7 +124,7 @@ export default function StudentAnalyticsPage() {
     if (!data || !analytics) return <div className="p-8 text-center">Données insuffisantes pour l'analyse.</div>;
 
     return (
-        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 bg-gray-50 dark:bg-gray-950 min-h-screen">
+        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 bg-gray-50 dark:bg-surface min-h-screen">
             
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -191,7 +191,7 @@ export default function StudentAnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
                 {/* Graphique Radar (Performance) */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <div className="bg-white dark:bg-surface p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <h3 className="font-bold text-gray-800 dark:text-white mb-6">Profil de Performance</h3>
                     <div className="h-[300px] w-full">
                         {analytics.chartData.length > 0 ? (
