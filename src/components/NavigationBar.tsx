@@ -57,8 +57,8 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/classes" className={`nav-link ${pathname.startsWith('/classes') ? 'active' : ''}`}>Classes</Link>
       <Link href="/ai-assistant" className={`nav-link ${pathname.startsWith('/ai-assistant') ? 'active' : ''}`}>Assistant</Link>
       <Link href="/gestion" className={`nav-link ${pathname.startsWith('/classesAdmin') ? 'active' : ''}`}>Gestion des Classes</Link>
-      {/* ... autres liens ... */}
-    <Link href="/admin/blog" className={`nav-link ${pathname.startsWith('/admin/blog') ? 'active' : ''}`}>Blog / Annonces</Link> {/* <-- NOUVEAU LIEN */}
+      <Link href="/admin/bulletins" className={`nav-link ${pathname === '/admin/bulletins' ? 'active' : ''}`}>Bulletins</Link>
+      <Link href="/admin/blog" className={`nav-link ${pathname.startsWith('/admin/blog') ? 'active' : ''}`}>Blog / Annonces</Link> {/* <-- NOUVEAU LIEN */}
     </>
   );
 
@@ -68,11 +68,9 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/my-classes" className={`nav-link ${pathname.startsWith('/my-classes') ? 'active' : ''}`}>Mes Classes</Link>
       <Link href="/grades-management" className={`nav-link ${pathname === '/grades-management' ? 'active' : ''}`}>Suivi & Notes</Link>
       <Link href="/teacher/quiz-generator" className={`nav-link ${pathname === '/teacher/quiz-generator' ? 'active' : ''}`}>Générateur de QCM</Link>
-      {/* <Link href="/quantum-lab" className={`nav-link ${pathname === '/quantum-lab' ? 'active' : ''}`}>Laboratoire Quantique</Link>
-      <Link href="/history-lab" className={`nav-link ${pathname === '/history-lab' ? 'active' : ''}`}>Laboratoire d'Histoire</Link>
-      <Link href="/philosophy-lab" className={`nav-link ${pathname === '/philosophy-lab' ? 'active' : ''}`}>Laboratoire de phylo</Link> */}
+      <Link href="/student/simulations" className={`nav-link ${pathname === '/student/simulations' ? 'active' : ''}`}>Laboratoire Virtuel 3D</Link> 
       <Link href="/dashboard/weekly-planner" className={`nav-link ${pathname === '/dashboard/weekly-planner' ? 'active' : ''}`}>Organiseur hebdo</Link>
-      <Link href="/labs" className={`nav-link ${pathname === '/labs' ? 'active' : ''}`}>Laboratoire</Link>
+      {/* <Link href="/labs" className={`nav-link ${pathname === '/labs' ? 'active' : ''}`}>Laboratoire</Link> */}
       <Link href="/blog" className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}>Annonces</Link> {/* <-- AJOUTER*/}
     </>
   );
@@ -82,12 +80,10 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/dashboard" className={`nav-link ${pathname === '/dashboard' ? 'active' : ''}`}>Mon Emploi du Temps</Link>
       <Link href="/my-courses" className={`nav-link ${pathname === '/my-courses' ? 'active' : ''}`}>Mes Cours</Link>
       <Link href="/my-grades" className={`nav-link ${pathname === '/my-grades' ? 'active' : ''}`}>Mes Notes</Link>
-      {/* <Link href="/quantum-lab" className={`nav-link ${pathname === '/quantum-lab' ? 'active' : ''}`}>Laboratoire Quantique</Link>
-      <Link href="/history-lab" className={`nav-link ${pathname === '/history-lab' ? 'active' : ''}`}>Laboratoire d'Histoire</Link> */}
       <Link href="/dashboard/my-plan" className={`nav-link ${pathname === '/dashboard/my-plan' ? 'active' : ''}`}>Mon Plan de Réussite</Link>
       <Link href="/student/simulations" className={`nav-link ${pathname === '/student/simulations' ? 'active' : ''}`}>Laboratoire Virtuel 3D</Link> 
       <Link href="/library" className={`nav-link ${pathname === '/library' ? 'active' : ''}`}>Bibliothèque</Link>
-      <Link href="/labs" className={`nav-link ${pathname === '/labs' ? 'active' : ''}`}>Laboratoire</Link>
+      {/* <Link href="/labs" className={`nav-link ${pathname === '/labs' ? 'active' : ''}`}>Laboratoire</Link> */}
       <Link href="/blog" className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}>Annonces</Link> {/* <-- AJOUTER */}
     </>
   );

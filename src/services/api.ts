@@ -238,6 +238,7 @@ interface NewEvaluationData {
   type: 'TD' | 'DEVOIR';
   subject: string;
   classId: string;
+  evaluationType?: string; // <-- AJOUTE CETTE LIGNE (DEVOIR_1, COMPOSITION, etc.)
 }
 
 interface UpsertGradeData {
@@ -1594,6 +1595,48 @@ export interface NeuronData {
 
 export const stimulateNeuron = (intensity: number, token: string) => {
   return apiClient.post<NeuronData>('/simulations/bio/neuron', { intensity }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+export interface BulletinConfig {
+  primaryColor: string;
+  schoolMotto: string;
+  directorName: string;
+  showRank: boolean;
+}
+
+export interface BulletinData {
+  student: { firstName: string; lastName: string; id: string };
+  rank: number;
+  subjects: {
+      subject: string;
+      teacher: string;
+      moyDevoirs: string;
+      noteCompo: string;
+      moyenne: string;
+      coefficient: number;
+      points: string;
+      appreciation: string;
+  }[];
+  summary: {
+      totalPoints: string;
+      totalCoefs: number;
+      generalAverage: string;
+      appreciation: string;
+  }
+}
+
+export const saveBulletinConfig = (data: any, token: string) => {
+  return apiClient.post('/reports/config', data, { headers: { Authorization: `Bearer ${token}` } });
+};
+
+export const generateClassBulletins = (classId: string, token: string) => {
+  return apiClient.get<{
+      establishment: any; config: BulletinConfig, bulletins: BulletinData[] 
+}>(`/reports/generate/${classId}`, {
       headers: { Authorization: `Bearer ${token}` }
   });
 };
