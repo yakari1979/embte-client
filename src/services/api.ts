@@ -1521,4 +1521,81 @@ export const getTeacherAssignments = (token: string) => {
 };
 
 
+// ... (autres imports)
+// pour les simulation 3D
+
+export interface CellConfig {
+  membraneColor: string;
+  nucleusColor: string;
+  mitochondriaCount: number;
+  hasCellWall: boolean;
+  chloroplasts: boolean;
+  message: string;
+}
+
+export const getCellSimulationConfig = (params: { cellType: string; healthState: string }, token: string) => {
+  // Supposons que tu as ajouté le préfixe /simulations dans ton server.js
+  return apiClient.post<CellConfig>('/simulations/bio/cell-config', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// ...ADN
+
+export interface DNAConfig {
+  strandColor: string;
+  rotationSpeed: number;
+  basePairCount: number;
+  separation: number;
+  hasMutation: boolean;
+  mutationIndex: number;
+  message: string;
+}
+
+export const getDNASimulationConfig = (params: { scenario: string }, token: string) => {
+  return apiClient.post<DNAConfig>('/simulations/bio/dna-config', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// transcription ADN ET ARN
+
+export interface TranscriptionData {
+  templateStrand: string[];
+  mrnaStrand: string[];
+  speed: number;
+}
+
+export const getTranscriptionSimulations = (token: string) => {
+  return apiClient.post<TranscriptionData>('/simulations/bio/transcription', { length: 30 }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+export interface MendelData {
+  offspring: { color: string, shape: string, flower: string }[];
+  stats: Record<string, number>;
+}
+
+export const getMendelSimulation = (type: 'MONO' | 'DI' | 'TRI', generation: 'F1' | 'F2', token: string) => {
+  return apiClient.post<MendelData>('/simulations/bio/mendel', { type, generation }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+export interface NeuronData {
+  fired: boolean;
+  graphData: { t: number, v: number }[];
+  message: string;
+}
+
+export const stimulateNeuron = (intensity: number, token: string) => {
+  return apiClient.post<NeuronData>('/simulations/bio/neuron', { intensity }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
 export default apiClient;
