@@ -57,7 +57,8 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/classes" className={`nav-link ${pathname.startsWith('/classes') ? 'active' : ''}`}>Classes</Link>
       <Link href="/ai-assistant" className={`nav-link ${pathname.startsWith('/ai-assistant') ? 'active' : ''}`}>Assistant</Link>
       <Link href="/gestion" className={`nav-link ${pathname.startsWith('/classesAdmin') ? 'active' : ''}`}>Gestion des Classes</Link>
-      <Link href="/admin/bulletins" className={`nav-link ${pathname === '/admin/bulletins' ? 'active' : ''}`}>Bulletins</Link>
+      <Link href="/admin/bulletins" className={`nav-link ${pathname === '/admin/bulletins' ? 'active' : ''}`}>Gestion des Bulletins</Link>
+      <Link href="/admin/bulletins/archives" className={`nav-link ${pathname === '/admin/bulletins/archives' ? 'active' : ''}`}>Archives & Envoi</Link>
       <Link href="/admin/blog" className={`nav-link ${pathname.startsWith('/admin/blog') ? 'active' : ''}`}>Blog / Annonces</Link> {/* <-- NOUVEAU LIEN */}
     </>
   );
@@ -80,6 +81,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/dashboard" className={`nav-link ${pathname === '/dashboard' ? 'active' : ''}`}>Mon Emploi du Temps</Link>
       <Link href="/my-courses" className={`nav-link ${pathname === '/my-courses' ? 'active' : ''}`}>Mes Cours</Link>
       <Link href="/my-grades" className={`nav-link ${pathname === '/my-grades' ? 'active' : ''}`}>Mes Notes</Link>
+      <Link href="/student/bulletins" className={`nav-link ${pathname === '/student/bulletins' ? 'active' : ''}`}>Mes Bulletins</Link>
       <Link href="/dashboard/my-plan" className={`nav-link ${pathname === '/dashboard/my-plan' ? 'active' : ''}`}>Mon Plan de Réussite</Link>
       <Link href="/student/simulations" className={`nav-link ${pathname === '/student/simulations' ? 'active' : ''}`}>Laboratoire Virtuel 3D</Link> 
       <Link href="/library" className={`nav-link ${pathname === '/library' ? 'active' : ''}`}>Bibliothèque</Link>
@@ -92,6 +94,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
   const parentLinks = (
     <>
       <Link href="/parent/dashboard" className={`nav-link ${pathname.startsWith('/parent') ? 'active' : ''}`}>Tableau de Bord</Link>
+      <Link href="/parent/bulletins" className={`nav-link ${pathname.startsWith('/parent/bulletins') ? 'active' : ''}`}>Bulletins de mes Enfants</Link>
       <Link href="/blog" className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}>Annonces</Link>
     </>
   );

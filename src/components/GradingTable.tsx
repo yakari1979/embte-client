@@ -225,17 +225,32 @@ interface GradeCellProps {
 }
 
 const GradeCell: React.FC<GradeCellProps> = ({ grade, onClick }) => {
-    const appreciationColors: { [key: string]: string } = { EXCELLENT: 'text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300', TRES_BIEN: 'text-blue-600 bg-blue-100 dark:bg-blue-900 dark:text-blue-300', BIEN: 'text-cyan-600 bg-cyan-100 dark:bg-cyan-900 dark:text-cyan-300', PASSABLE: 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900 dark:text-yellow-300', INSUFFISANT: 'text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-300', ACQUERIR: 'text-orange-600 bg-orange-100 dark:bg-orange-900 dark:text-orange-300', NON_NOTE: 'text-gray-500 bg-gray-100 dark:bg-gray-800 dark:text-gray-400' };
-    const colorClass = grade ? appreciationColors[grade.appreciation] || 'text-gray-500' : 'text-gray-500';
+    // Mapping des couleurs pour les nouvelles appréciations
+    const appreciationColors: { [key: string]: string } = { 
+        EXCELLENT: 'text-green-600 bg-green-100', 
+        TRES_BIEN: 'text-blue-600 bg-blue-100', 
+        BIEN: 'text-cyan-600 bg-cyan-100', 
+        ASSEZ_BIEN: 'text-teal-600 bg-teal-100', // Nouveau
+        PASSABLE: 'text-yellow-600 bg-yellow-100', 
+        INSUFFISANT: 'text-orange-600 bg-orange-100', 
+        FAIBLE: 'text-red-500 bg-red-100', // Nouveau
+        TRES_FAIBLE: 'text-red-800 bg-red-200', // Nouveau
+        NON_NOTE: 'text-gray-500 bg-gray-100' 
+    };
+    
+    // Fallback de sécurité si l'appréciation n'est pas dans la liste
+    const colorClass = grade && appreciationColors[grade.appreciation] ? appreciationColors[grade.appreciation] : 'text-gray-500';
     
     return (
-        <div onClick={onClick} className="text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded transition-colors min-h-[60px] flex flex-col justify-center">
+        <div onClick={onClick} className="text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded transition-colors min-h-[60px] flex flex-col justify-center border border-transparent hover:border-gray-200">
             {grade && grade.score !== null ? (
                 <>
                     <p className="font-bold text-lg">{grade.score.toFixed(2)}</p>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${colorClass}`}>{grade.appreciation.replace('_', ' ')}</span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${colorClass}`}>
+                        {grade.appreciation.replace('_', ' ')}
+                    </span>
                 </>
-            ) : <span className="text-gray-400 italic">--</span>}
+            ) : <span className="text-gray-300 text-2xl font-light">-</span>}
         </div>
     );
 };
@@ -254,92 +269,112 @@ const GradingTable: React.FC<GradingTableProps> = ({ data, classId, onDataChange
     setIsEditModalOpen(true);
   };
   
-  // --- CORRECTION DU FILTRAGE ---
-  // On inclut 'TD' dans la liste TD
+  // FILTRAGE ROBUSTE
+  // On s'assure que 'TD' va dans la table TD
   const tdEvaluations = evaluations.filter(ev => ev.type === 'TD');
   
-  // On inclut DEVOIR_1, DEVOIR_2, COMPOSITION et AUTRE dans la liste des Devoirs
+  // Tous les autres types vont dans la table Devoirs
   const devoirEvaluations = evaluations.filter(ev => 
       ['DEVOIR_1', 'DEVOIR_2', 'COMPOSITION', 'AUTRE', 'DEVOIR'].includes(ev.type)
   );
 
-  // Fonction utilitaire pour afficher un joli badge pour le type
+  // Badge visuel pour identifier le type
   const getTypeBadge = (type: string) => {
       switch(type) {
-          case 'DEVOIR_1': return <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">D1</span>;
-          case 'DEVOIR_2': return <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">D2</span>;
-          case 'COMPOSITION': return <span className="text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-bold">COMPO</span>;
-          default: return <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Autre</span>;
+          case 'DEVOIR_1': return <span className="ml-2 text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200">D1</span>;
+          case 'DEVOIR_2': return <span className="ml-2 text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200">D2</span>;
+          case 'COMPOSITION': return <span className="ml-2 text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded border border-purple-200 font-bold">COMPO</span>;
+          default: return null;
       }
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 animate-in fade-in duration-500">
       
       {/* --- SECTION 1 : TRAVAUX DIRIGÉS (TD) --- */}
-      <div>
-        <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">Travaux Dirigés (TD)</h2>
-            <button onClick={() => setIsAddTdModalOpen(true)} className="btn-primary">+ Ajouter un TD</button>
-        </div>
-        <div className="overflow-x-auto bg-surface rounded-lg shadow">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-800">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-gray-800 z-10">Élève</th>
-                {tdEvaluations.map(ev => (
-                  <th key={ev.id} className="px-6 py-3 text-center text-xs font-medium text-text-secondary uppercase tracking-wider">{ev.title} <br/><span className="text-[10px] opacity-70">({ev.subject})</span></th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-surface divide-y divide-gray-200 dark:divide-gray-700">
-              {students.length > 0 ? students.map(student => (
-                <tr key={student.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-left font-medium sticky left-0 bg-surface z-10 border-r border-gray-100 dark:border-gray-700"> {student.firstName.toUpperCase()} {student.lastName.toUpperCase()}</td>
-                  {tdEvaluations.map(ev => (
-                    <td key={ev.id} className="p-1 min-w-[100px]">
-                         <GradeCell 
-                            grade={grades.find(g => g.studentId === student.id && g.evaluationId === ev.id)}
-                            onClick={() => handleOpenEditModal(student, ev)}
-                         />
-                    </td>
+      {tdEvaluations.length > 0 || students.length > 0 ? (
+          <div>
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                    📚 Travaux Dirigés (TD)
+                </h2>
+                <button onClick={() => setIsAddTdModalOpen(true)} className="btn-secondary text-sm">
+                    + Ajouter un TD
+                </button>
+            </div>
+            <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900/50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-gray-900 z-10 w-48">
+                        Élève
+                    </th>
+                    {tdEvaluations.map(ev => (
+                      <th key={ev.id} className="px-4 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider min-w-[120px]">
+                          <div className="truncate w-24 mx-auto" title={ev.title}>{ev.title}</div>
+                          <div className="text-[9px] text-gray-400 font-normal">{ev.subject}</div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
+                  {students.map(student => (
+                    <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <td className="px-4 py-2 whitespace-nowrap text-sm font-semibold text-gray-700 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10 border-r border-gray-100 dark:border-gray-700">
+                          {student.firstName} <span className="uppercase">{student.lastName}</span>
+                      </td>
+                      {tdEvaluations.map(ev => (
+                        <td key={ev.id} className="p-1">
+                             <GradeCell 
+                                grade={grades.find(g => g.studentId === student.id && g.evaluationId === ev.id)}
+                                onClick={() => handleOpenEditModal(student, ev)}
+                             />
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              )) : (
-                <tr>
-                    <td colSpan={tdEvaluations.length + 1} className="text-center py-10 text-text-secondary italic">Aucun élève dans cette classe.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                </tbody>
+              </table>
+            </div>
+          </div>
+      ) : null}
 
-      {/* --- SECTION 2 : DEVOIRS SURVEILLÉS & COMPOS --- */}
+      {/* --- SECTION 2 : DEVOIRS & COMPOS --- */}
       <div>
         <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">Devoirs & Compositions</h2>
-            <button onClick={() => setIsAddDevoirModalOpen(true)} className="btn-primary">+ Ajouter un Devoir</button>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                📝 Devoirs & Compositions
+            </h2>
+            <button onClick={() => setIsAddDevoirModalOpen(true)} className="btn-primary text-sm shadow-md">
+                + Ajouter une Note
+            </button>
         </div>
-        <div className="overflow-x-auto bg-surface rounded-lg shadow">
+        <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-gray-50 dark:bg-gray-900/50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-gray-800 z-10">Élève</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-gray-900 z-10 w-48">
+                    Élève
+                </th>
                 {devoirEvaluations.map(ev => (
-                  <th key={ev.id} className="px-6 py-3 text-center text-xs font-medium text-text-secondary uppercase tracking-wider">
-                      {ev.title} <br/>
-                      {getTypeBadge(ev.type)}
+                  <th key={ev.id} className="px-4 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider min-w-[120px]">
+                      <div className="flex items-center justify-center">
+                          <span className="truncate max-w-[100px]" title={ev.title}>{ev.title}</span>
+                          {getTypeBadge(ev.type)}
+                      </div>
+                      <div className="text-[9px] text-gray-400 font-normal mt-0.5">{ev.subject}</div>
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-surface divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
               {students.length > 0 ? students.map(student => (
-                <tr key={student.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-left font-medium sticky left-0 bg-surface z-10 border-r border-gray-100 dark:border-gray-700">{student.firstName.toUpperCase()} {student.lastName.toUpperCase()} </td>
+                <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-semibold text-gray-700 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10 border-r border-gray-100 dark:border-gray-700">
+                      {student.firstName} <span className="uppercase">{student.lastName}</span>
+                  </td>
                   {devoirEvaluations.map(ev => (
-                    <td key={ev.id} className="p-1 min-w-[100px]">
+                    <td key={ev.id} className="p-1">
                          <GradeCell 
                             grade={grades.find(g => g.studentId === student.id && g.evaluationId === ev.id)}
                             onClick={() => handleOpenEditModal(student, ev)}
@@ -349,7 +384,9 @@ const GradingTable: React.FC<GradingTableProps> = ({ data, classId, onDataChange
                 </tr>
               )) : (
                 <tr>
-                    <td colSpan={devoirEvaluations.length + 1} className="text-center py-10 text-text-secondary italic">Aucun élève dans cette classe.</td>
+                    <td colSpan={devoirEvaluations.length + 1} className="text-center py-12 text-gray-400 italic">
+                        Aucun élève trouvé dans cette classe.
+                    </td>
                 </tr>
               )}
             </tbody>
@@ -358,7 +395,6 @@ const GradingTable: React.FC<GradingTableProps> = ({ data, classId, onDataChange
       </div>
 
       {/* --- MODALS --- */}
-      
       <AddEvaluationModal
         isOpen={isAddTdModalOpen}
         onClose={() => setIsAddTdModalOpen(false)}
@@ -366,7 +402,7 @@ const GradingTable: React.FC<GradingTableProps> = ({ data, classId, onDataChange
         classId={classId}
         subjects={teacherSubjects}
         evaluationType="TD" 
-        bulletinType="TD" // On force le type TD
+        bulletinType="TD"
       />
 
       <AddEvaluationModal
@@ -376,7 +412,7 @@ const GradingTable: React.FC<GradingTableProps> = ({ data, classId, onDataChange
         classId={classId}
         subjects={teacherSubjects}
         evaluationType="DEVOIR" 
-        allowBulletinChoice={true} // Le prof choisit D1, D2 ou Compo
+        allowBulletinChoice={true}
       />
 
       <EditGradeModal

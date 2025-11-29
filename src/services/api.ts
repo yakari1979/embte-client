@@ -1602,6 +1602,16 @@ export const stimulateNeuron = (intensity: number, token: string) => {
 
 
 export interface BulletinConfig {
+  showDirectorSignature: boolean;
+  showAppreciation: boolean;
+  showCoeff: boolean;
+  borderColor: any;
+  fontFamily: any;
+  bgColor2: any;
+  bgColor1: any;
+  bgType: any;
+  authNumber: any;
+  phoneNumber: any;
   primaryColor: string;
   schoolMotto: string;
   directorName: string;
@@ -1638,6 +1648,31 @@ export const generateClassBulletins = (classId: string, token: string) => {
       establishment: any; config: BulletinConfig, bulletins: BulletinData[] 
 }>(`/reports/generate/${classId}`, {
       headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const saveDecisions = (classId: string, term: string, decisions: any[], token: string) => {
+  return apiClient.post('/reports/save-decisions', { classId, term, decisions }, { headers: { Authorization: `Bearer ${token}` } });
+};
+
+// export const publishBulletins = (classId: string, term: string, token: string) => {
+//   return apiClient.post('/reports/publish', { classId, term }, { headers: { Authorization: `Bearer ${token}` } });
+// };
+
+// Route spéciale élève (à créer dans le backend : elle fait comme /generate mais filtre sur req.user.id)
+export const getMyReportCard = (token: string) => {
+  return apiClient.get('/reports/student/my-reports', { headers: { Authorization: `Bearer ${token}` } });
+};
+
+// Mettre à jour cette fonction existante
+export const publishBulletins = (classId: string, term: string, token: string, target: 'STUDENT' | 'PARENT' | 'BOTH' = 'STUDENT') => {
+  return apiClient.post('/reports/publish', { classId, term, target }, { headers: { Authorization: `Bearer ${token}` } });
+};
+
+// Ajouter cette nouvelle fonction
+export const getChildReportCard = (studentId: string, token: string) => {
+  return apiClient.get(`/reports/parent/child/${studentId}/report`, { 
+      headers: { Authorization: `Bearer ${token}` } 
   });
 };
 
