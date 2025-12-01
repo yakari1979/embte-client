@@ -1,269 +1,205 @@
-// "use client";
-
-// import React, { useRef, useState, useEffect } from 'react';
-// import { Canvas, useFrame } from '@react-three/fiber';
-// import { OrbitControls, Sphere, Box, Cylinder, Html } from '@react-three/drei'; // <-- Import Html ici
-// import * as THREE from 'three';
-
-// // Couleurs standardisées
-// const COLORS: any = {
-//   'A': '#ff4d4d', // Rouge
-//   'T': '#ffff4d', // Jaune
-//   'C': '#4dff4d', // Vert
-//   'G': '#4d79ff', // Bleu
-//   'U': '#ff00ff', // Violet (Uracile)
-// };
-
-// const Nucleotide = ({ type, position }: any) => {
-//   return (
-//     <group position={position}>
-//       {/* Base Azotée */}
-//       <Box args={[0.8, 0.8, 0.8]}>
-//         <meshStandardMaterial color={COLORS[type]} />
-//       </Box>
-      
-//       {/* Lettre (CORRECTION ICI : On utilise Html au lieu de Text) */}
-//       <Html position={[0, 0, 0.5]} center transform pointerEvents="none">
-//         <div style={{ 
-//             color: 'black', 
-//             fontWeight: 'bold', 
-//             fontSize: '8px', 
-//             userSelect: 'none' 
-//         }}>
-//             {type}
-//         </div>
-//       </Html>
-
-//       {/* Squelette Sucre-Phosphate */}
-//       <Sphere args={[0.3]} position={[0, -0.6, 0]}>
-//          <meshStandardMaterial color="white" />
-//       </Sphere>
-//     </group>
-//   );
-// };
-
-// const TranscriptionProcess = ({ data, isPlaying }: { data: any, isPlaying: boolean }) => {
-//   const groupRef = useRef<THREE.Group>(null);
-//   const [progress, setProgress] = useState(0);
-
-//   // Animation : L'ADN défile vers la gauche pour simuler l'avancée de l'enzyme
-//   useFrame((state, delta) => {
-//     if (isPlaying && progress < data.templateStrand.length - 5) {
-//         setProgress((prev) => prev + delta * 1.5); // Vitesse
-//     }
-//   });
-
-//   // Position de la "fenêtre" de lecture
-//   const offset = -progress * 1.2; // Espace entre les bases
-
-//   return (
-//     <group ref={groupRef} position={[offset + 5, 0, 0]}>
-      
-//       {/* --- 1. BRIN ADN MODÈLE (En bas) --- */}
-//       {data.templateStrand.map((base: string, i: number) => (
-//         <Nucleotide key={`dna-${i}`} type={base} position={[i * 1.2, -1.5, 0]} />
-//       ))}
-
-//       {/* --- 2. BRIN ARNm EN CONSTRUCTION (En haut) --- */}
-//       {data.mrnaStrand.map((base: string, i: number) => {
-//         // L'ARN n'apparait que si la tête de lecture est passée
-//         if (i > progress + 3) return null; // Pas encore créé
-        
-//         // Animation d'arrivée du nucléotide (il tombe du ciel)
-//         let yPos = 0.5;
-//         if (i > progress) yPos = 5 - (progress - i + 4) * 2; 
-//         if (yPos < 0.5) yPos = 0.5;
-
-//         return (
-//            <group key={`rna-${i}`}>
-//               <Nucleotide type={base} position={[i * 1.2, yPos, 0]} />
-//               {/* Liaison hydrogène temporaire */}
-//               {yPos === 0.5 && (
-//                   <Cylinder args={[0.05, 0.05, 1]} position={[i * 1.2, -0.5, 0]}>
-//                       <meshBasicMaterial color="white" opacity={0.5} transparent />
-//                   </Cylinder>
-//               )}
-//            </group>
-//         )
-//       })}
-
-//     </group>
-//   );
-// };
-
-// const Enzyme = () => {
-//     // L'ARN Polymérase est fixe au centre de l'écran
-//     return (
-//         <group position={[2, 0, 0]}>
-//             <Sphere args={[3.5, 32, 32]}>
-//                 <meshPhysicalMaterial 
-//                     color="#a2d9ff" 
-//                     transmission={0.6} 
-//                     opacity={0.3} 
-//                     transparent 
-//                     roughness={0}
-//                     thickness={2}
-//                 />
-//             </Sphere>
-//             {/* CORRECTION ICI : Html au lieu de Text */}
-//             <Html position={[0, 4, 0]} center>
-//                 <div style={{ 
-//                     color: 'white', 
-//                     background: 'rgba(0,0,0,0.5)', 
-//                     padding: '4px 8px', 
-//                     borderRadius: '4px',
-//                     fontSize: '12px',
-//                     whiteSpace: 'nowrap'
-//                 }}>
-//                     ARN Polymérase
-//                 </div>
-//             </Html>
-//         </group>
-//     )
-// }
-
-// export default function Transcription3D({ data, isPlaying }: { data: any, isPlaying: boolean }) {
-//   return (
-//     <div className="w-full h-[500px] bg-gray-900 rounded-xl overflow-hidden shadow-2xl relative">
-//       <Canvas camera={{ position: [0, 2, 12], fov: 50 }}>
-//         <ambientLight intensity={0.8} />
-//         <pointLight position={[10, 10, 10]} />
-        
-//         {/* L'Enzyme (Fixe) */}
-//         <Enzyme />
-
-//         {/* Le Processus (Mobile) */}
-//         <TranscriptionProcess data={data} isPlaying={isPlaying} />
-
-//         <OrbitControls enableZoom={true} />
-//       </Canvas>
-
-//       <div className="absolute bottom-4 left-4 bg-black/60 p-3 rounded-lg text-white text-xs">
-//          <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 bg-[#ff4d4d]"></div> Adénine (A)</div>
-//          <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 bg-[#ff00ff]"></div> Uracile (U) - ARN</div>
-//          <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 bg-[#ffff4d]"></div> Thymine (T) - ADN</div>
-//          <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 bg-[#4dff4d]"></div> Cytosine (C)</div>
-//          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#4d79ff]"></div> Guanine (G)</div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
 "use client";
-
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sphere, Box, Cylinder, Html } from '@react-three/drei';
+import { OrbitControls, Sphere, Cylinder, Html, Float, Stars, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
-// ... (Code des couleurs et composant Nucleotide et Enzyme inchangés) ...
-// Garde les constantes COLORS, le composant Nucleotide et Enzyme comme avant.
-
 const COLORS: any = {
-  'A': '#ff4d4d', 'T': '#ffff4d', 'C': '#4dff4d', 'G': '#4d79ff', 'U': '#ff00ff',
+  'A': '#ef4444', // Rouge
+  'T': '#eab308', // Jaune
+  'C': '#22c55e', // Vert
+  'G': '#3b82f6', // Bleu
+  'U': '#d946ef', // Violet
 };
 
-const Nucleotide = ({ type, position }: any) => {
-  return (
-    <group position={position}>
-      <Box args={[0.8, 0.8, 0.8]}><meshStandardMaterial color={COLORS[type]} /></Box>
-      <Html position={[0, 0, 0.5]} center transform pointerEvents="none">
-        <div style={{ color: 'black', fontWeight: 'bold', fontSize: '8px', userSelect: 'none' }}>{type}</div>
-      </Html>
-      <Sphere args={[0.3]} position={[0, -0.6, 0]}><meshStandardMaterial color="white" /></Sphere>
-    </group>
-  );
-};
-
-const Enzyme = () => {
+// --- BASE AZOTÉE (Design Moléculaire) ---
+const BasePair = ({ type, position, isRNA = false }: { type: string, position: any, isRNA?: boolean }) => {
     return (
-        <group position={[2, 0, 0]}>
-            <Sphere args={[3.5, 32, 32]}>
-                <meshPhysicalMaterial color="#a2d9ff" transmission={0.6} opacity={0.3} transparent roughness={0} thickness={2}/>
-            </Sphere>
-            <Html position={[0, 4, 0]} center>
-                <div style={{ color: 'white', background: 'rgba(0,0,0,0.5)', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', whiteSpace: 'nowrap'}}>ARN Polymérase</div>
-            </Html>
+        <group position={position}>
+            {/* Atome Central */}
+            <mesh>
+                <sphereGeometry args={[0.4, 16, 16]} />
+                <meshStandardMaterial color={COLORS[type]} roughness={0.3} metalness={0.1} />
+            </mesh>
+            {/* Lettre Incrustée */}
+            <Text 
+                position={[0, 0, 0.45]} 
+                fontSize={0.3} 
+                color="white" 
+                anchorX="center" 
+                anchorY="middle"
+                outlineWidth={0.02}
+                outlineColor="black"
+            >
+                {type}
+            </Text>
+            {/* Liaison Sucre-Phosphate (Tige) */}
+            <mesh position={[0, isRNA ? 0.6 : -0.6, 0]}>
+                <cylinderGeometry args={[0.1, 0.1, 0.8]} />
+                <meshStandardMaterial color="#cbd5e1" />
+            </mesh>
+            {/* Phosphate (Petite boule) */}
+            <mesh position={[0, isRNA ? 1.1 : -1.1, 0]}>
+                <sphereGeometry args={[0.25]} />
+                <meshStandardMaterial color="white" />
+            </mesh>
         </group>
-    )
-}
-
-// --- CORRECTION MAJEURE ICI DANS TRANSCRIPTION PROCESS ---
-const TranscriptionProcess = ({ data, isPlaying, onFinish }: { data: any, isPlaying: boolean, onFinish: () => void }) => {
-  const groupRef = useRef<THREE.Group>(null);
-  const [progress, setProgress] = useState(0);
-
-  useFrame((state, delta) => {
-    if (isPlaying) {
-        // On laisse aller jusqu'à la fin de la chaîne + une marge (length + 2)
-        if (progress < data.templateStrand.length + 2) {
-            setProgress((prev) => prev + delta * 1.5); // Un peu plus rapide
-        } else {
-            // L'animation est finie
-            onFinish();
-        }
-    }
-  });
-
-  // Position de la "fenêtre" de lecture
-  const offset = -progress * 1.2;
-
-  return (
-    <group ref={groupRef} position={[offset + 5, 0, 0]}>
-      {/* ADN */}
-      {data.templateStrand.map((base: string, i: number) => (
-        <Nucleotide key={`dna-${i}`} type={base} position={[i * 1.2, -1.5, 0]} />
-      ))}
-
-      {/* ARNm */}
-      {data.mrnaStrand.map((base: string, i: number) => {
-        if (i > progress + 3) return null;
-        
-        let yPos = 0.5;
-        // Animation de chute plus fluide
-        if (i > progress) yPos = 8 - (progress - i + 4) * 2; 
-        if (yPos < 0.5) yPos = 0.5;
-
-        return (
-           <group key={`rna-${i}`}>
-              <Nucleotide type={base} position={[i * 1.2, yPos, 0]} />
-              {yPos === 0.5 && (
-                  <Cylinder args={[0.05, 0.05, 1]} position={[i * 1.2, -0.5, 0]}>
-                      <meshBasicMaterial color="white" opacity={0.5} transparent />
-                  </Cylinder>
-              )}
-           </group>
-        )
-      })}
-    </group>
-  );
+    );
 };
 
-// --- AJOUT DE LA PROPRIÉTÉ onFinish DANS LE COMPOSANT PRINCIPAL ---
+// --- ARN POLYMÉRASE (La Machine) ---
+const Polymerase = () => (
+    <group position={[2, 0, 0]}>
+        {/* Corps principal (Semi-transparent) */}
+        <mesh>
+            <sphereGeometry args={[3.5, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.8]} /> {/* Forme ouverte */}
+            <meshPhysicalMaterial 
+                color="#60a5fa" 
+                transmission={0.6} 
+                opacity={0.4} 
+                transparent 
+                roughness={0.2} 
+                thickness={2}
+                clearcoat={1}
+            />
+        </mesh>
+        {/* Label */}
+        <Html position={[0, 4, 0]} center>
+            <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded shadow-lg font-bold">
+                ARN Polymérase
+            </div>
+        </Html>
+    </group>
+);
+
+// --- NUCLÉOTIDES LIBRES (Ambiance) ---
+const FreeNucleotides = () => {
+    const nucleotides = useMemo(() => Array.from({ length: 20 }).map(() => ({
+        type: ['A', 'U', 'C', 'G'][Math.floor(Math.random() * 4)],
+        pos: [
+            (Math.random() - 0.5) * 15,
+            (Math.random() - 0.5) * 10 + 5, // Au dessus
+            (Math.random() - 0.5) * 5
+        ] as [number, number, number]
+    })), []);
+
+    return (
+        <group>
+            {nucleotides.map((n, i) => (
+                <Float key={i} speed={1} rotationIntensity={2} floatIntensity={2}>
+                    <group position={n.pos} scale={0.5}>
+                        <mesh>
+                            <sphereGeometry args={[0.3]} />
+                            <meshStandardMaterial color={COLORS[n.type]} transparent opacity={0.6} />
+                        </mesh>
+                    </group>
+                </Float>
+            ))}
+        </group>
+    );
+};
+
+// --- PROCESSUS D'ASSEMBLAGE ---
+const TranscriptionProcess = ({ data, isPlaying, onFinish }: { data: any, isPlaying: boolean, onFinish: () => void }) => {
+    const groupRef = useRef<THREE.Group>(null);
+    const [progress, setProgress] = useState(0);
+
+    useFrame((state, delta) => {
+        if (isPlaying) {
+            if (progress < data.templateStrand.length + 2) {
+                setProgress((prev) => prev + delta * 1.5);
+            } else {
+                onFinish();
+            }
+        }
+    });
+
+    const offset = -progress * 1.2;
+
+    return (
+        <group ref={groupRef} position={[offset + 5, 0, 0]}>
+            {/* BRIN ADN MODÈLE (Fixe en bas) */}
+            {data.templateStrand.map((base: string, i: number) => (
+                <group key={`dna-${i}`}>
+                    <BasePair type={base} position={[i * 1.2, -1.5, 0]} />
+                    {/* Liaison hydrogène brisée si sous l'enzyme */}
+                    {Math.abs(i - progress) > 2 && (
+                        <mesh position={[i * 1.2, 0, 0]}>
+                            <cylinderGeometry args={[0.05, 0.05, 2]} />
+                            <meshStandardMaterial color="#94a3b8" transparent opacity={0.3} />
+                        </mesh>
+                    )}
+                </group>
+            ))}
+
+            {/* BRIN ARNm (En construction) */}
+            {data.mrnaStrand.map((base: string, i: number) => {
+                // N'apparait que si l'enzyme est passée
+                if (i > progress + 3) return null;
+
+                // Animation d'arrivée "magnétique"
+                let yPos = 1.5;
+                let scale = 1;
+                let opacity = 1;
+
+                if (i > progress) {
+                    // Le nucléotide arrive du ciel
+                    yPos = 8 - (progress - i + 4) * 3;
+                    if (yPos < 1.5) yPos = 1.5;
+                    scale = Math.min(1, Math.max(0, 1 - (yPos - 1.5) / 5)); // Grandit en arrivant
+                }
+
+                // Animation de départ (l'ARNm se détache à gauche)
+                if (i < progress - 4) {
+                    yPos += (progress - i - 4) * 0.5; // Monte et part
+                }
+
+                return (
+                    <group key={`rna-${i}`} position={[i * 1.2, yPos, 0]} scale={scale}>
+                        <BasePair type={base} position={[0, 0, 0]} isRNA={true} />
+                        {/* Liaison covalente entre nucléotides ARN */}
+                        {i > 0 && i <= progress && (
+                            <mesh position={[-0.6, 1.1, 0]} rotation={[0, 0, Math.PI / 2]}>
+                                <cylinderGeometry args={[0.08, 0.08, 1.2]} />
+                                <meshStandardMaterial color="#d946ef" /> {/* Squelette ARN coloré */}
+                            </mesh>
+                        )}
+                    </group>
+                );
+            })}
+        </group>
+    );
+};
+
 export default function Transcription3D({ data, isPlaying, onFinish }: { data: any, isPlaying: boolean, onFinish: () => void }) {
-  return (
-    <div className="w-full h-[500px] bg-gray-900 rounded-xl overflow-hidden shadow-2xl relative">
-      <Canvas camera={{ position: [0, 2, 12], fov: 50 }}>
-        <ambientLight intensity={0.8} />
-        <pointLight position={[10, 10, 10]} />
-        <Enzyme />
-        
-        {/* On passe onFinish au processus */}
-        <TranscriptionProcess data={data} isPlaying={isPlaying} onFinish={onFinish} />
+    return (
+        <div className="w-full h-[500px] bg-gray-900 rounded-xl overflow-hidden shadow-2xl relative border-4 border-gray-800">
+            <Canvas camera={{ position: [0, 2, 14], fov: 45 }}>
+                <color attach="background" args={['#0f172a']} />
+                <ambientLight intensity={0.5} />
+                <pointLight position={[10, 10, 10]} intensity={1.5} />
+                <pointLight position={[-10, 5, 5]} color="#3b82f6" intensity={0.8} />
+                
+                {/* Particules d'ambiance */}
+                <Stars radius={50} depth={50} count={300} factor={2} saturation={0} fade speed={1} />
+                <FreeNucleotides />
 
-        <OrbitControls enableZoom={true} />
-      </Canvas>
+                {/* Machine */}
+                <Polymerase />
+                <TranscriptionProcess data={data} isPlaying={isPlaying} onFinish={onFinish} />
 
-      <div className="absolute bottom-4 left-4 bg-black/60 p-3 rounded-lg text-white text-xs">
-         <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 bg-[#ff4d4d]"></div> Adénine (A)</div>
-         <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 bg-[#ff00ff]"></div> Uracile (U) - ARN</div>
-         <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 bg-[#ffff4d]"></div> Thymine (T) - ADN</div>
-         <div className="flex items-center gap-2 mb-1"><div className="w-3 h-3 bg-[#4dff4d]"></div> Cytosine (C)</div>
-         <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#4d79ff]"></div> Guanine (G)</div>
-      </div>
-    </div>
-  );
+                <OrbitControls enableZoom={true} minDistance={5} maxDistance={20} />
+            </Canvas>
+
+            {/* Légende Interactive */}
+            <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-md p-4 rounded-xl border border-white/10 text-white text-xs space-y-2 shadow-lg">
+                <h4 className="font-bold text-gray-400 uppercase mb-1">Code Génétique</h4>
+                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-[#ef4444]"></div> Adénine (A)</div>
+                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-[#d946ef]"></div> Uracile (U) <span className="text-gray-400 ml-1">- Spécifique ARN</span></div>
+                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-[#eab308]"></div> Thymine (T) <span className="text-gray-400 ml-1">- Spécifique ADN</span></div>
+                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-[#22c55e]"></div> Cytosine (C)</div>
+                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-[#3b82f6]"></div> Guanine (G)</div>
+            </div>
+        </div>
+    );
 }

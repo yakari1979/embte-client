@@ -11,6 +11,7 @@ const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 // Crée le client Axios avec l'URL dynamique
 const apiClient = axios.create({
   baseURL: baseURL,
+  timeout: 15000,
 });
 
 // =======================================================
@@ -1532,6 +1533,7 @@ export interface CellConfig {
   hasCellWall: boolean;
   chloroplasts: boolean;
   message: string;
+  cellType: string; // <--- AJOUTE CETTE LIGNE ICI
 }
 
 export const getCellSimulationConfig = (params: { cellType: string; healthState: string }, token: string) => {
@@ -1540,8 +1542,6 @@ export const getCellSimulationConfig = (params: { cellType: string; healthState:
       headers: { Authorization: `Bearer ${token}` }
   });
 };
-
-// ...ADN
 
 export interface DNAConfig {
   strandColor: string;
@@ -1595,6 +1595,156 @@ export interface NeuronData {
 
 export const stimulateNeuron = (intensity: number, token: string) => {
   return apiClient.post<NeuronData>('/simulations/bio/neuron', { intensity }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- SYNAPSE ---
+export interface SynapseData {
+  vesicleRelease: boolean;
+  signalTransmitted: boolean;
+  message: string;
+  membranePotentialChange: number;
+}
+export const simulateSynapse = (params: { neurotransmitter: string, receptorStatus: string }, token: string) => {
+  return apiClient.post<SynapseData>('/simulations/bio/synapse', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- MUSCLE ---
+export interface MuscleData {
+  state: 'RELAXED' | 'CONTRACTED' | 'RIGOR';
+  sarcomereLength: number;
+  message: string;
+}
+
+// --- PHAGOCYTOSE ---
+export interface PhagocytosisConfig {
+  macrophageColor: string;
+  bacteriaVisible: boolean;
+  bacteriaPos: { x: number, y: number, z: number };
+  message: string;
+}
+export const simulatePhagocytosis = (stage: string, token: string) => {
+  return apiClient.post<PhagocytosisConfig>('/simulations/bio/phagocytosis', { stage }, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- MUSCLE ---
+export interface MuscleData {
+  state: 'RELAXED' | 'CONTRACTED' | 'RIGOR';
+  sarcomereLength: number; // Pourcentage de longueur (100 = relâché, 70 = contracté)
+  message: string;
+}
+
+export const simulateMuscle = (params: { atpLevel: string, calciumLevel: string }, token: string) => {
+  return apiClient.post<MuscleData>('/simulations/bio/muscle', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- RÉFLEXE ---
+export interface ReflexData {
+  legAngle: number;
+  emgSignal: number[];
+  message: string;
+  success: boolean;
+}
+
+export const simulateReflex = (params: { stimulusIntensity: number, damageLocation: string }, token: string) => {
+  return apiClient.post<ReflexData>('/simulations/bio/reflex', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- PRESSION ARTÉRIELLE ---
+export interface BloodPressureConfig {
+  heartRate: number;
+  vesselDiameter: number;
+  nerveActivity: {
+      hering: 'SILENT' | 'LOW' | 'NORMAL' | 'HIGH';
+      para: 'SILENT' | 'LOW' | 'NORMAL' | 'HIGH';
+      ortho: 'SILENT' | 'LOW' | 'NORMAL' | 'HIGH';
+  };
+  message: string;
+}
+
+export const simulateBloodPressure = (params: { situation: string, nerveCut: string }, token: string) => {
+  return apiClient.post<BloodPressureConfig>('/simulations/bio/blood-pressure', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// --- FÉCONDATION ---
+export interface FertilizationConfig {
+    spermSpeed: number;
+    eggState: 'PRESENT' | 'ABSENT' | 'OLD';
+    success: boolean;
+    message: string;
+}
+export const simulateFertilization = (params: { spermCount: string, spermMobility: string, timing: string }, token: string) => {
+    return apiClient.post<FertilizationConfig>('/simulations/bio/fertilization', params, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+// --- HÉRÉDITÉ ---
+export interface HeredityResult {
+    childGenotype: string;
+    childPhenotype: string;
+    antigens: string[]; // ['A', 'B', 'Rh']
+    message: string;
+}
+export const simulateHeredity = (params: { fatherGenotype: any, motherGenotype: any }, token: string) => {
+    return apiClient.post<HeredityResult>('/simulations/bio/heredity', params, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
+// --- IMMUNITÉ SPÉCIFIQUE ---
+export interface SpecificImmunityConfig {
+  antibodyCount: number;
+  killerActive: boolean;
+  targetState: 'ALIVE' | 'NEUTRALIZED' | 'LYSED';
+  message: string;
+}
+
+export const simulateSpecificImmunity = (params: { type: string, stage: string }, token: string) => {
+  return apiClient.post<SpecificImmunityConfig>('/simulations/bio/specific-immunity', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- PAVLOV ---
+export interface PavlovConfig {
+  salivation: boolean;
+  brainPath: string[];
+  message: string;
+}
+export const simulatePavlov = (params: { stimulus: string, conditioningLevel: number }, token: string) => {
+  return apiClient.post<PavlovConfig>('/simulations/bio/pavlov', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- ACCOUCHEMENT ---
+export interface BirthConfig {
+  contractionIntensity: number;
+  cervixOpening: number;
+  babyPosition: number;
+  message: string;
+}
+export const simulateBirth = (params: { oxytocinLevel: string, stage: string }, token: string) => {
+  return apiClient.post<BirthConfig>('/simulations/bio/birth', params, {
       headers: { Authorization: `Bearer ${token}` }
   });
 };

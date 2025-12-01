@@ -2,14 +2,30 @@
 
 import React from 'react';
 import Link from 'next/link';
-// N'oublie pas d'importer FileText ici
-import { ArrowLeft, Dna, Microscope, PlayCircle, FileText, Sprout, Activity } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  Dna, 
+  Microscope, 
+  PlayCircle, 
+  FileText, 
+  Sprout, 
+  Activity, 
+  Network, 
+  ShieldCheck,
+  Dumbbell,
+  Baby,
+  Droplet,
+  HeartPulse,
+  ShieldAlert,
+  BrainCircuit // Pour Pavlov
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function SVTSimulationsPage() {
   const router = useRouter();
 
   const simulations = [
+    // --- 1. BIOLOGIE MOLECULAIRE & CELLULAIRE ---
     {
       id: 'dna',
       title: "Structure de l'ADN",
@@ -26,7 +42,6 @@ export default function SVTSimulationsPage() {
       color: "hover:border-emerald-300 hover:shadow-emerald-500/20",
       link: "/student/simulations/cell"
     },
-    // --- NOUVELLE CARTE AJOUTÉE ICI ---
     {
       id: 'transcription',
       title: "Transcription ADN → ARNm",
@@ -35,6 +50,8 @@ export default function SVTSimulationsPage() {
       color: "hover:border-blue-300 hover:shadow-blue-500/20",
       link: "/student/simulations/transcription"
     },
+    
+    // --- 2. GÉNÉTIQUE ---
     {
       id: 'mendel',
       title: "Génétique & Lois de Mendel",
@@ -44,12 +61,100 @@ export default function SVTSimulationsPage() {
       link: "/student/simulations/mendel"
     },
     {
+      id: 'heredity',
+      title: "Hérédité : Groupes Sanguins",
+      description: "Comprenez la transmission des allèles ABO/Rh et la formation des phénotypes (Antigènes).",
+      icon: <Droplet size={40} className="text-cyan-600" />,
+      color: "hover:border-cyan-300 hover:shadow-cyan-500/20",
+      link: "/student/simulations/heredity"
+    },
+
+    // --- 3. NEUROPHYSIOLOGIE ---
+    {
       id: 'nervous',
-      title: "Le Système Nerveux",
-      description: "Simulez la 'Loi du tout ou rien' et visualisez la propagation du message nerveux le long de l'axone.",
-      icon: <Activity size={40} className="text-yellow-500" />,
-      color: "hover:border-yellow-300 hover:shadow-yellow-500/20",
+      title: "Le Message Nerveux",
+      description: "Simulez la 'Loi du tout ou rien' et visualisez la propagation du potentiel d'action le long de l'axone.",
+      icon: <Activity size={40} className="text-amber-500" />,
+      color: "hover:border-amber-300 hover:shadow-amber-500/20",
       link: "/student/simulations/nervous"
+    },
+    {
+      id: 'synapse',
+      title: "Transmission Synaptique",
+      description: "Comprenez le rôle des neurotransmetteurs (Acétylcholine, GABA) et le fonctionnement des récepteurs.",
+      icon: <Network size={40} className="text-purple-500" />,
+      color: "hover:border-purple-300 hover:shadow-purple-500/20",
+      link: "/student/simulations/synapse"
+    },
+    {
+      id: 'reflex',
+      title: "Réflexe Myotatique",
+      description: "Testez l'arc réflexe rotulien et simulez des lésions nerveuses pour comprendre le circuit.",
+      icon: <Activity size={40} className="text-indigo-600" />,
+      color: "hover:border-indigo-300 hover:shadow-indigo-500/20",
+      link: "/student/simulations/reflex"
+    },
+    {
+      id: 'pavlov',
+      title: "Réflexe Conditionnel (Pavlov)",
+      description: "Créez de nouvelles connexions nerveuses dans le cortex par apprentissage (Cloche + Viande).",
+      icon: <BrainCircuit size={40} className="text-violet-600" />,
+      color: "hover:border-violet-300 hover:shadow-violet-500/20",
+      link: "/student/simulations/pavlov"
+    },
+
+    // --- 4. FONCTIONS VITALES ---
+    {
+      id: 'muscle',
+      title: "Contraction Musculaire",
+      description: "Découvrez le mécanisme moléculaire du sarcomère, le rôle de l'ATP et du Calcium.",
+      icon: <Dumbbell size={40} className="text-red-600" />,
+      color: "hover:border-red-300 hover:shadow-red-500/20",
+      link: "/student/simulations/muscle"
+    },
+    {
+      id: 'blood-pressure',
+      title: "Régulation Pression Artérielle",
+      description: "Expérimentez le Baroréflexe : sectionnez les nerfs (Hering, X) et observez la réponse cardiaque.",
+      icon: <HeartPulse size={40} className="text-red-500" />,
+      color: "hover:border-red-300 hover:shadow-red-500/20",
+      link: "/student/simulations/blood-pressure"
+    },
+
+    // --- 5. IMMUNITÉ ---
+    {
+      id: 'phagocytosis',
+      title: "Immunité : La Phagocytose",
+      description: "Observez les étapes de la réponse immunitaire non spécifique : adhésion, ingestion et digestion.",
+      icon: <ShieldCheck size={40} className="text-emerald-600" />,
+      color: "hover:border-emerald-300 hover:shadow-emerald-500/20",
+      link: "/student/simulations/phagocytosis"
+    },
+    {
+      id: 'specific-immunity',
+      title: "Immunité Spécifique (LB & LT)",
+      description: "Comparez l'action des Anticorps (Humorale) et des Lymphocytes Tueurs (Cellulaire).",
+      icon: <ShieldAlert size={40} className="text-blue-600" />,
+      color: "hover:border-blue-300 hover:shadow-blue-500/20",
+      link: "/student/simulations/specific-immunity"
+    },
+
+    // --- 6. REPRODUCTION ---
+    {
+      id: 'fertilization',
+      title: "Reproduction : La Fécondation",
+      description: "Simulez la rencontre des gamètes, l'influence du spermogramme et du cycle ovarien.",
+      icon: <Baby size={40} className="text-pink-400" />,
+      color: "hover:border-pink-300 hover:shadow-pink-500/20",
+      link: "/student/simulations/fertilization"
+    },
+    {
+      id: 'birth',
+      title: "L'Accouchement",
+      description: "Comprenez la rétroaction positive, le rôle de l'ocytocine et la mécanique de l'expulsion.",
+      icon: <Baby size={40} className="text-fuchsia-500" />, // Fuchsia pour différencier de la fécondation
+      color: "hover:border-fuchsia-300 hover:shadow-fuchsia-500/20",
+      link: "/student/simulations/birth"
     }
   ];
 
