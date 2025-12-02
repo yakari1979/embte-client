@@ -1749,6 +1749,253 @@ export const simulateBirth = (params: { oxytocinLevel: string, stage: string }, 
   });
 };
 
+// --- PHYSIQUE CINÉMATIQUE ---
+export interface ProjectileConfig {
+  trajectory: {x: number, y: number, z: number}[];
+  stats: { range: string, maxHeight: string, duration: string };
+  message: string;
+}
+// CORRECTION : Ajout de "/simulations" au début du chemin
+export const simulateProjectile = (params: { velocity: number, angle: number, height: number }, token: string) => {
+  return apiClient.post<ProjectileConfig>('/simulations/physics/projectile', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- PHYSIQUE LORENTZ ---
+export interface LorentzConfig {
+  radius: number;
+  period: string;
+  direction: number;
+  message: string;
+}
+
+// CORRECTION : Ajout de "/simulations" au début du chemin
+export const simulateLorentz = (params: { chargeType: string, velocity: number, bField: number }, token: string) => {
+  return apiClient.post<LorentzConfig>('/simulations/physics/lorentz', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- INDUCTION ---
+export interface InductionConfig {
+  voltage: string;
+  flux: string;
+  currentDirection: number; // 1, -1, 0
+  message: string;
+}
+export const simulateInduction = (params: { magnetVelocity: number, magnetPosition: number }, token: string) => {
+  return apiClient.post<InductionConfig>('/simulations/physics/induction', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- CIRCUIT RC ---
+export interface RCConfig {
+  uc: string; // Tension
+  i: string;  // Intensité (mA)
+  tau: string; // Constante de temps
+  percentCharge: string;
+  message: string;
+}
+export const simulateRC = (params: { rValue: number, cValue: number, voltageE: number, time: number, mode: string }, token: string) => {
+  return apiClient.post<RCConfig>('/simulations/physics/rc-circuit', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- YOUNG ---
+export interface YoungConfig {
+  interfringe: string;
+  message: string;
+}
+export const simulateYoung = (params: { lambda: number, slitDistance: number, screenDistance: number }, token: string) => {
+  return apiClient.post<YoungConfig>('/simulations/physics/interference', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- PHOTOÉLECTRIQUE ---
+export interface PhotoelectricConfig {
+  isEjected: boolean;
+  photonEnergy: string;
+  kineticEnergy: string;
+  electronVelocity: string;
+  message: string;
+}
+export const simulatePhotoelectric = (params: { wavelength: number, intensity: number, workFunction: number }, token: string) => {
+  return apiClient.post<PhotoelectricConfig>('/simulations/physics/photoelectric', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- DIPÔLE RL ---
+export interface RLConfig {
+  i: string;      // Intensité (mA)
+  ul: string;     // Tension Bobine (V)
+  energy: string; // Énergie (mJ)
+  tau: string;    // ms
+  percent: string;
+  message: string;
+}
+export const simulateRL = (params: { inductance: number, resistance: number, voltageE: number, time: number, mode: string }, token: string) => {
+  return apiClient.post<RLConfig>('/simulations/physics/rl-circuit', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- ATOME DE BOHR ---
+export interface BohrConfig {
+  deltaE: string;
+  lambda: string;
+  type: 'EMISSION' | 'ABSORPTION';
+  color: string;
+  message: string;
+}
+export const simulateBohr = (params: { n1: number, n2: number }, token: string) => {
+  return apiClient.post<BohrConfig>('/simulations/physics/bohr', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- TRANSFORMATEUR ---
+export interface TransformerConfig {
+  u2: string;
+  ratio: string;
+  type: string;
+  fluxIntensity: number;
+  message: string;
+}
+export const simulateTransformer = (params: { u1: number, n1: number, n2: number }, token: string) => {
+  return apiClient.post<TransformerConfig>('/simulations/physics/transformer', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- RLC FORCÉ ---
+export interface RLCForcedConfig {
+  z: string;
+  i: string;
+  phi: string;
+  f0: string;
+  state: string;
+  message: string;
+}
+export const simulateRLCForced = (params: { r: number, l: number, c: number, f: number, uMax: number }, token: string) => {
+  return apiClient.post<RLCForcedConfig>('/simulations/physics/rlc-forced', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+// --- TITRAGE ---
+export interface TitrationConfig {
+  ph: string;
+  equivalenceVolume: string;
+  color: string;
+  solutionVolume: string;
+  species: { h3o: string, oh: string };
+  message: string;
+}
+export const simulateTitration = (params: { volumeAdded: number, acidConcentration: number, baseConcentration: number, volumeAcid: number }, token: string) => {
+  return apiClient.post<TitrationConfig>('/simulations/chemistry/titration', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- CINÉTIQUE ---
+export interface KineticsConfig {
+  speedFactor: string;
+  collisionEfficiency: string;
+  particleCount: number;
+  particleSpeed: number;
+  message: string;
+}
+export const simulateKinetics = (params: { temperature: number, concentration: number, catalyst: boolean }, token: string) => {
+  return apiClient.post<KineticsConfig>('/simulations/chemistry/kinetics', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+
+// --- ATOME ---
+export interface AtomConfig {
+  z: number;
+  name: string;
+  electronicConfig: string;
+  shells: number[];
+  message: string;
+}
+export const simulateAtom = (element: string, token: string) => {
+  return apiClient.post<AtomConfig>('/simulations/chemistry/atom-config', { element }, { headers: { Authorization: `Bearer ${token}` } });
+};
+
+// --- VSEPR ---
+export interface VSEPRConfig {
+  shapeName: string;
+  angle: string;
+  geometryType: string;
+  message: string;
+}
+export const simulateVSEPR = (type: string, token: string) => {
+  return apiClient.post<VSEPRConfig>('/simulations/chemistry/vsepr', { type }, { headers: { Authorization: `Bearer ${token}` } });
+};
+
+// --- ISOMÉRIE ---
+export interface IsomerConfig {
+  moleculeName: string;
+  isZ: boolean;
+  message: string;
+}
+export const simulateIsomer = (type: string, token: string) => {
+  return apiClient.post<IsomerConfig>('/simulations/chemistry/isomerism', { molecule: 'BUT-2-ENE', type }, { headers: { Authorization: `Bearer ${token}` } });
+};
+
+// --- REDOX ---
+export interface RedoxConfig {
+  voltage: string;
+  equation: string;
+  electronFlow: string;
+  message: string;
+}
+export const simulateRedox = (connected: boolean, token: string) => {
+  return apiClient.post<RedoxConfig>('/simulations/chemistry/redox', { connected }, { headers: { Authorization: `Bearer ${token}` } });
+};
+
+// --- PYRAMIDE DES ÂGES ---
+export interface PyramidConfig {
+  data: { age: string, men: number, women: number }[];
+  totalPop: number;
+  type: string;
+  message: string;
+}
+
+export const simulatePyramid = (params: { country: string, birthModifier: number, lifeModifier: number }, token: string) => {
+  // IMPORTANT : Vérifie que l'URL correspond bien à celle définie dans le backend
+  return apiClient.post<PyramidConfig>('/simulations/history-sim/age-pyramid', params, {
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+// --- DATATION C14 ---
+export interface CarbonConfig {
+  c14: string; // % restant
+  n14: string; // % formé
+  age: number;
+  message: string;
+}
+// Note : J'utilise la route existante 'decay' mais adaptée pour le C14 spécifiquement ici, 
+// ou on crée une nouvelle fonction si le endpoint change. Ici je réutilise le endpoint générique créé avant ou le nouveau.
+// Utilisons le nouveau endpoint C14 implicite via le payload.
+export const simulateCarbon14 = (timeYears: number, token: string) => {
+  return apiClient.post<CarbonConfig>('/simulations/physics-sim/decay', { timeYears, initialNuclei: 100, halfLife: 5730 }, { // On adapte les params
+      headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
 
 
 export interface BulletinConfig {
