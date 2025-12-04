@@ -316,7 +316,7 @@ const NavigationBar: React.FC<{ user: User }> = ({ user }) => {
       <Link href="/blog" className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}>Annonces</Link>
     </>
   );
-
+        // fonctionnaliter de la section propres de la routeur en fonction de la pureter des affaire propre 
   const parentLinks = (
     <>
       <Link href="/parent/dashboard" className={`nav-link ${pathname.startsWith('/parent') ? 'active' : ''}`}>Tableau de Bord</Link>
