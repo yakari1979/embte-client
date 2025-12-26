@@ -1,52 +1,15 @@
-// // src/app/layout.tsx (version mise à jour)
-// import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
-// import "../styles/index.css";
-// import 'leaflet/dist/leaflet.css';
-// import { Providers } from "./providers"; // <-- Importer le provider
-
-// const inter = Inter({ subsets: ["latin"] });
-
-// export const metadata: Metadata = {
-//   title: "Plateforme Édu",
-//   description: "Votre plateforme d'éducation numérique.",
-// };
-
-// export default function RootLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-//   return (
-//     <html lang="fr" suppressHydrationWarning>
-//       <body className={inter.className}>
-//         <Providers> {/* <-- Entourer children avec le provider */}
-//           {children}
-//         </Providers>
-//       </body>
-//     </html>
-//   );
-// }
-
-
-
-// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "../styles/index.css";
-import 'leaflet/dist/leaflet.css';
-import { Providers } from "./providers";
-// --- IMPORT DU CHAT ---
-// Assure-toi que le chemin correspond bien à l'endroit où tu as créé le fichier
-// Si ton fichier est dans src/components/, c'est bien ça :
-import CoachingChat from "@/components/CoachingChat";
-import ParentAssistant from "@/components/ParentAssistant"; // <-- IMPORT 
+import "@/app/globals.css"; // Ton import CSS correct
+import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/context/ThemeContext";
+import UserTracker from "@/components/UserTracker"; // <-- IMPORT
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: "Plateforme Édu",
-  description: "Votre plateforme d'éducation numérique.",
+  title: "Nexus BTP",
+  description: "Gestion de chantier.",
 };
 
 export default function RootLayout({
@@ -56,16 +19,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Providers>
+      {/* 
+         IMPORTANT : J'ai ajouté les classes Tailwind ici 
+         bg-nexus-black = couleur de fond
+         text-nexus-text = couleur du texte
+      */}
+      <body className={`${inter.className} bg-nexus-black text-nexus-text min-h-screen`}>
+        <ThemeProvider>
+        <UserTracker /> {/* <-- AJOUT ICI, invisible mais présent */}
+          <Navbar />
           {children}
-          
-          {/* --- LE CHATBOT FLOTTANT --- */}
-          {/* Il se superpose à toutes les pages grâce à sa position "fixed" */}
-          <CoachingChat />
-          <ParentAssistant />   {/* Pour les parents */}
-          
-        </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );
