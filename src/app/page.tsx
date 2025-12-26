@@ -227,16 +227,16 @@ export default function LandingPage() {
                 img="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800"
              />
              <ProjectCard 
-                title="Pont de l'Avenir" 
-                location="Abidjan, RCI" 
+                title="Bâtiment de l'Avenir" 
+                location="Rufisque, Sénégal" 
                 category="Infrastructures"
-                img="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800"
+                img="https://res.cloudinary.com/da72jlau6/image/upload/v1766767530/imgA_x4ttah.jpg"
              />
              <ProjectCard 
-                title="Usine TechHub" 
-                location="Diamniadio, Sénégal" 
+                title="Bâtiment Terminé" 
+                location="Rufisque, Sénégal" 
                 category="Industriel"
-                img="https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=800"
+                img="https://res.cloudinary.com/da72jlau6/image/upload/v1766767575/img5_h5tl3o.png"
              />
           </div>
         </div>

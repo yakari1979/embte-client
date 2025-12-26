@@ -10,21 +10,37 @@ gsap.registerPlugin(ScrollTrigger);
 
 // DONNÉES PHOTOS (4 Projets Phares)
 const projects = [
-  {
-    id: 1,
-    title: "Tour Panoramique",
-    location: "Dakar Plateau",
-    category: "Immeuble R+12",
-    desc: "Une prouesse architecturale alliant verre et béton armé, défiant les normes de hauteur.",
-    img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766767575/img5_h5tl3o.png"
-  },
+    {
+        id: 1,
+        title: "Bâtiment Horizon",
+        location: "Rufisque, Sénégal",
+        category: "Immeuble R+12",
+        desc: "Une prouesse architecturale alliant verre et béton armé, défiant les normes de hauteur.",
+        img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766767575/img5_h5tl3o.png"
+    },
+    {
+        id: 2,
+        title: "Bâtiment",
+        location: "Rufisque, Sénégal",
+        category: "Résidentiel Écologique",
+        desc: "Autonomie énergétique totale. Intégration paysagère respectueuse de l'environnement côtier.",
+        img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774621/img7_y6jvce.png"
+    },
+    {
+        id: 3,
+        title: "Bâtiment",
+        location: "Rufisque, Sénégal",
+        category: "Infrastructure Public",
+        desc: "Stade multifonctionnel de 15 000 places avec structure métallique suspendue.",
+        img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774806/img8_xsk6pt.jpg"
+    },
   {
     id: 2,
     title: "Villa Solaire",
     location: "Saly Portudal",
     category: "Résidentiel Écologique",
     desc: "Autonomie énergétique totale. Intégration paysagère respectueuse de l'environnement côtier.",
-    img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1600&auto=format&fit=crop"
+    img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774621/img7_y6jvce.png"
   },
   {
     id: 3,
@@ -32,16 +48,9 @@ const projects = [
     location: "Diamniadio",
     category: "Infrastructure Public",
     desc: "Stade multifonctionnel de 15 000 places avec structure métallique suspendue.",
-    img: "https://images.unsplash.com/photo-1470468969717-61d5d54fd036?q=80&w=1600&auto=format&fit=crop"
+    img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774806/img8_xsk6pt.jpg"
   },
-  {
-    id: 4,
-    title: "Pont de l'Émergence",
-    location: "Autoroute A1",
-    category: "Génie Civil",
-    desc: "Ouvrage d'art connectant les deux rives, conçu pour supporter un trafic lourd constant.",
-    img: "https://images.unsplash.com/photo-1545558014-8692077e9b5c?q=80&w=1600&auto=format&fit=crop"
-  }
+
 ];
 
 // DONNÉES VIDÉOS (liens Pexels HD stables)

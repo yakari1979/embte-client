@@ -18,7 +18,7 @@ const solutionsData = [
     subtitle: "L'art de vivre moderne",
     description: "Nous concevons des villas d'exception alliant design contemporain et confort thermique. De la fondation aux finitions, nous réalisons votre rêve familial.",
     tags: ["Clé en main", "Écologique", "Design"],
-    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1600&auto=format&fit=crop", // Belle villa
+    image: "https://res.cloudinary.com/da72jlau6/image/upload/v1766767530/imgA_x4ttah.jpg", // Belle villa
     icon: <Home className="w-8 h-8 text-white"/>
   },
   {
@@ -27,7 +27,7 @@ const solutionsData = [
     subtitle: "Bureaux & Immeubles R+X",
     description: "Des structures robustes pour les professionnels. Nous optimisons chaque m² pour garantir rentabilité et durabilité à vos investissements locatifs.",
     tags: ["Béton Armé", "Normes ERP", "Rentabilité"],
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1600&auto=format&fit=crop", // Immeuble verre
+    image: "https://res.cloudinary.com/da72jlau6/image/upload/v1766767575/img5_h5tl3o.png", // Immeuble verre
     icon: <Building2 className="w-8 h-8 text-white"/>
   },
   {
@@ -36,7 +36,7 @@ const solutionsData = [
     subtitle: "Transformation intégrale",
     description: "Donnez une seconde vie à l'existant. Surélévation, renforcement structurel ou modernisation complète des intérieurs et façades.",
     tags: ["Surélévation", "Façade", "Interieur"],
-    image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=1600&auto=format&fit=crop", // Renovation
+    image: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774621/img7_y6jvce.png", // Renovation
     icon: <Hammer className="w-8 h-8 text-white"/>
   },
   {
@@ -45,7 +45,7 @@ const solutionsData = [
     subtitle: "Infrastructures lourdes",
     description: "Terrassement, voiries et réseaux divers. L'expertise technique pour les projets d'envergure nécessitant une logistique industrielle.",
     tags: ["Infrastructure", "Réseaux", "Assainissement"],
-    image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1600&auto=format&fit=crop", // Chantier gros oeuvre
+    image: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774806/img8_xsk6pt.jpg", // Chantier gros oeuvre
     icon: <Ruler className="w-8 h-8 text-white"/>
   }
 ];
