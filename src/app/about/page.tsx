@@ -30,7 +30,7 @@ const heroSlides = [
     title: "La Force de Bâtir",
     subtitle: "Génie Civil & Structure",
     desc: "Des fondations solides pour les générations futures.",
-    img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1600&auto=format&fit=crop"
+    img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766775840/img9_yq6qi6.png"
   },
   {
     id: 3,

@@ -34,22 +34,6 @@ const projects = [
         desc: "Stade multifonctionnel de 15 000 places avec structure métallique suspendue.",
         img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774806/img8_xsk6pt.jpg"
     },
-  {
-    id: 2,
-    title: "Villa Solaire",
-    location: "Saly Portudal",
-    category: "Résidentiel Écologique",
-    desc: "Autonomie énergétique totale. Intégration paysagère respectueuse de l'environnement côtier.",
-    img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774621/img7_y6jvce.png"
-  },
-  {
-    id: 3,
-    title: "Complexe Sportif",
-    location: "Diamniadio",
-    category: "Infrastructure Public",
-    desc: "Stade multifonctionnel de 15 000 places avec structure métallique suspendue.",
-    img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774806/img8_xsk6pt.jpg"
-  },
 
 ];
 
