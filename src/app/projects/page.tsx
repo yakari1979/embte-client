@@ -3,7 +3,7 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, MapPin, Play, Pause, Phone, Mail } from 'lucide-react';
+import { ArrowRight, MapPin, Play, Pause, Phone, Mail, Instagram, Twitter, Linkedin, Facebook } from 'lucide-react';
 import Link from 'next/link';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -16,7 +16,7 @@ const projects = [
     location: "Dakar Plateau",
     category: "Immeuble R+12",
     desc: "Une prouesse architecturale alliant verre et béton armé, défiant les normes de hauteur.",
-    img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=1600&auto=format&fit=crop"
+    img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766767575/img5_h5tl3o.png"
   },
   {
     id: 2,
@@ -44,51 +44,41 @@ const projects = [
   }
 ];
 
-// DONNÉES VIDÉOS (5 Séquences)
-// Note: Remplace les src par tes propres fichiers mp4 dans /public ou des liens externes
-// const videos = [
-//   { id: 1, title: "Coulage Dalle RDC", src: "https://assets.mixkit.co/videos/preview/mixkit-factory-worker-welding-metal-in-a-workshop-41705-large.mp4", size: "large" },
-//   { id: 2, title: "Pose Charpente", src: "https://assets.mixkit.co/videos/preview/mixkit-industrial-machine-working-14282-large.mp4", size: "small" },
-//   { id: 3, title: "Finitions Intérieures", src: "https://assets.mixkit.co/videos/preview/mixkit-male-painter-painting-a-white-wall-41687-large.mp4", size: "small" },
-//   { id: 4, title: "Vue Drone Chantier", src: "https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-construction-site-43403-large.mp4", size: "small" },
-//   { id: 5, title: "Time-lapse Façade", src: "https://assets.mixkit.co/videos/preview/mixkit-workers-on-top-of-a-building-under-construction-43640-large.mp4", size: "small" }
-// ];
-
 // DONNÉES VIDÉOS (liens Pexels HD stables)
 const videos = [
     { 
       id: 1, 
-      title: "Drone chantier avec grues et ouvriers", 
+      title: "chantier avec grues et ouvriers", 
       // Vue aérienne d’un chantier en activité
-      src: "https://fr.freepik.com/video-gratuite/construction-batiments-nigeria-drone-02_30849#fromView=search&page=1&position=27&uuid=c8624ff2-c6ee-4001-99ad-c19cda0c56bd", 
+      src: "https://res.cloudinary.com/da72jlau6/video/upload/v1766764274/vm6_q7egy9.mp4", 
       size: "large"
     },
     { 
       id: 2, 
       title: "Vue aérienne chantier et grues", 
       // Grues et machines en mouvement
-      src: "https://player.vimeo.com/external/829786045.sd.mp4?s=3a83276f95b06fcb5093bed5b3dc827399a4f784&profile_id=165&oauth2_token_id=57447761",
+      src: "https://res.cloudinary.com/da72jlau6/video/upload/v1766764261/vm3_zzebxi.mp4",
       size: "small"
     },
     { 
       id: 3, 
       title: "Chantier construction bâtiments", 
       // Ouvriers et équipements de construction
-      src: "https://player.vimeo.com/external/791636139.sd.mp4?s=6b332341c84a6601b29552c7734a07ebf034c0ff&profile_id=165&oauth2_token_id=57447761",
+      src: "https://res.cloudinary.com/da72jlau6/video/upload/v1766764262/vm4_nrqiqd.mp4",
       size: "small"
     },
     { 
       id: 4, 
       title: "Vue aérienne gros chantier urbain", 
       // Vidéo drone d’un grand chantier
-      src: "https://player.vimeo.com/external/825716498.sd.mp4?s=8f3bd41432d2c85a711c2a2d76f34a4379a72bb7&profile_id=165&oauth2_token_id=57447761",
+      src: "https://res.cloudinary.com/da72jlau6/video/upload/v1766764260/vm5_byglew.mp4",
       size: "small"
     },
     { 
       id: 5, 
       title: "Machines de construction en action", 
       // Travaux avec engins et grues
-      src: "https://player.vimeo.com/external/828435533.sd.mp4?s=d47868fe1be0ad9c0fa30631af858aa74908c9a8&profile_id=165&oauth2_token_id=57447761",
+      src: "https://res.cloudinary.com/da72jlau6/video/upload/v1766764274/vm2_lgdxxf.mp4",
       size: "small"
     }
   ];
@@ -276,8 +266,8 @@ export default function ProjectsPage() {
 
       {/* CTA FOOTER */}
       <section className="py-20 bg-nexus-orange text-black text-center">
-          <h2 className="text-4xl md:text-6xl font-black mb-8">Convaincu ?</h2>
-          <Link href="/auth/register" className="inline-block bg-black text-white px-12 py-5 rounded-full font-bold text-xl hover:scale-105 transition-transform shadow-2xl">
+          <h2 className="text-4xl md:text-6xl text-white font-black mb-8">Convaincu ?</h2>
+          <Link href="/auth/register" className="inline-block bg-white text-nexus-orange px-12 py-5 rounded-full font-bold text-xl hover:scale-105 transition-transform shadow-2xl">
              Lancer mon chantier
           </Link>
       </section>
@@ -288,20 +278,18 @@ export default function ProjectsPage() {
             <div>
                 <h3 className="text-2xl font-bold text-nexus-text mb-4">EM<span className="text-nexus-orange">BTE</span></h3>
                 <p className="text-sm leading-relaxed">
-                    La solution n°1 pour la digitalisation des chantiers en Afrique de l'Ouest. Précision, rapidité, transparence.
+                    La solution n°1 pour la digitalisation des chantiers en Afrique de l'Ouest.
                 </p>
             </div>
-            
+              {/* dejas fait */}
             <div>
                 <h4 className="text-white font-bold mb-4">Liens Rapides</h4>
                 <ul className="space-y-2 text-sm">
                     <li><Link href="#" className="hover:text-nexus-orange">À Propos</Link></li>
                     <li><Link href="/solutions" className="hover:text-nexus-orange">Nos Services</Link></li>
                     <li><Link href="/contact" className="hover:text-nexus-orange">Contacter Nous</Link></li>
-                    {/* <li><Link href="#" className="hover:text-nexus-orange">Carrières</Link></li> */}
                 </ul>
             </div>
-
             <div>
                 <h4 className="text-white font-bold mb-4">Légal</h4>
                 <ul className="space-y-2 text-sm">
@@ -310,7 +298,6 @@ export default function ProjectsPage() {
                     <li><Link href="/cgv" className="hover:text-nexus-orange">CGV</Link></li>
                 </ul>
             </div>
-
             <div>
                 <h4 className="text-white font-bold mb-4">Contact</h4>
                 <ul className="space-y-3 text-sm">
@@ -320,10 +307,125 @@ export default function ProjectsPage() {
                 </ul>
             </div>
          </div>
-         
-         <div className="container mx-auto border-t border-white/10 pt-8 text-center text-xs">
-            <p>© 2025 Nexus EMBTE. Tous droits réservés. Code with ❤️ by YourTeam.</p>
-         </div>
+          <div className="container mx-auto border-t border-[var(--nexus-gray)] pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+
+            {/* Texte à gauche */}
+            <p className="text-[var(--nexus-concrete)] text-center md:text-left flex flex-wrap items-center gap-1">
+              © 2025
+              <span className="text-[var(--nexus-text)] font-semibold">
+                Nexus EMBTE
+              </span>.
+              Tous droits réservés.
+              Code with ❤️ by
+              <a
+                href="https://ton-lien-epso.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  ml-1 px-3 py-1 rounded-full font-semibold
+                  text-white
+                  bg-gradient-to-r
+                  from-[var(--nexus-orange)]
+                  to-blue-600
+                  hover:to-blue-700
+                  transition-all
+                  shadow-md
+                "
+              >
+                EPSO
+              </a>
+            </p>
+
+            {/* Réseaux sociaux */}
+            <div className="flex items-center gap-4">
+
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Facebook size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Linkedin size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="Twitter"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Twitter size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Instagram size={18} />
+              </a>
+
+              <a
+                href="mailto:contact@nexusembte.com"
+                aria-label="Gmail"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Mail size={18} />
+              </a>
+
+            </div>
+          </div>
       </footer>
 
     </div>

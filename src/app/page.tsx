@@ -6,7 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { 
   ArrowRight, Ruler, Truck, ShieldCheck, MapPin, 
-  Handshake, Building2, Hammer, HardHat, Briefcase,Phone,Mail 
+  Handshake, Building2, Hammer, HardHat, Briefcase,Phone, Mail, Facebook, Linkedin, Twitter, Instagram, 
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
@@ -84,54 +84,85 @@ export default function LandingPage() {
     <main ref={mainRef} className="bg-nexus-black min-h-screen text-nexus-text overflow-x-hidden selection:bg-nexus-orange selection:text-black transition-colors duration-300">
       
       {/* --- SECTION 1: HERO --- */}
-      <section className="relative h-screen flex flex-col lg:flex-row items-center pt-20">
-        <div className="w-full lg:w-1/2 px-8 lg:pl-24 z-10 flex flex-col justify-center h-full order-2 lg:order-1">
-          <div className="hero-text opacity-0 mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-nexus-orange/30 bg-nexus-orange/10 w-fit">
-            <span className="w-2 h-2 rounded-full bg-nexus-orange animate-pulse"/>
-            <span className="text-xs font-bold text-nexus-orange uppercase tracking-wider">Innovation BTP 2025</span>
-          </div>
-          
-          <h1 className="hero-text opacity-0 text-5xl lg:text-7xl font-extrabold leading-tight mb-6">
-            Construisons <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-orange to-yellow-500">
-              L'Impossible
-            </span>
-          </h1>
-          
-          <p className="hero-text opacity-0 text-lg text-nexus-concrete max-w-lg mb-8 leading-relaxed">
-             Avec l'entreprise moderne de bâtiments et travaux d'étude. La plateforme qui connecte vos chantiers.
-          </p>
-          
-          <div className="hero-text opacity-0 flex gap-4">
-            <Link href="/auth/register" className="bg-nexus-orange text-black px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-transform flex items-center gap-2 shadow-lg shadow-nexus-orange/20">
-              Commencer <ArrowRight size={20}/>
-            </Link>
-            <Link href="#projets" className="px-8 py-4 rounded-xl font-bold text-lg border border-nexus-gray hover:bg-nexus-dark transition-colors text-nexus-text">
-              Nos Projets
-            </Link>
-          </div>
-        </div>
+<section className="relative h-screen flex flex-col lg:flex-row items-center pt-20 overflow-hidden">
 
-        {/* 3D à droite */}
-        <div className="w-full lg:w-1/2 h-[50vh] lg:h-full relative lg:order-2 overflow-hidden flex items-center justify-center [perspective:1200px]">
-          <motion.div
-            initial={{ scale: 0.6, rotateX: 35, rotateY: -25, z: -300, opacity: 0 }}
-            animate={{ scale: 0.85, rotateX: 0, rotateY: 0, z: 0, opacity: 1 }}
-            transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
-            className="relative max-w-[520px]"
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            <Image
-              src="/images/img2.jpg"
-              alt="Interface de la plateforme"
-              width={720}
-              height={480}
-              priority
-              className="rounded-2xl object-cover shadow-2xl shadow-black/40 border border-nexus-gray/50"
-            />
-          </motion.div>
-        </div>
-      </section>
+{/* 🖼️ IMAGE DE FOND */}
+{/* 🖼️ IMAGE DE FOND */}
+<Image
+    src="https://res.cloudinary.com/da72jlau6/image/upload/v1766767530/imgA_x4ttah.jpg"
+    alt="Chantier moderne"
+    fill
+    priority
+    className="object-cover"
+  />
+
+{/* 🌑 OVERLAY sombre */}
+<div className="absolute inset-0 bg-black/60" />
+
+{/* ✨ LUMIÈRE / GLOW */}
+<div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-nexus-orange/20 rounded-full blur-[160px]" />
+
+{/* --- IMAGE 3D DROITE --- */}
+<div className="relative w-full lg:w-1/2 h-[50vh] lg:h-full z-10 flex items-center justify-center order-2 [perspective:1200px]">
+  <motion.div
+    initial={{ scale: 0.6, rotateX: 35, rotateY: -25, z: -300, opacity: 0 }}
+    animate={{ scale: 0.85, rotateX: 0, rotateY: 0, z: 0, opacity: 1 }}
+    transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+    className="relative max-w-[520px]"
+    style={{ transformStyle: "preserve-3d" }}
+  >
+    <Image
+      src="/images/img2.jpg"
+      alt="Interface de la plateforme"
+      width={720}
+      height={480}
+      priority
+      className="rounded-2xl object-cover shadow-2xl shadow-black/40 border border-nexus-gray/50"
+    />
+  </motion.div>
+</div>
+
+{/* --- CONTENU GAUCHE --- */}
+<div className="relative w-full lg:w-1/2 px-8 lg:pl-24 z-10 flex flex-col justify-center h-full  lg:order-1">
+  
+  <div className="hero-text opacity-0 mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-nexus-orange/30 bg-nexus-orange/10 w-fit">
+    <span className="w-2 h-2 rounded-full bg-nexus-orange animate-pulse"/>
+    <span className="text-xs font-bold text-nexus-orange uppercase tracking-wider">
+      Innovation BTP 2025
+    </span>
+  </div>
+
+  <h1 className="hero-text opacity-0 text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-white">
+    Construisons <br/>
+    <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-orange to-yellow-500">
+      L'Impossible
+    </span>
+  </h1>
+
+  <p className="hero-text opacity-0 text-lg text-nexus-concrete max-w-lg mb-8 leading-relaxed">
+    Avec l'entreprise moderne de bâtiments et travaux d'étude.
+    La plateforme qui connecte vos chantiers.
+  </p>
+
+  <div className="hero-text opacity-0 flex gap-4">
+    <Link
+      href="/auth/register"
+      className="bg-nexus-orange text-black px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-transform flex items-center gap-2 shadow-lg shadow-nexus-orange/30"
+    >
+      Commencer <ArrowRight size={20}/>
+    </Link>
+
+    <Link
+      href="#projets"
+      className="px-8 py-4 rounded-xl font-bold text-lg border border-white/30 hover:bg-white/10 transition-colors text-white"
+    >
+      Nos Projets
+    </Link>
+  </div>
+</div>
+
+</section>
+
 
 
       {/* --- SECTION 2: CHIFFRES CLÉS --- */}
@@ -273,9 +304,125 @@ export default function LandingPage() {
                 </ul>
             </div>
          </div>
-         <div className="container mx-auto border-t border-white/10 pt-8 text-center text-xs">
-            <p>© 2025 Nexus EMBTE. Tous droits réservés. Code with ❤️ by YourTeam.</p>
-         </div>
+          <div className="container mx-auto border-t border-[var(--nexus-gray)] pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+
+            {/* Texte à gauche */}
+            <p className="text-[var(--nexus-concrete)] text-center md:text-left flex flex-wrap items-center gap-1">
+              © 2025
+              <span className="text-[var(--nexus-text)] font-semibold">
+                Nexus EMBTE
+              </span>.
+              Tous droits réservés.
+              Code with ❤️ by
+              <a
+                href="https://ton-lien-epso.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  ml-1 px-3 py-1 rounded-full font-semibold
+                  text-white
+                  bg-gradient-to-r
+                  from-[var(--nexus-orange)]
+                  to-blue-600
+                  hover:to-blue-700
+                  transition-all
+                  shadow-md
+                "
+              >
+                EPSO
+              </a>
+            </p>
+
+            {/* Réseaux sociaux */}
+            <div className="flex items-center gap-4">
+
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Facebook size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Linkedin size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="Twitter"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Twitter size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Instagram size={18} />
+              </a>
+
+              <a
+                href="mailto:contact@nexusembte.com"
+                aria-label="Gmail"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Mail size={18} />
+              </a>
+
+            </div>
+          </div>
       </footer>
     </main>
   );
@@ -341,8 +488,3 @@ function ProjectCard({ title, location, category, img }: any) {
         </div>
     )
 }
-
-// les image pour les partenaire 
-// Maire de Rufisque de Nord : https://i.postimg.cc/Mppd8QLt/mrn.webp
-//EPSO : https://i.postimg.cc/Bn3JF9pn/epso.jpg
-// Maire de Rufisque Est : https://i.postimg.cc/rFn5xYhs/mr.webp

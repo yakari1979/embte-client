@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { 
   ArrowRight, Home, Building2, Hammer, Ruler, 
-  CheckCircle2, ArrowUpRight, Zap, Shield, MapPin, Phone, Mail
+  CheckCircle2, ArrowUpRight, Zap, Shield, MapPin, Phone, Mail, Instagram, Twitter, Linkedin, Facebook
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -216,20 +216,18 @@ export default function SolutionsPage() {
             <div>
                 <h3 className="text-2xl font-bold text-nexus-text mb-4">EM<span className="text-nexus-orange">BTE</span></h3>
                 <p className="text-sm leading-relaxed">
-                    La solution n°1 pour la digitalisation des chantiers en Afrique de l'Ouest. Précision, rapidité, transparence.
+                    La solution n°1 pour la digitalisation des chantiers en Afrique de l'Ouest.
                 </p>
             </div>
-            
+              {/* dejas fait */}
             <div>
                 <h4 className="text-white font-bold mb-4">Liens Rapides</h4>
                 <ul className="space-y-2 text-sm">
                     <li><Link href="#" className="hover:text-nexus-orange">À Propos</Link></li>
                     <li><Link href="/solutions" className="hover:text-nexus-orange">Nos Services</Link></li>
                     <li><Link href="/contact" className="hover:text-nexus-orange">Contacter Nous</Link></li>
-                    {/* <li><Link href="#" className="hover:text-nexus-orange">Carrières</Link></li> */}
                 </ul>
             </div>
-
             <div>
                 <h4 className="text-white font-bold mb-4">Légal</h4>
                 <ul className="space-y-2 text-sm">
@@ -238,7 +236,6 @@ export default function SolutionsPage() {
                     <li><Link href="/cgv" className="hover:text-nexus-orange">CGV</Link></li>
                 </ul>
             </div>
-
             <div>
                 <h4 className="text-white font-bold mb-4">Contact</h4>
                 <ul className="space-y-3 text-sm">
@@ -248,10 +245,125 @@ export default function SolutionsPage() {
                 </ul>
             </div>
          </div>
-         
-         <div className="container mx-auto border-t border-white/10 pt-8 text-center text-xs">
-            <p>© 2025 Nexus EMBTE. Tous droits réservés. Code with ❤️ by YourTeam.</p>
-         </div>
+          <div className="container mx-auto border-t border-[var(--nexus-gray)] pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+
+            {/* Texte à gauche */}
+            <p className="text-[var(--nexus-concrete)] text-center md:text-left flex flex-wrap items-center gap-1">
+              © 2025
+              <span className="text-[var(--nexus-text)] font-semibold">
+                Nexus EMBTE
+              </span>.
+              Tous droits réservés.
+              Code with ❤️ by
+              <a
+                href="https://ton-lien-epso.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  ml-1 px-3 py-1 rounded-full font-semibold
+                  text-white
+                  bg-gradient-to-r
+                  from-[var(--nexus-orange)]
+                  to-blue-600
+                  hover:to-blue-700
+                  transition-all
+                  shadow-md
+                "
+              >
+                EPSO
+              </a>
+            </p>
+
+            {/* Réseaux sociaux */}
+            <div className="flex items-center gap-4">
+
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Facebook size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Linkedin size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="Twitter"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Twitter size={18} />
+              </a>
+
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Instagram size={18} />
+              </a>
+
+              <a
+                href="mailto:contact@nexusembte.com"
+                aria-label="Gmail"
+                className="
+                p-2 rounded-full
+                bg-gradient-to-br
+                from-[var(--nexus-orange)]
+                to-blue-600
+                text-white
+                hover:scale-110
+                transition-all
+                shadow-md
+              "
+              >
+                <Mail size={18} />
+              </a>
+
+            </div>
+          </div>
       </footer>
 
     </div>
