@@ -221,10 +221,10 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
              <ProjectCard 
-                title="Tour Horizon" 
-                location="Dakar, Sénégal" 
+                title="Bâtiment Terminé" 
+                location="Rufisque, Sénégal" 
                 category="Résidentiel"
-                img="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800"
+                img="https://res.cloudinary.com/da72jlau6/image/upload/v1766775840/img9_yq6qi6.png"
              />
              <ProjectCard 
                 title="Bâtiment de l'Avenir" 
