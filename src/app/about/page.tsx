@@ -193,7 +193,7 @@ export default function AboutPage() {
                 Fournir des constructions de qualité – maisons, immeubles et cités – qui répondent aux besoins de nos clients, dans le respect des normes de sécurité, de durabilité et de performance.
               </p>
             </div>
-            <div className="order-1 md:order-2 h-[300px] md:h-[400px] bg-[url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1000')] bg-cover bg-center rounded-3xl opacity-90 transition-all duration-700"></div>
+            <div className="order-1 md:order-2 h-[300px] md:h-[400px] bg-[url('https://res.cloudinary.com/da72jlau6/image/upload/v1766775840/img9_yq6qi6.png')] bg-cover bg-center rounded-3xl opacity-90 transition-all duration-700"></div>
           </div>
         </section>
 
