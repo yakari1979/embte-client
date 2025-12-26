@@ -128,7 +128,7 @@ export default function LandingPage() {
   <div className="hero-text opacity-0 mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-nexus-orange/30 bg-nexus-orange/10 w-fit">
     <span className="w-2 h-2 rounded-full bg-nexus-orange animate-pulse"/>
     <span className="text-xs font-bold text-nexus-orange uppercase tracking-wider">
-      Innovation BTP 2025
+      Innovation BTP
     </span>
   </div>
 

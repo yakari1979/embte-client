@@ -55,9 +55,6 @@ export default function TestimonialsSection() {
       
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 mb-16 text-center">
-        <span className="inline-block py-1 px-3 rounded-full bg-nexus-orange/10  border-nexus-orange/20 text-nexus-orange text-sm font-bold uppercase tracking-widest mb-4">
-          Témoignages
-        </span>
         <h2 className="text-3xl sm:text-5xl font-black text-nexus-text">
             Témoignages <br/>
           <span className="text-nexus-concrete text-2xl sm:text-3xl font-normal mt-2 block">
