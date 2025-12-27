@@ -14,6 +14,11 @@ import { motion } from "framer-motion";
 import PartnersSection from '@/components/PartnersSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 
+const OfficeScene = dynamic(() => import('@/components/OfficeScene'), { 
+  ssr: false,
+  loading: () => <div className="h-[600px] w-full bg-nexus-dark animate-pulse rounded-3xl"></div>
+});
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,86 +89,84 @@ export default function LandingPage() {
     <main ref={mainRef} className="bg-nexus-black min-h-screen text-nexus-text overflow-x-hidden selection:bg-nexus-orange selection:text-black transition-colors duration-300">
       
       {/* --- SECTION 1: HERO --- */}
-<section className="relative h-screen flex flex-col lg:flex-row items-center pt-20 overflow-hidden">
+      <section className="relative h-screen flex flex-col lg:flex-row items-center pt-20 overflow-hidden">
 
-{/* 🖼️ IMAGE DE FOND */}
-{/* 🖼️ IMAGE DE FOND */}
-<Image
-    src="https://res.cloudinary.com/da72jlau6/image/upload/v1766767530/imgA_x4ttah.jpg"
-    alt="Chantier moderne"
-    fill
-    priority
-    className="object-cover"
-  />
+      {/* 🖼️ IMAGE DE FOND */}
+      {/* 🖼️ IMAGE DE FOND */}
+      <Image
+          src="https://res.cloudinary.com/da72jlau6/image/upload/v1766767530/imgA_x4ttah.jpg"
+          alt="Chantier moderne"
+          fill
+          priority
+          className="object-cover"
+        />
 
-{/* 🌑 OVERLAY sombre */}
-<div className="absolute inset-0 bg-black/60" />
+      {/* 🌑 OVERLAY sombre */}
+      <div className="absolute inset-0 bg-black/60" />
 
-{/* ✨ LUMIÈRE / GLOW */}
-<div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-nexus-orange/20 rounded-full blur-[160px]" />
+      {/* ✨ LUMIÈRE / GLOW */}
+      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-nexus-orange/20 rounded-full blur-[160px]" />
 
-{/* --- IMAGE 3D DROITE --- */}
-<div className="relative w-full lg:w-1/2 h-[50vh] lg:h-full z-10 flex items-center justify-center order-2 [perspective:1200px]">
-  <motion.div
-    initial={{ scale: 0.6, rotateX: 35, rotateY: -25, z: -300, opacity: 0 }}
-    animate={{ scale: 0.85, rotateX: 0, rotateY: 0, z: 0, opacity: 1 }}
-    transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
-    className="relative max-w-[520px]"
-    style={{ transformStyle: "preserve-3d" }}
-  >
-    <Image
-      src="/images/img2.jpg"
-      alt="Interface de la plateforme"
-      width={720}
-      height={480}
-      priority
-      className="rounded-2xl object-cover shadow-2xl shadow-black/40 border border-nexus-gray/50"
-    />
-  </motion.div>
-</div>
+      {/* --- IMAGE 3D DROITE --- */}
+      <div className="relative w-full lg:w-1/2 h-[50vh] lg:h-full z-10 flex items-center justify-center order-2 [perspective:1200px]">
+        <motion.div
+          initial={{ scale: 0.6, rotateX: 35, rotateY: -25, z: -300, opacity: 0 }}
+          animate={{ scale: 0.85, rotateX: 0, rotateY: 0, z: 0, opacity: 1 }}
+          transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          className="relative max-w-[520px]"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          <Image
+            src="/images/img2.jpg"
+            alt="Interface de la plateforme"
+            width={720}
+            height={480}
+            priority
+            className="rounded-2xl object-cover shadow-2xl shadow-black/40 border border-nexus-gray/50"
+          />
+        </motion.div>
+      </div>
 
-{/* --- CONTENU GAUCHE --- */}
-<div className="relative w-full lg:w-1/2 px-8 lg:pl-24 z-10 flex flex-col justify-center h-full  lg:order-1">
-  
-  <div className="hero-text opacity-0 mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-nexus-orange/30 bg-nexus-orange/10 w-fit">
-    <span className="w-2 h-2 rounded-full bg-nexus-orange animate-pulse"/>
-    <span className="text-xs font-bold text-nexus-orange uppercase tracking-wider">
-      Innovation BTP
-    </span>
-  </div>
+      {/* --- CONTENU GAUCHE --- */}
+      <div className="relative w-full lg:w-1/2 px-8 lg:pl-24 z-10 flex flex-col justify-center h-full  lg:order-1">
+        
+        <div className="hero-text opacity-0 mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-nexus-orange/30 bg-nexus-orange/10 w-fit">
+          <span className="w-2 h-2 rounded-full bg-nexus-orange animate-pulse"/>
+          <span className="text-xs font-bold text-nexus-orange uppercase tracking-wider">
+            Innovation BTP
+          </span>
+        </div>
 
-  <h1 className="hero-text opacity-0 text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-white">
-    Construisons <br/>
-    <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-orange to-yellow-500">
-      L'Impossible
-    </span>
-  </h1>
+        <h1 className="hero-text opacity-0 text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-white">
+          Construisons <br/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-orange to-yellow-500">
+            L'Impossible
+          </span>
+        </h1>
 
-  <p className="hero-text opacity-0 text-lg text-nexus-concrete max-w-lg mb-8 leading-relaxed">
-    Avec l'entreprise moderne de bâtiments et travaux d'étude.
-    La plateforme qui connecte vos chantiers.
-  </p>
+        <p className="hero-text opacity-0 text-lg text-nexus-concrete max-w-lg mb-8 leading-relaxed">
+          Avec l'entreprise moderne de bâtiments et travaux d'étude.
+          La plateforme qui connecte vos chantiers.
+        </p>
 
-  <div className="hero-text opacity-0 flex gap-4">
-    <Link
-      href="/auth/register"
-      className="bg-nexus-orange text-black px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-transform flex items-center gap-2 shadow-lg shadow-nexus-orange/30"
-    >
-      Commencer <ArrowRight size={20}/>
-    </Link>
+        <div className="hero-text opacity-0 flex gap-4">
+          <Link
+            href="/auth/register"
+            className="bg-nexus-orange text-black px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-transform flex items-center gap-2 shadow-lg shadow-nexus-orange/30"
+          >
+            Commencer <ArrowRight size={20}/>
+          </Link>
 
-    <Link
-      href="#projets"
-      className="px-8 py-4 rounded-xl font-bold text-lg border border-white/30 hover:bg-white/10 transition-colors text-white"
-    >
-      Nos Projets
-    </Link>
-  </div>
-</div>
+          <Link
+            href="#projets"
+            className="px-8 py-4 rounded-xl font-bold text-lg border border-white/30 hover:bg-white/10 transition-colors text-white"
+          >
+            Nos Projets
+          </Link>
+        </div>
+      </div>
 
-</section>
-
-
+      </section>
 
       {/* --- SECTION 2: CHIFFRES CLÉS --- */}
       <section id="stats" className="py-20 border-y border-nexus-gray bg-nexus-dark/30">
@@ -247,6 +250,12 @@ export default function LandingPage() {
 
       {/* --- SECTION 6: TÉMOIGNAGES (NOUVEAU) --- */}
       <TestimonialsSection />
+
+      {/* 3D animation avec contact gmeil et numero de telephone */}
+
+      {/* --- SECTION: VISITE VIRTUELLE (BUREAU 3D) --- */}
+      <OfficeScene />
+
 
 
       {/* --- SECTION 7: CTA --- */}

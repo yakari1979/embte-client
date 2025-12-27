@@ -330,6 +330,11 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ------------------------------------------------------- */}
+      {/* 5. NOTRE Animation 3D */}
+      {/* ------------------------------------------------------- */}
+      
+
       {/* --- FOOTER --- */}
       <footer className="bg-nexus-dark border-t border-nexus-gray pt-16 pb-8 px-6 text-nexus-concrete">
          <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
