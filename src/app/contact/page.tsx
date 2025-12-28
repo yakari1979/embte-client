@@ -108,14 +108,14 @@ export default function ContactPage() {
                     <div className="bg-nexus-dark p-6 rounded-2xl border border-nexus-gray hover:border-nexus-orange transition-colors group">
                         <Phone className="text-nexus-orange mb-4 group-hover:scale-110 transition-transform" size={32}/>
                         <h3 className="font-bold text-nexus-text mb-1">Téléphone</h3>
-                        <p className="text-nexus-concrete">+221 33 800 00 00</p>
-                        <p className="text-nexus-concrete">+221 77 000 00 00</p>
+                        <p className="text-nexus-concrete">+221 77 218 74 64</p>
+                        <p className="text-nexus-concrete">+221 77 300 20 94</p>
                     </div>
                     <div className="bg-nexus-dark p-6 rounded-2xl border border-nexus-gray hover:border-nexus-orange transition-colors group">
                         <Mail className="text-nexus-orange mb-4 group-hover:scale-110 transition-transform" size={32}/>
                         <h3 className="font-bold text-nexus-text mb-1">Email</h3>
-                        <p className="text-nexus-concrete">contact@nexusbtp.sn</p>
-                        <p className="text-nexus-concrete">support@nexusbtp.sn</p>
+                        <p className="text-nexus-concrete">mou.kone@yahoo.com</p>
+                        <p className="text-nexus-concrete">support@embte.sn</p>
                     </div>
                 </div>
 

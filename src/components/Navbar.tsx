@@ -121,7 +121,7 @@ export default function Navbar() {
               alt="Logo EM BTE"
               // h-12 (48px) sur mobile, h-20 (80px) sur ordi
               // w-auto permet de garder les proportions de ton logo
-              className="h-10 md:h-14 w-auto object-contain transition-transform duration-300 hover:scale-105 rounded-lg"
+              className="h-10 md:h-10 w-auto object-contain transition-transform duration-300 hover:scale-105 rounded-lg"
             />
           </Link>
 
