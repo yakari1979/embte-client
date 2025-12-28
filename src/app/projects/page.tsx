@@ -24,7 +24,7 @@ const projects = [
         id: 1,
         title: "Bâtiment Horizon",
         location: "Rufisque, Sénégal",
-        category: "Immeuble R+12",
+        category: "Immeuble",
         desc: "Une prouesse architecturale alliant verre et béton armé, défiant les normes de hauteur.",
         img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766767575/img5_h5tl3o.png"
     },
@@ -32,7 +32,7 @@ const projects = [
         id: 2,
         title: "Bâtiment",
         location: "Rufisque, Sénégal",
-        category: "Résidentiel Écologique",
+        category: "Immeuble",
         desc: "Autonomie énergétique totale. Intégration paysagère respectueuse de l'environnement côtier.",
         img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774621/img7_y6jvce.png"
     },
@@ -40,7 +40,7 @@ const projects = [
         id: 3,
         title: "Bâtiment",
         location: "Rufisque, Sénégal",
-        category: "Infrastructure Public",
+        category: "Immeuble",
         desc: "Stade multifonctionnel de 15 000 places avec structure métallique suspendue.",
         img: "https://res.cloudinary.com/da72jlau6/image/upload/v1766774806/img8_xsk6pt.jpg"
     },
@@ -118,9 +118,6 @@ export default function ProjectsPage() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-nexus-orange/10 rounded-full blur-[150px] pointer-events-none"></div>
 
         <div className="relative z-10">
-            <p className="desc-anim text-nexus-orange font-bold tracking-[0.2em] mb-4 uppercase">
-                Portfolio 2024-2025
-            </p>
             <h1 className="text-6xl md:text-9xl font-black uppercase leading-[0.9]">
                 <div className="overflow-hidden text-nexus-text mb-2">
                     <span className="char-anim inline-block">N</span>
@@ -172,7 +169,7 @@ export default function ProjectsPage() {
                              </div>
                         </div>
                         <div>
-                            <span className="text-9xl font-black text-nexus-text/5 absolute -top-20 -left-10 z-0">0{index + 1}</span>
+                            {/* <span className="text-9xl font-black text-nexus-text/5 absolute -top-20 -left-10 z-0">0{index + 1}</span> */}
                             <div className="relative z-10">
                                 <h2 className="text-5xl font-bold text-nexus-text mb-6 leading-tight">{proj.title}</h2>
                                 <div className="flex items-center gap-2 text-nexus-orange mb-8 font-mono text-sm uppercase">

@@ -184,9 +184,6 @@ export default function LandingPage() {
       <section id="services" className="py-24 px-6 bg-nexus-black relative border-t border-nexus-gray/20">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <span className="text-nexus-orange font-bold uppercase tracking-widest text-sm bg-nexus-orange/10 px-3 py-1 rounded-full border border-nexus-orange/20">
-                Ce que nous faisons
-            </span>
             <h2 className="text-3xl lg:text-5xl font-black mt-4 mb-4 text-nexus-text">
                 Une expertise <span className="text-blue-500">complète</span>
             </h2>

@@ -157,13 +157,43 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-7 space-y-6">
+            {/* <div className="lg:col-span-7 space-y-6">
                 <Quote className="text-nexus-orange w-16 h-16 opacity-20" />
                 <h2 className="text-4xl font-bold">Le mot du Président</h2>
                 <p className="text-lg text-justify font-light leading-relaxed">
                    Chers partenaires, EMBTE évolue avec une ambition claire : proposer des réalisations solides et durables. Notre force repose sur une équipe qualifiée capable de répondre aux exigences techniques les plus complexes.
                 </p>
                 <p className="font-script text-4xl text-nexus-orange">Mamadou Kone</p>
+            </div> */}
+
+            <div className="lg:col-span-7 ceo-text space-y-8 relative">
+              <Quote className="text-nexus-orange w-16 h-16 absolute -top-12 -left-8 opacity-20" />
+              <div>
+                <h2 className="text-4xl font-bold text-nexus-text mb-2">Le mot du Président</h2>
+                <p className="text-nexus-concrete italic">Vision, Rigueur et Engagement.</p>
+              </div>
+
+              <div className="space-y-6 text-lg text-nexus-text leading-relaxed font-light text-justify">
+                <p>
+                  <span className="text-4xl float-left mr-2 mt-[-10px] font-serif text-nexus-orange">C</span>
+                  hers partenaires, chers clients, notre entreprise évolue dans le secteur du Bâtiment et des Travaux Publics avec une ambition claire : proposer des réalisations <strong>solides, durables et conformes</strong> aux normes internationales.
+                </p>
+                <p>
+                  Depuis sa création, notre entreprise accompagne ses clients en mettant un accent particulier sur le respect des délais, la maîtrise des coûts et la satisfaction totale. Chaque chantier que nous menons est guidé par un sens profond de la responsabilité.
+                </p>
+                <p>
+                  Notre force repose sur une équipe qualifiée, capable de répondre aux exigences techniques les plus complexes. Conscients des enjeux écologiques, nous intégrons désormais des <strong>solutions durables</strong> dans chaque bâtiment.
+                </p>
+                <p className="font-medium text-nexus-text border-l-4 border-nexus-orange pl-6 py-2 bg-nexus-dark/50 rounded-r-xl">
+                  "Ensemble, nous continuerons à bâtir des ouvrages de qualité et à contribuer activement au développement de nos territoires."
+                </p>
+              </div>
+
+              <div className="pt-8 flex items-center justify-end gap-4">
+                <div className="text-right">
+                  <p className="font-script text-4xl text-nexus-orange rotate-[-5deg] opacity-90">Mamadou Kone</p>
+                </div>
+              </div>
             </div>
         </div>
       </section>
