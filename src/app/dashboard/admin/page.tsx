@@ -8,7 +8,7 @@ import {
   MessageSquare, BellRing, X, ChevronRight, Phone, Mail,
   Truck, Package
 } from 'lucide-react';
-import { adminService } from '@/services/api';
+import { adminService,SERVER_URL } from '@/services/api';
 import Link from 'next/link';
 import { io } from 'socket.io-client'; // Pour le temps réel
 
@@ -39,7 +39,8 @@ export default function AdminDashboard() {
     fetchData(); 
 
     // 2. CONNEXION SOCKET.IO (TEMPS RÉEL)
-    const socket = io('http://localhost:3001'); 
+    // const socket = io('http://localhost:3001');
+    const socket = io(SERVER_URL);  
 
     socket.on('connect', () => {
         console.log("Connecté au QG Nexus");

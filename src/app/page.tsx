@@ -13,6 +13,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import PartnersSection from '@/components/PartnersSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
+import ServiceImageCard from '@/components/ServiceImageCard';
 
 const OfficeScene = dynamic(() => import('@/components/OfficeScene'), { 
   ssr: false,
@@ -180,30 +181,40 @@ export default function LandingPage() {
 
 
       {/* --- SECTION 3: SERVICES --- */}
-      <section id="services" className="py-24 px-6 bg-nexus-black relative">
+      <section id="services" className="py-24 px-6 bg-nexus-black relative border-t border-nexus-gray/20">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <span className="text-nexus-orange font-bold uppercase tracking-widest text-sm">Ce que nous faisons</span>
-            <h2 className="text-3xl lg:text-5xl font-bold mt-2 mb-4 text-nexus-text">Une expertise complète</h2>
-            <p className="text-nexus-concrete max-w-2xl mx-auto">De la conception 3D à la remise des clés, nous digitalisons chaque étape.</p>
+            <span className="text-nexus-orange font-bold uppercase tracking-widest text-sm bg-nexus-orange/10 px-3 py-1 rounded-full border border-nexus-orange/20">
+                Ce que nous faisons
+            </span>
+            <h2 className="text-3xl lg:text-5xl font-black mt-4 mb-4 text-nexus-text">
+                Une expertise <span className="text-blue-500">complète</span>
+            </h2>
+            <p className="text-nexus-concrete max-w-2xl mx-auto text-lg">
+                De la conception 3D à la remise des clés, nous digitalisons et sécurisons chaque étape de votre projet.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <ServiceCard 
-              icon={<Ruler className="text-nexus-orange"/>} 
-              title="Architecture & BIM" 
-              desc="Conception assistée par ordinateur et modélisation 3D pour des plans sans erreur." 
+            
+            {/* Carte 1 : Architecture */}
+            <ServiceImageCard 
+              src="/images/service1.jpeg" 
+              alt="Architecture & BIM"
             />
-            <ServiceCard 
-              icon={<Truck className="text-blue-500"/>} 
-              title="Logistique Chantier" 
-              desc="Suivi GPS des matériaux, gestion des stocks et optimisation des approvisionnements." 
+
+            {/* Carte 2 : Logistique */}
+            <ServiceImageCard 
+              src="/images/service2.jpeg" 
+              alt="Logistique Chantier"
             />
-            <ServiceCard 
-              icon={<ShieldCheck className="text-green-500"/>} 
-              title="Contrôle Qualité" 
-              desc="Rapports journaliers automatisés et conformité aux normes internationales." 
+
+            {/* Carte 3 : Qualité */}
+            <ServiceImageCard 
+              src="/images/service3.jpeg" 
+              alt="Contrôle Qualité"
             />
+
           </div>
         </div>
       </section>

@@ -7,7 +7,7 @@ import {
   Loader2, CheckCircle2, TrendingUp, CreditCard, ArrowUpRight, 
   Building, Phone, ShieldCheck, HardHat, Users, CloudSun, ImageIcon, Mail, ArrowLeft, ArrowRight, Clock, X
 } from 'lucide-react';
-import { clientService } from '@/services/api';
+import { clientService, SERVER_URL } from '@/services/api';
 import dynamic from 'next/dynamic';
 
 const ConstructionScene = dynamic(() => import('@/components/ConstructionScene'), { ssr: false });
@@ -572,7 +572,7 @@ function ActiveDashboard({ project }: { project: any }) {
                                 onClick={() => setSelectedReport(report)}
                                 className="group relative aspect-video rounded-xl overflow-hidden bg-nexus-black border border-nexus-gray cursor-pointer hover:border-nexus-orange transition-all"
                             >
-                                <img src={`http://localhost:3001${firstImage.url}`} alt="Chantier" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
+                                <img src={`${SERVER_URL}${firstImage.url}`} alt="Chantier" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
                                 <div className="absolute bottom-3 left-4 right-4">
                                     <p className="text-white text-xs font-bold line-clamp-1">{report.content}</p>
@@ -648,11 +648,11 @@ function ClientReportModal({ report, onClose }: any) {
                         {mediaFiles.map((file: any, index: number) => (
                             <div key={index} className="space-y-2">
                                 {file.type === 'IMAGE' ? (
-                                    <a href={`http://localhost:3001${file.url}`} target="_blank" rel="noreferrer" className="block rounded-xl overflow-hidden border border-nexus-gray hover:border-nexus-orange transition-colors">
-                                        <img src={`http://localhost:3001${file.url}`} alt="Preuve" className="w-full h-auto"/>
+                                    <a href={`${SERVER_URL}${file.url}`} target="_blank" rel="noreferrer" className="block rounded-xl overflow-hidden border border-nexus-gray hover:border-nexus-orange transition-colors">
+                                        <img src={`${SERVER_URL}${file.url}`} alt="Preuve" className="w-full h-auto"/>
                                     </a>
                                 ) : (
-                                    <a href={`http://localhost:3001${file.url}`} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 rounded-xl bg-nexus-black border border-nexus-gray hover:border-nexus-orange transition-colors">
+                                    <a href={`${SERVER_URL}${file.url}`} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 rounded-xl bg-nexus-black border border-nexus-gray hover:border-nexus-orange transition-colors">
                                         <FileText className="text-nexus-concrete"/>
                                         <span className="text-nexus-text text-sm truncate">{file.name}</span>
                                     </a>

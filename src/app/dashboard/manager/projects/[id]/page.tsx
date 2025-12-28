@@ -247,6 +247,29 @@ export default function ManagerProjectControl() {
                     </Link>
                 </div>
 
+                <Link 
+                href={`/dashboard/manager/projects/${id}/inventory`} 
+                className="
+                    group w-full py-3
+                    bg-nexus-black
+                    border border-nexus-gray
+                    text-nexus-text font-bold
+                    rounded-xl
+                    hover:border-nexus-orange
+                    hover:bg-nexus-orange/10
+                    transition-all duration-300
+                    flex items-center justify-center gap-2
+                "
+                >
+                <Package
+                    size={18}
+                    className="text-nexus-orange transition-transform duration-300 group-hover:scale-110"
+                />
+                Gérer l’Inventaire
+                <ArrowRight size={18} className="opacity-70"/>
+                </Link>
+
+
             </div>
 
         </div>

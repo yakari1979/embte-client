@@ -8,8 +8,8 @@ import UserTracker from "@/components/UserTracker"; // <-- IMPORT
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: "Nexus BTP",
-  description: "Gestion de chantier.",
+  title: "EMBTE BTP",
+  description: "Gestion de chantier en temps reel.",
 };
 
 export default function RootLayout({

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { adminService } from '@/services/api';
-import { ArrowLeft, HardHat, Save, Users, Calendar, CheckCircle2, Phone, User } from 'lucide-react';
+import { ArrowLeft, HardHat, Save, Users, Calendar, CheckCircle2, Phone, User, Box, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ManageProjectPage() {
@@ -142,6 +142,22 @@ export default function ManageProjectPage() {
                     </div>
                 )}
             </div>
+        </div>
+
+         {/* BOUTON AUDIT STOCK */}
+         <div className="anim-card bg-nexus-dark border border-nexus-gray rounded-2xl p-6 shadow-lg">
+            <h3 className="text-lg font-bold text-nexus-text mb-4 flex items-center gap-2">
+                <Box className="text-blue-500"/> Gestion des Stocks
+            </h3>
+            <p className="text-nexus-concrete text-sm mb-6">
+                Vérifiez les niveaux de stock et l'historique des consommations sur ce chantier.
+            </p>
+            <Link 
+                href={`/dashboard/admin/projects/${id}/inventory`} 
+                className="w-full py-3 bg-nexus-black border border-nexus-gray text-nexus-text font-bold rounded-xl hover:bg-nexus-dark hover:border-blue-500 transition-all flex items-center justify-center gap-2"
+            >
+                <ShieldCheck size={18}/> Auditer l'Inventaire
+            </Link>
         </div>
 
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { managerService } from '@/services/api';
+import { managerService, SERVER_URL } from '@/services/api';
 import { gsap } from 'gsap';
 import { 
   FileText, CheckCircle2, Clock, MapPin, User, CloudSun, 
@@ -177,9 +177,9 @@ function ReportDetailsModal({ report, onClose, onValidate }: any) {
                             </h3>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                 {mediaFiles.map((file: any, index: number) => (
-                                    <a href={`http://localhost:3001${file.url}`} target="_blank" rel="noopener noreferrer" key={index} className="block relative aspect-square rounded-xl overflow-hidden border border-nexus-gray hover:border-nexus-orange transition-colors group">
+                                    <a href={`${SERVER_URL}${file.url}`} target="_blank" rel="noopener noreferrer" key={index} className="block relative aspect-square rounded-xl overflow-hidden border border-nexus-gray hover:border-nexus-orange transition-colors group">
                                         {file.type === 'IMAGE' ? (
-                                            <img src={`http://localhost:3001${file.url}`} alt="Chantier" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+                                            <img src={`${SERVER_URL}${file.url}`} alt="Chantier" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-nexus-black text-nexus-concrete">
                                                 <span className="text-xs font-bold uppercase">{file.type}</span>

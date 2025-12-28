@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { clientService } from '@/services/api';
+import { clientService, SERVER_URL } from '@/services/api';
 import { gsap } from 'gsap';
 import { 
   FileText, CheckCircle2, Clock, Image as ImageIcon, 
@@ -122,14 +122,14 @@ function FilesGallery({ reports }: any) {
             {allFiles.map((file: any, index: number) => (
                 <a 
                     key={index} 
-                    href={`http://localhost:3001${file.url}`} 
+                    href={`${SERVER_URL}${file.url}`} 
                     target="_blank" 
                     rel="noreferrer"
                     className="content-anim group bg-nexus-dark border border-nexus-gray rounded-2xl overflow-hidden hover:border-nexus-orange transition-all"
                 >
                     <div className="aspect-video bg-nexus-black relative flex items-center justify-center overflow-hidden">
                         {file.type === 'IMAGE' ? (
-                            <img src={`http://localhost:3001${file.url}`} alt={file.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+                            <img src={`${SERVER_URL}${file.url}`} alt={file.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
                         ) : file.type === 'VIDEO' ? (
                             <Film size={40} className="text-nexus-concrete"/>
                         ) : (

@@ -2,7 +2,21 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // URL de ton serveur Backend (vérifie bien le port 3001)
-const API_URL = 'http://localhost:3001/api';
+// const API_URL = 'http://localhost:3001/api';
+
+// const api = axios.create({
+//   baseURL: API_URL,
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
+
+// 1. On récupère l'URL depuis le fichier .env
+// Si elle n'existe pas, on garde localhost par sécurité
+export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001';
+
+// 2. L'URL pour les appels API (ex: http://localhost:3001/api)
+const API_URL = `${SERVER_URL}/api`;
 
 const api = axios.create({
   baseURL: API_URL,
@@ -135,6 +149,10 @@ export const adminService = {
   updateSupplyStatus: async (requestId: string, status: string) => {
     const response = await api.put(`/admin/logistics/${requestId}/status`, { status });
     return response.data;
+  },
+  getProjectInventory: async (projectId: string) => {
+    const response = await api.get(`/admin/projects/${projectId}/inventory`);
+    return response.data;
   }
 };
 
@@ -195,6 +213,20 @@ export const managerService = {
   },
   receiveSupply: async (requestId: string) => {
     const response = await api.put(`/manager/supply-request/${requestId}/receive`);
+    return response.data;
+  },
+  getFullInventory: async (projectId: string) => {
+    const response = await api.get(`/manager/projects/${projectId}/inventory-full`);
+    return response.data;
+  },
+
+  addItem: async (data: any) => {
+    const response = await api.post('/manager/inventory/add', data);
+    return response.data;
+  },
+
+  recordUsage: async (data: any) => {
+    const response = await api.post('/manager/inventory/usage', data);
     return response.data;
   }
 };

@@ -152,13 +152,38 @@ export default function Navbar() {
               <>
                 {/* On affiche le bouton Dashboard sauf pour le client qui a déjà tout au centre */}
                 {userRole !== 'CLIENT' && (
-                  <Link 
-                    href={dashboardPath} 
-                    className="flex items-center gap-2 text-nexus-text hover:text-nexus-orange font-medium text-sm transition-colors border border-nexus-gray px-4 py-2 rounded-lg hover:border-nexus-orange"
+                  // <Link 
+                  //   href={dashboardPath} 
+                  //   className="flex items-center gap-2 text-nexus-text hover:text-nexus-orange font-medium text-sm transition-colors border border-nexus-gray px-4 py-2 rounded-lg hover:border-nexus-orange"
+                  // >
+                  //   <LayoutDashboard size={18} />
+                  //   Tableau de Bord
+                  // </Link>
+
+                  <Link
+                    href={dashboardPath}
+                    className="
+                      group relative inline-flex items-center gap-2
+                      px-5 py-2.5 rounded-xl
+                      border border-white/10
+                      bg-white/5 backdrop-blur-md
+                      text-nexus-text text-sm font-semibold
+                      transition-all duration-300
+                      hover:border-nexus-orange/50
+                      hover:bg-nexus-orange/10
+                      hover:shadow-[0_0_30px_rgba(249,115,22,0.25)]
+                    "
                   >
-                    <LayoutDashboard size={18} />
-                    Tableau de Bord
+                    <LayoutDashboard
+                      size={18}
+                      className="text-white transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <span className='text-white'>Tableau de Bord</span>
+
+                    {/* glow effect */}
+                    <span className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition duration-300 bg-gradient-to-r from-nexus-orange/20 via-transparent to-nexus-orange/20" />
                   </Link>
+
                 )}
                 
                 <button 
