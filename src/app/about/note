@@ -1,0 +1,2 @@
+Key : NEXT_PUBLIC_API_URL (C'est le nom standard, vérifie dans ton code frontend quel nom tu utilises).
+Value : https://embte-serveur.onrender.com
