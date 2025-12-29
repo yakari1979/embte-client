@@ -259,7 +259,7 @@ export default function ContactPage() {
                 <h4 className="text-white font-bold mb-4">Contact</h4>
                 <ul className="space-y-3 text-sm">
                     <li className="flex items-center gap-2"><MapPin size={16}/> Dakar, Sénégal</li>
-                    <li className="flex items-center gap-2"><Phone size={16}/> +221 33 800 00 00</li>
+                    <li className="flex items-center gap-2"><Phone size={16}/> +221 77 218 74 64</li>
                     <li className="flex items-center gap-2"><Mail size={16}/> contact@nexusbtp.sn</li>
                 </ul>
             </div>

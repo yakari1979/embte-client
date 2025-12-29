@@ -157,15 +157,6 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
-            {/* <div className="lg:col-span-7 space-y-6">
-                <Quote className="text-nexus-orange w-16 h-16 opacity-20" />
-                <h2 className="text-4xl font-bold">Le mot du Président</h2>
-                <p className="text-lg text-justify font-light leading-relaxed">
-                   Chers partenaires, EMBTE évolue avec une ambition claire : proposer des réalisations solides et durables. Notre force repose sur une équipe qualifiée capable de répondre aux exigences techniques les plus complexes.
-                </p>
-                <p className="font-script text-4xl text-nexus-orange">Mamadou Kone</p>
-            </div> */}
-
             <div className="lg:col-span-7 ceo-text space-y-8 relative">
               <Quote className="text-nexus-orange w-16 h-16 absolute -top-12 -left-8 opacity-20" />
               <div>
@@ -220,7 +211,7 @@ export default function AboutPage() {
       <div className="h-32 bg-gradient-to-b from-nexus-black to-nexus-dark"></div>
 
       {/* 4. SECTION ÉQUIPE (CORRIGÉE POUR AFFICHAGE PARTOUT) */}
-      <section id="team-section" className="py-24 px-4 bg-nexus-dark relative z-20">
+      {/* <section id="team-section" className="py-24 px-4 bg-nexus-dark relative z-20">
         <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-4">L'Équipe d'Excellence</h2>
             <p className="text-nexus-concrete text-lg">Des experts passionnés à votre service.</p>
@@ -233,7 +224,6 @@ export default function AboutPage() {
                     className="team-member relative overflow-hidden rounded-2xl group
                                h-[450px] md:h-[600px] flex-1 md:hover:flex-[3] transition-all duration-700 ease-in-out cursor-pointer"
                 >
-                    {/* UTILISATION DE <img> POUR ÉVITER L'ERREUR FETCH NEXT.JS */}
                     <img 
                         src={member.img} 
                         alt={member.name} 
@@ -254,7 +244,53 @@ export default function AboutPage() {
                 </div>
             ))}
         </div>
-      </section>
+      </section> */}
+{/* 4. SECTION ÉQUIPE (CORRIGÉE : GRANDE SUR MOBILE / ACCORDÉON SUR PC) */}
+<section id="team-section" className="py-24 px-4 bg-nexus-dark relative z-20">
+  <div className="text-center mb-16">
+    <h2 className="text-4xl md:text-6xl font-black text-white mb-4">L'Équipe d'Excellence</h2>
+    <p className="text-nexus-concrete text-lg">Des experts passionnés à votre service.</p>
+  </div>
+
+  {/* 
+      - Mobile : grid-cols-1 (1 colonne large)
+      - Tablette : md:grid-cols-2 (2 colonnes)
+      - Desktop : lg:flex (redevient l'accordéon horizontal)
+  */}
+  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-6 lg:h-[600px]">
+    {team.map((member, idx) => (
+      <div
+        key={idx}
+        className="team-member relative overflow-hidden rounded-3xl group
+                   h-[500px] md:h-[550px] lg:h-full lg:flex-1 lg:hover:flex-[3] 
+                   transition-all duration-700 ease-in-out cursor-pointer shadow-2xl"
+      >
+        {/* L'image utilise <img> pour éviter les erreurs de timeout du terminal */}
+        <img
+          src={member.img}
+          alt={member.name}
+          className="absolute inset-0 w-full h-full object-cover grayscale md:grayscale-0 lg:grayscale group-hover:grayscale-0 transition-all duration-700"
+        />
+
+        {/* Overlay dégradé plus sombre pour que le texte soit lisible sur mobile */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 lg:opacity-60 lg:group-hover:opacity-90 transition-opacity"></div>
+
+        {/* Contenu textuel */}
+        <div className="absolute bottom-0 left-0 w-full p-8 transform translate-y-0 lg:translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-500 z-10">
+          <div className="bg-nexus-orange text-black p-2 w-fit rounded-lg mb-4 shadow-lg">
+            <member.icon size={24} />
+          </div>
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-1 drop-shadow-md">
+            {member.name}
+          </h3>
+          <p className="text-nexus-orange font-bold uppercase text-xs tracking-[0.2em]">
+            {member.role}
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
 
       {/* --- FOOTER --- */}
       <footer className="bg-nexus-dark border-t border-nexus-gray pt-16 pb-8 px-6 text-nexus-concrete">
@@ -286,7 +322,7 @@ export default function AboutPage() {
                 <h4 className="text-white font-bold mb-4">Contact</h4>
                 <ul className="space-y-3 text-sm">
                     <li className="flex items-center gap-2"><MapPin size={16}/> Dakar, Sénégal</li>
-                    <li className="flex items-center gap-2"><Phone size={16}/> +221 33 800 00 00</li>
+                    <li className="flex items-center gap-2"><Phone size={16}/> +221 77 218 74 64</li>
                     <li className="flex items-center gap-2"><Mail size={16}/> contact@nexusbtp.sn</li>
                 </ul>
             </div>
